@@ -36,7 +36,7 @@ class TelegramBot:
         self.load_plugins()
 
         # Handle all Telegram related errors
-        self.dispatcher.add_error_handler(self.handle_telegram_error)
+        self.dispatcher.add_error_handler(self.handle_tg_errors)
 
     # Start the bot
     def bot_start_polling(self):
@@ -88,7 +88,7 @@ class TelegramBot:
                     logging.warning(msg)
 
     # Handle all telegram and telegram.ext related errors
-    def handle_telegram_error(self, bot, update, error):
+    def handle_tg_errors(self, bot, update, error):
         error_msg = f"{emo.ERROR} Telegram ERROR: *{error}*"
         logging.error(error)
 
