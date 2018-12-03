@@ -1,0 +1,16 @@
+{
+    "admin_id": 134166731,
+    "telegram": {
+        "read_timeout": 10,
+        "connect_timeout": 10
+    },
+    "webhook": {
+        "listen": "0.0.0.0",
+        "port": 8443,
+        "privkey_path": "/path/to/privkey.pem",
+        "cert_path": "/path/to/cert.pem",
+        "url": "https://somedomain.com"
+    },
+    "use_db": true,
+    "update_slug": "endogen/OpenCryptoBot/master"
+}

@@ -1,0 +1,6 @@
+CREATE TABLE commands (
+	user_id INTEGER NOT NULL,
+	command TEXT NOT NULL,
+	date_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY(user_id) REFERENCES users(user_id)
+)
