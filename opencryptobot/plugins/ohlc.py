@@ -10,7 +10,6 @@ import opencryptobot.constants as con
 from io import BytesIO
 from telegram import ParseMode
 from coinmarketcap import Market
-from telegram.ext import CommandHandler
 from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.cryptocompare import CryptoCompare
 
@@ -20,12 +19,12 @@ class Ohlc(OpenCryptoPlugin):
 
     cmc_coin_id = None
 
-    def get_handler(self):
-        return CommandHandler("ohlc", self._ohlc, pass_args=True)
+    def get_cmd(self):
+        return "ohlc"
 
-    @OpenCryptoPlugin.add_user
     @OpenCryptoPlugin.send_typing
-    def _ohlc(self, bot, update, args):
+    @OpenCryptoPlugin.save_data
+    def get_action(self, bot, update, args):
         time_frame = 120  # Hours
         from_sy = "BTC"
 
@@ -110,6 +109,12 @@ class Ohlc(OpenCryptoPlugin):
         update.message.reply_photo(
             photo=io.BufferedReader(BytesIO(pio.to_image(fig, format='webp'))),
             parse_mode=ParseMode.MARKDOWN)
+
+    def get_usage(self):
+        pass
+
+    def get_description(self):
+        pass
 
     def _get_cmc_coin_id(self, ticker):
         for listing in Market().listings()["data"]:

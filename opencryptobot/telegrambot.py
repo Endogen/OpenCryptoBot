@@ -4,8 +4,8 @@ import importlib
 import opencryptobot.emoji as emo
 
 from telegram import ParseMode
-from telegram.ext import Updater
 from telegram.error import InvalidToken
+from telegram.ext import Updater, CommandHandler
 from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.config import ConfigManager as Cfg
 
@@ -74,7 +74,13 @@ class TelegramBot:
                     instance = plugin_class(self.updater, self.db)
 
                     if isinstance(instance, OpenCryptoPlugin):
-                        self.dispatcher.add_handler(instance.get_handler())
+                        cmd = instance.get_cmd()
+                        act = instance.get_action
+
+                        self.dispatcher.add_handler(
+                            CommandHandler(cmd, act, pass_args=True)
+                        )
+
                         logging.debug(f"Plugin '{module_name}' successfully added")
 
                 except Exception as ex:

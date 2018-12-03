@@ -2,7 +2,6 @@ import threading
 
 from coinmarketcap import Market
 from telegram import ParseMode
-from telegram.ext import CommandHandler
 from opencryptobot.plugin import OpenCryptoPlugin
 
 
@@ -12,15 +11,21 @@ class Stats(OpenCryptoPlugin):
     data_btc = ""
     data_eur = ""
 
-    def get_handler(self):
-        return CommandHandler("stats", self._stats)
+    def get_cmd(self):
+        return "stats"
 
-    @OpenCryptoPlugin.add_user
     @OpenCryptoPlugin.send_typing
-    def _stats(self, bot, update, data):
-        coin = data.pair.split("-")[1]
-        listings = Market().listings()
+    @OpenCryptoPlugin.save_data
+    def get_action(self, bot, update, args):
+        if not args:
+            update.message.reply_text(
+                text=f"Usage:\n{self.get_usage()}",
+                parse_mode=ParseMode.MARKDOWN)
+            return
 
+        coin = args[0]
+
+        listings = Market().listings()
         for listing in listings["data"]:
             if coin.upper() == listing["symbol"].upper():
                 self.coin_id = listing["id"]
@@ -69,10 +74,16 @@ class Stats(OpenCryptoPlugin):
                  f"Market Cap: {m_cap} USD\n"
                  f"Circ. Supp: {sup_c} {symbol}\n"
                  f"Total Supp: {sup_t} {symbol}`\n\n"
-                 f"[Stats on CoinMarketCap](https://coinmarketcap.com/currencies/{slug})\n"
-                 f"[Stats on Coinlib](https://coinlib.io/coin/{coin}/{coin})",
+                 f"Stats on [CoinMarketCap](https://coinmarketcap.com/currencies/{slug}) & "
+                 f"[Coinlib](https://coinlib.io/coin/{coin}/{coin})",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True)
+
+    def get_usage(self):
+        return "`/stats [COIN]`"
+
+    def get_description(self):
+        return "Get price, market cap and volume info for a coin"
 
     def market_btc(self):
         self.data_btc = Market().ticker(self.coin_id, convert="BTC")

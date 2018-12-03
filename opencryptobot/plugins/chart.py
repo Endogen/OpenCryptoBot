@@ -9,7 +9,6 @@ from io import BytesIO
 from pandas import DataFrame
 from telegram import ParseMode
 from coinmarketcap import Market
-from telegram.ext import CommandHandler
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin
 
@@ -20,20 +19,12 @@ class Chart(OpenCryptoPlugin):
     cg_coin_id = None
     cmc_coin_id = None
 
-    def get_handler(self):
-        return CommandHandler("c", self._chart, pass_args=True)
+    def get_cmd(self):
+        return "c"
 
-    def get_usage(self):
-        return "`/c [TICKER] ([TIMEFRAME-IN-DAYS])`"
-
-    # TODO: Implement and add to every plugin
-    def get_description(self):
-        pass
-
-    @OpenCryptoPlugin.add_user
     @OpenCryptoPlugin.send_typing
-    @OpenCryptoPlugin.save_command  # TODO: Add to every plugin
-    def _chart(self, bot, update, args):
+    @OpenCryptoPlugin.save_data
+    def get_action(self, bot, update, args):
         time_frame = 3  # Days
         vs_ticker = "BTC"
 
@@ -133,6 +124,12 @@ class Chart(OpenCryptoPlugin):
         update.message.reply_photo(
             photo=io.BufferedReader(BytesIO(pio.to_image(fig, format="webp"))),
             parse_mode=ParseMode.MARKDOWN)
+
+    def get_usage(self):
+        return "`/c [COIN] ([TIMEFRAME-IN-DAYS])`"
+
+    def get_description(self):
+        return "Show a graph for the given coin with price and volume"
 
     def _get_cg_coin_id(self, ticker):
         for coin in CoinGecko().get_coins_list():

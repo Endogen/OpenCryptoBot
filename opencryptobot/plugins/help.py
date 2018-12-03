@@ -1,19 +1,20 @@
-import opencryptobot.emoji as emo
-
 from telegram import ParseMode
-from telegram.ext import CommandHandler
 from opencryptobot.plugin import OpenCryptoPlugin
 
 
-# TODO: Has to be identical to 'start'
-# TODO: Automatically for every plugin, derive usage, desc and cmd
-class Start(OpenCryptoPlugin):
+class Help(OpenCryptoPlugin):
 
-    def get_handler(self):
-        return CommandHandler("start", self._start)
+    def get_cmd(self):
+        return "help"
 
-    @OpenCryptoPlugin.add_user
-    def _start(self, bot, update):
+    @OpenCryptoPlugin.send_typing
+    def get_action(self, bot, update, args):
         update.message.reply_text(
-            text=f"{emo.STARS} *Welcome to OpenCryptoBot!* {emo.STARS}",
+            text="Some help here",
             parse_mode=ParseMode.MARKDOWN)
+
+    def get_usage(self):
+        return None
+
+    def get_description(self):
+        return None

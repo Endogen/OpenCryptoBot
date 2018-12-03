@@ -15,7 +15,7 @@ class OpenCryptoBot:
         # Parse command line arguments
         self.args = self._parse_args()
 
-        # Load conf file
+        # Load config file
         Cfg(self.args.config)
 
         # Set up logging
@@ -23,11 +23,9 @@ class OpenCryptoBot:
         log_level = self.args.loglevel
         self._init_logger(log_path, log_level)
 
-        # Prepare database
+        # Create database
         sql_dir = con.SQL_DIR
         db_path = self.args.database
-
-        # Create database
         self.db = Database(db_path, sql_dir)
 
         # Create bot

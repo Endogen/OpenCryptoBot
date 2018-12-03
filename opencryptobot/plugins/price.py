@@ -1,18 +1,24 @@
 import opencryptobot.emoji as emo
 
 from telegram import ParseMode
-from telegram.ext import CommandHandler
 from opencryptobot.plugin import OpenCryptoPlugin
 
 
 # TODO: Implement
 class Price(OpenCryptoPlugin):
 
-    def get_handler(self):
-        return CommandHandler("p", self._shutdown)
+    def get_cmd(self):
+        return "p"
 
-    @OpenCryptoPlugin.add_user
-    def _shutdown(self, bot, update):
+    @OpenCryptoPlugin.send_typing
+    @OpenCryptoPlugin.save_data
+    def get_action(self, bot, update, args):
         update.message.reply_text(
             text=f"{emo.STARS} *NOT IMPLEMENTED YET* {emo.STARS}",
             parse_mode=ParseMode.MARKDOWN)
+
+    def get_usage(self):
+        pass
+
+    def get_description(self):
+        pass

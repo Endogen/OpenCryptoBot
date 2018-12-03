@@ -1,17 +1,21 @@
 import opencryptobot.emoji as emo
 
 from telegram import ParseMode
-from telegram.ext import CommandHandler
 from opencryptobot.plugin import OpenCryptoPlugin
 
 
 class Start(OpenCryptoPlugin):
 
-    def get_handler(self):
-        return CommandHandler("start", self._start)
+    def get_cmd(self):
+        return "start"
 
-    @OpenCryptoPlugin.add_user
-    def _start(self, bot, update):
+    def get_action(self, bot, update, args):
         update.message.reply_text(
             text=f"{emo.STARS} *Welcome to OpenCryptoBot!* {emo.STARS}",
             parse_mode=ParseMode.MARKDOWN)
+
+    def get_usage(self):
+        return None
+
+    def get_description(self):
+        return None
