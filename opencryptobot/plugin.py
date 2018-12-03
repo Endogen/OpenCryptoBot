@@ -38,11 +38,8 @@ class OpenCryptoPlugin:
         def _save_data(self, bot, update, **kwargs):
             if Cfg.get("use_db"):
                 usr = update.message.from_user
-
-                if not self.db.user_exists(usr.id):
-                    self.db.add_user(usr)
-
-                self.db.save_cmd(usr.id, update.message.text)
+                cmd = update.message.text
+                self.db.save(usr, cmd)
 
             return func(self, bot, update, **kwargs)
         return _save_data

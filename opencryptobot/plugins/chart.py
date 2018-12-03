@@ -26,7 +26,7 @@ class Chart(OpenCryptoPlugin):
     @OpenCryptoPlugin.save_data
     def get_action(self, bot, update, args):
         time_frame = 3  # Days
-        vs_ticker = "BTC"
+        vs_coin = "BTC"
 
         if not args:
             update.message.reply_text(
@@ -36,23 +36,23 @@ class Chart(OpenCryptoPlugin):
 
         if "-" in args[0]:
             pair = args[0].split("-", 1)
-            vs_ticker = pair[0]
-            ticker = pair[1]
+            vs_coin = pair[0]
+            coin = pair[1]
         else:
-            ticker = args[0]
+            coin = args[0]
 
         if len(args) > 1 and args[1].isnumeric():
             time_frame = args[1]
 
-        cg_thread = threading.Thread(target=self._get_cg_coin_id, args=[ticker])
-        cmc_thread = threading.Thread(target=self._get_cmc_coin_id, args=[ticker])
+        cg_thread = threading.Thread(target=self._get_cg_coin_id, args=[coin])
+        cmc_thread = threading.Thread(target=self._get_cmc_coin_id, args=[coin])
 
         cg_thread.start()
         cmc_thread.start()
 
         cg_thread.join()
 
-        market = CoinGecko().get_coin_market_chart_by_id(self.cg_coin_id, vs_ticker, time_frame)
+        market = CoinGecko().get_coin_market_chart_by_id(self.cg_coin_id, vs_coin, time_frame)
 
         # Volume
         df_volume = DataFrame(market["total_volumes"], columns=["DateTime", "Volume"])
@@ -100,7 +100,7 @@ class Chart(OpenCryptoPlugin):
             ),
             yaxis=dict(domain=[0, 0.20], ticksuffix="  "),
             yaxis2=dict(domain=[0.25, 1], ticksuffix="  "),
-            title=f"{vs_ticker.upper()} - {ticker.upper()}",
+            title=f"{vs_coin.upper()} - {coin.upper()}",
             legend=dict(orientation="h", yanchor="top", xanchor="center", y=1.05, x=0.45),
             shapes=[{
                 "type": "line",
@@ -126,19 +126,19 @@ class Chart(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return "`/c [COIN] ([TIMEFRAME-IN-DAYS])`"
+        return "`/c [COIN] | [PAIR] ([TIMEFRAME-IN-DAYS])`"
 
     def get_description(self):
         return "Show a graph for the given coin with price and volume"
 
-    def _get_cg_coin_id(self, ticker):
-        for coin in CoinGecko().get_coins_list():
-            if coin["symbol"].lower() == ticker.lower():
-                self.cg_coin_id = coin["id"]
+    def _get_cg_coin_id(self, coin):
+        for entry in CoinGecko().get_coins_list():
+            if entry["symbol"].lower() == coin.lower():
+                self.cg_coin_id = entry["id"]
                 break
 
-    def _get_cmc_coin_id(self, ticker):
+    def _get_cmc_coin_id(self, coin):
         for listing in Market().listings()["data"]:
-            if ticker.upper() == listing["symbol"].upper():
+            if coin.upper() == listing["symbol"].upper():
                 self.cmc_coin_id = listing["id"]
                 break

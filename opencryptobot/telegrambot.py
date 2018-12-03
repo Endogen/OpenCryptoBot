@@ -81,7 +81,7 @@ class TelegramBot:
                             CommandHandler(cmd, act, pass_args=True)
                         )
 
-                        logging.debug(f"Plugin '{module_name}' successfully added")
+                        logging.info(f"Plugin '{module_name}' added")
 
                 except Exception as ex:
                     msg = f"File '{file}' can't be loaded as a plugin: {ex}"

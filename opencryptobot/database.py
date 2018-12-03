@@ -27,44 +27,33 @@ class Database:
 
             con.close()
 
-    # Check if user is already present in database
-    def user_exists(self, user_id):
+    def save(self, usr_data, cmd):
         con = sqlite3.connect(self._db_path)
         cur = con.cursor()
 
+        # Check if user already exists
         sql = "SELECT EXISTS(SELECT 1 FROM users WHERE user_id = ?)"
-        cur.execute(sql, [user_id])
+        cur.execute(sql, [usr_data.id])
         con.commit()
 
-        r = cur.fetchone()
-        con.close()
+        # Add user if he doesn't exist
+        if cur.fetchone()[0] != 1:
+            sql = "INSERT INTO users " \
+                  "(user_id, first_name, last_name, username, language) " \
+                  "VALUES (?, ?, ?, ?, ?)"
 
-        return True if r[0] == 1 else False
+            cur.execute(sql, [usr_data.id,
+                              usr_data.first_name,
+                              usr_data.last_name,
+                              usr_data.username,
+                              usr_data.language_code])
+            con.commit()
 
-    def add_user(self, user_data):
-        con = sqlite3.connect(self._db_path)
-        cur = con.cursor()
-
-        sql = "INSERT INTO users " \
-              "(user_id, first_name, last_name, username, language) " \
-              "VALUES (?, ?, ?, ?, ?)"
-
-        cur.execute(sql, [user_data.id,
-                          user_data.first_name,
-                          user_data.last_name,
-                          user_data.username,
-                          user_data.language_code])
-        con.commit()
-        con.close()
-
-    def save_cmd(self, usr_id, cmd):
-        con = sqlite3.connect(self._db_path)
-        cur = con.cursor()
-
+        # Save issued command
         sql = "INSERT INTO commands " \
               "(user_id, command) " \
               "VALUES (?, ?)"
 
-        cur.execute(sql, [usr_id, cmd])
+        cur.execute(sql, [usr_data.id, cmd])
         con.commit()
         con.close()

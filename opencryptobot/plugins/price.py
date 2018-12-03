@@ -18,7 +18,7 @@ class Price(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        pass
+        return "`/p [COIN] | [PAIR]`"
 
     def get_description(self):
-        pass
+        return "Show the price of a coin"

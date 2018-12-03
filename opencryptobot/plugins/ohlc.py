@@ -111,10 +111,10 @@ class Ohlc(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        pass
+        return "`/ohlc [COIN] | [PAIR] ([TIMEFRAME-IN-HOURS])`"
 
     def get_description(self):
-        pass
+        return "Show a OHLC graph for the given coin"
 
     def _get_cmc_coin_id(self, ticker):
         for listing in Market().listings()["data"]:

@@ -83,7 +83,7 @@ class Stats(OpenCryptoPlugin):
         return "`/stats [COIN]`"
 
     def get_description(self):
-        return "Get price, market cap and volume info for a coin"
+        return "Get price, market cap and volume for a coin"
 
     def market_btc(self):
         self.data_btc = Market().ticker(self.coin_id, convert="BTC")
