@@ -14,7 +14,6 @@ from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.cryptocompare import CryptoCompare
 
 
-# TODO: Default from_cur should be fiat
 class Ohlc(OpenCryptoPlugin):
 
     cmc_coin_id = None
@@ -26,6 +25,7 @@ class Ohlc(OpenCryptoPlugin):
     @OpenCryptoPlugin.save_data
     def get_action(self, bot, update, args):
         time_frame = 120  # Hours
+        resolution = None
         from_sy = "BTC"
 
         if not args:
@@ -35,6 +35,7 @@ class Ohlc(OpenCryptoPlugin):
             return
 
         # TODO: Doesn't work. Why?
+        # Coin or pair
         if "-" in args[0]:
             pair = args[0].split("-", 1)
             from_sy = pair[0].upper()
@@ -42,13 +43,31 @@ class Ohlc(OpenCryptoPlugin):
         else:
             to_sy = args[0].upper()
 
-        if len(args) > 1 and args[1].isnumeric():
-            time_frame = int(args[1])
-
         cmc_thread = threading.Thread(target=self._get_cmc_coin_id, args=[to_sy])
         cmc_thread.start()
 
-        ohlcv = CryptoCompare().historical_ohlcv_hourly(to_sy, from_sy, time_frame)["Data"]
+        # Time frame
+        if len(args) > 1:
+            if args[1].isnumeric():
+                time_frame = args[1]
+            elif args[1].lower().endswith("m") and args[1][:-1].isnumeric():
+                resolution = "MINUTE"
+                time_frame = args[1][:-1]
+            elif args[1].lower().endswith("h") and args[1][:-1].isnumeric():
+                resolution = "HOUR"
+                time_frame = args[1][:-1]
+            elif args[1].lower().endswith("d") and args[1][:-1].isnumeric():
+                resolution = "DAY"
+                time_frame = args[1][:-1]
+
+        if resolution == "MINUTE":
+            ohlcv = CryptoCompare().historical_ohlcv_minute(to_sy, from_sy, time_frame)["Data"]
+        elif resolution == "HOUR":
+            ohlcv = CryptoCompare().historical_ohlcv_hourly(to_sy, from_sy, time_frame)["Data"]
+        elif resolution == "DAY":
+            ohlcv = CryptoCompare().historical_ohlcv_daily(to_sy, from_sy, time_frame)["Data"]
+        else:
+            ohlcv = CryptoCompare().historical_ohlcv_hourly(to_sy, from_sy, time_frame)["Data"]
 
         if not ohlcv:
             update.message.reply_text(

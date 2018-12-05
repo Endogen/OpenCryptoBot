@@ -10,7 +10,17 @@ class CryptoCompare(object):
         if base_url:
             self._base_url = base_url
 
+    def historical_ohlcv_daily(self, fsym, tsym, limit):
+        url_data = f"histoday?fsym={fsym}&tsym={tsym}&limit={limit}"
+        self.response = requests.get(f"{self._base_url}{url_data}").json()
+        return self.response
+
     def historical_ohlcv_hourly(self, fsym, tsym, limit):
         url_data = f"histohour?fsym={fsym}&tsym={tsym}&limit={limit}"
+        self.response = requests.get(f"{self._base_url}{url_data}").json()
+        return self.response
+
+    def historical_ohlcv_minute(self, fsym, tsym, limit):
+        url_data = f"histominute?fsym={fsym}&tsym={tsym}&limit={limit}"
         self.response = requests.get(f"{self._base_url}{url_data}").json()
         return self.response
