@@ -20,7 +20,7 @@ class Ohlc(OpenCryptoPlugin):
     cmc_coin_id = None
 
     def get_cmd(self):
-        return "ohlc"
+        return "cs"
 
     @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
@@ -111,10 +111,10 @@ class Ohlc(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return "`/ohlc [COIN] | [PAIR] ([TIMEFRAME-IN-HOURS])`"
+        return f"`/{self.get_cmd()} <coin> | <base coin>-<coin> (<# of hours>)`"
 
     def get_description(self):
-        return "Show a OHLC graph for the given coin"
+        return "Candlestick chart"
 
     def _get_cmc_coin_id(self, ticker):
         for listing in Market().listings()["data"]:

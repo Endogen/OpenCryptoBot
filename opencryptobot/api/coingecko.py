@@ -38,6 +38,23 @@ class CoinGecko(object):
 
         return self._request(api_url)
 
+    # ---------- SIMPLE ----------
+    def get_simple_price(self, ids, vs_currencies, **kwargs):
+        """Get the current price of any cryptocurrencies in any other supported currencies that you need"""
+
+        api_url = f'{self._base_url}simple/price?ids={ids}&vs_currencies={vs_currencies}'
+        api_url = self._api_url_params(api_url, kwargs)
+
+        return self._request(api_url)
+
+    def get_simple_supported_vs_currencies(self):
+        """Get list of supported_vs_currencies"""
+
+        api_url = f'{self._base_url}simple/supported_vs_currencies'
+        api_url = self._api_url_params(api_url)
+
+        return self._request(api_url)
+
     # ---------- COINS ----------
     def get_coins(self, **kwargs):
         """List all coins with data (name, price, market, developer, community, etc)"""

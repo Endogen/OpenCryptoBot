@@ -12,7 +12,7 @@ class Stats(OpenCryptoPlugin):
     data_eur = ""
 
     def get_cmd(self):
-        return "stats"
+        return "s"
 
     @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
@@ -80,10 +80,10 @@ class Stats(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return "`/stats [COIN]`"
+        return f"`/{self.get_cmd()} <coin>`"
 
     def get_description(self):
-        return "Get price, market cap and volume for a coin"
+        return "Price, market cap and volume for a coin"
 
     def market_btc(self):
         self.data_btc = Market().ticker(self.coin_id, convert="BTC")

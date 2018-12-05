@@ -26,7 +26,7 @@ class Chart(OpenCryptoPlugin):
     @OpenCryptoPlugin.save_data
     def get_action(self, bot, update, args):
         time_frame = 3  # Days
-        vs_coin = "BTC"
+        base_coin = "BTC"
 
         if not args:
             update.message.reply_text(
@@ -36,7 +36,7 @@ class Chart(OpenCryptoPlugin):
 
         if "-" in args[0]:
             pair = args[0].split("-", 1)
-            vs_coin = pair[0]
+            base_coin = pair[0]
             coin = pair[1]
         else:
             coin = args[0]
@@ -52,7 +52,7 @@ class Chart(OpenCryptoPlugin):
 
         cg_thread.join()
 
-        market = CoinGecko().get_coin_market_chart_by_id(self.cg_coin_id, vs_coin, time_frame)
+        market = CoinGecko().get_coin_market_chart_by_id(self.cg_coin_id, base_coin, time_frame)
 
         # Volume
         df_volume = DataFrame(market["total_volumes"], columns=["DateTime", "Volume"])
@@ -100,7 +100,7 @@ class Chart(OpenCryptoPlugin):
             ),
             yaxis=dict(domain=[0, 0.20], ticksuffix="  "),
             yaxis2=dict(domain=[0.25, 1], ticksuffix="  "),
-            title=f"{vs_coin.upper()} - {coin.upper()}",
+            title=f"{base_coin.upper()} - {coin.upper()}",
             legend=dict(orientation="h", yanchor="top", xanchor="center", y=1.05, x=0.45),
             shapes=[{
                 "type": "line",
@@ -126,10 +126,10 @@ class Chart(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return "`/c [COIN] | [PAIR] ([TIMEFRAME-IN-DAYS])`"
+        return f"`/{self.get_cmd()} <coin> | <base coin>-<coin> (<# of days>)`"
 
     def get_description(self):
-        return "Show a graph for the given coin with price and volume"
+        return "Chart with price and volume"
 
     def _get_cg_coin_id(self, coin):
         for entry in CoinGecko().get_coins_list():

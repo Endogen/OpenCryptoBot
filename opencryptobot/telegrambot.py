@@ -12,6 +12,8 @@ from opencryptobot.config import ConfigManager as Cfg
 
 class TelegramBot:
 
+    plugins = list()
+
     def __init__(self, bot_token, bot_db):
         self.db = bot_db
         self.token = bot_token
@@ -30,8 +32,8 @@ class TelegramBot:
         except InvalidToken:
             exit("ERROR: Bot token not valid")
 
-        self.dispatcher = self.updater.dispatcher
         self.job_queue = self.updater.job_queue
+        self.dispatcher = self.updater.dispatcher
 
         self.load_plugins()
 
@@ -81,6 +83,7 @@ class TelegramBot:
                             CommandHandler(cmd, act, pass_args=True)
                         )
 
+                        TelegramBot.plugins.append(instance)
                         logging.info(f"Plugin '{module_name}' added")
 
                 except Exception as ex:
