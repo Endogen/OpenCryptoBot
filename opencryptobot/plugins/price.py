@@ -52,7 +52,7 @@ class Price(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin> | <base coin>-<coin>`"
+        return f"`/{self.get_cmd()} <coin> or <base coin>-<coin>`"
 
     def get_description(self):
         return "Price for coin"

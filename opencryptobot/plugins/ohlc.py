@@ -111,7 +111,7 @@ class Ohlc(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin> | <base coin>-<coin> (<# of hours>)`"
+        return f"`/{self.get_cmd()} <coin> or <base coin>-<coin> (<# of hours>)`"
 
     def get_description(self):
         return "Candlestick chart"
