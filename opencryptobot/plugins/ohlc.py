@@ -52,7 +52,7 @@ class Ohlc(OpenCryptoPlugin):
 
         if not ohlcv:
             update.message.reply_text(
-                text=f"No OHLC data available for {to_sy} {emo.OH_NO}",
+                text=f"{emo.ERROR} Can't retrieve data for {to_sy}",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
@@ -114,7 +114,7 @@ class Ohlc(OpenCryptoPlugin):
         return f"`/{self.get_cmd()} <coin> or <base coin>-<coin> (<# of hours>)`"
 
     def get_description(self):
-        return "Candlestick chart"
+        return "Candlestick chart with price"
 
     def _get_cmc_coin_id(self, ticker):
         for listing in Market().listings()["data"]:

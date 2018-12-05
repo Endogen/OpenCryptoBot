@@ -3,6 +3,7 @@ import threading
 import pandas as pd
 import plotly.io as pio
 import plotly.graph_objs as go
+import opencryptobot.emoji as emo
 import opencryptobot.constants as con
 
 from io import BytesIO
@@ -13,7 +14,6 @@ from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin
 
 
-# TODO: Default from_cur should be fiat
 class Chart(OpenCryptoPlugin):
 
     cg_coin_id = None
@@ -52,6 +52,12 @@ class Chart(OpenCryptoPlugin):
 
         cg_thread.join()
 
+        if not self.cg_coin_id:
+            update.message.reply_text(
+                text=f"{emo.ERROR} Can't retrieve data for *{coin.upper()}*",
+                parse_mode=ParseMode.MARKDOWN)
+            return
+
         market = CoinGecko().get_coin_market_chart_by_id(self.cg_coin_id, base_coin, time_frame)
 
         # Volume
@@ -78,6 +84,12 @@ class Chart(OpenCryptoPlugin):
         )
 
         cmc_thread.join()
+
+        if not self.cmc_coin_id:
+            update.message.reply_text(
+                text=f"{emo.ERROR} Can't retrieve data for *{coin.upper()}*",
+                parse_mode=ParseMode.MARKDOWN)
+            return
 
         layout = go.Layout(
             images=[dict(
@@ -132,12 +144,16 @@ class Chart(OpenCryptoPlugin):
         return "Chart with price and volume"
 
     def _get_cg_coin_id(self, coin):
-        for entry in CoinGecko().get_coins_list():
-            if entry["symbol"].lower() == coin.lower():
-                self.cg_coin_id = entry["id"]
-                break
+        try:
+            for entry in CoinGecko().get_coins_list():
+                if entry["symbol"].lower() == coin.lower():
+                    self.cg_coin_id = entry["id"]
+                    break
+        except Exception:
+            self.cg_coin_id = None
 
     def _get_cmc_coin_id(self, coin):
+        self.cmc_coin_id = None
         for listing in Market().listings()["data"]:
             if coin.upper() == listing["symbol"].upper():
                 self.cmc_coin_id = listing["id"]

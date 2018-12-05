@@ -45,7 +45,7 @@ class Price(OpenCryptoPlugin):
                 msg += f"`{key.upper()}: {value}`\n"
 
         if not msg:
-            msg = f"{emo.ERROR} Trading pair *{args[0].upper()}* not supported"
+            msg = f"{emo.ERROR} Can't retrieve data for *{args[0].upper()}*"
 
         update.message.reply_text(
             text=msg,

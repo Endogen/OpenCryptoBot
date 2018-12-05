@@ -1,4 +1,5 @@
 import threading
+import opencryptobot.emoji as emo
 
 from coinmarketcap import Market
 from telegram import ParseMode
@@ -7,9 +8,9 @@ from opencryptobot.plugin import OpenCryptoPlugin
 
 class Stats(OpenCryptoPlugin):
 
-    coin_id = ""
-    data_btc = ""
-    data_eur = ""
+    coin_id = None
+    data_btc = None
+    data_eur = None
 
     def get_cmd(self):
         return "s"
@@ -25,11 +26,18 @@ class Stats(OpenCryptoPlugin):
 
         coin = args[0]
 
+        self.coin_id = None
         listings = Market().listings()
         for listing in listings["data"]:
             if coin.upper() == listing["symbol"].upper():
                 self.coin_id = listing["id"]
                 break
+
+        if not self.coin_id:
+            update.message.reply_text(
+                text=f"{emo.ERROR} Can't retrieve data for *{coin.upper()}*",
+                parse_mode=ParseMode.MARKDOWN)
+            return
 
         thread_usd = threading.Thread(target=self.market_btc())
         thread_eur = threading.Thread(target=self.market_eur())
@@ -83,7 +91,7 @@ class Stats(OpenCryptoPlugin):
         return f"`/{self.get_cmd()} <coin>`"
 
     def get_description(self):
-        return "Price, market cap and volume for a coin"
+        return "Price, market cap and volume"
 
     def market_btc(self):
         self.data_btc = Market().ticker(self.coin_id, convert="BTC")
