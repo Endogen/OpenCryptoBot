@@ -1,4 +1,5 @@
 from telegram import ParseMode
+import opencryptobot.emoji as emo
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin
 
@@ -42,6 +43,9 @@ class Price(OpenCryptoPlugin):
             for key, value in prices.items():
                 value = self.trm_zro(value)
                 msg += f"`{key.upper()}: {value}`\n"
+
+        if not msg:
+            msg = f"{emo.ERROR} Trading pair *{args[0].upper()}* not supported"
 
         update.message.reply_text(
             text=msg,
