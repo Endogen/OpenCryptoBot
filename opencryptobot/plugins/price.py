@@ -29,16 +29,18 @@ class Price(OpenCryptoPlugin):
 
         cg = CoinGecko()
 
-        # Get coin ID
+        # Get coin ID and name
         coin_id = str()
+        coin_name = str()
         for entry in cg.get_coins_list():
             if entry["symbol"].lower() == coin.lower():
+                coin_name = entry["name"]
                 coin_id = entry["id"]
                 break
 
         result = cg.get_simple_price(coin_id, vs_cur)
 
-        msg = str()
+        msg = str(f"`{coin_name}`\n")
         for _, prices in result.items():
             for key, value in prices.items():
                 value = "{0:.8f}".format(value)
