@@ -44,26 +44,6 @@ class OpenCryptoPlugin:
             return func(self, bot, update, **kwargs)
         return _save_data
 
-    @staticmethod
-    def trm_zro(value_to_trim, decimals=8):
-        if isinstance(value_to_trim, float):
-            return (("%." + str(decimals) + "f") % value_to_trim).rstrip("0").rstrip(".")
-
-        elif isinstance(value_to_trim, str):
-            str_list = value_to_trim.split(" ")
-
-            for i in range(len(str_list)):
-                old_s = str_list[i]
-
-                if old_s.replace(".", "").replace(",", "").isdigit():
-                    new_s = str((("%." + str(decimals) + "f") % float(old_s)).rstrip("0").rstrip("."))
-                    str_list[i] = new_s
-
-            return " ".join(str_list)
-
-        else:
-            return value_to_trim
-
     def get_cmd(self):
         method = inspect.currentframe().f_code.co_name
         raise NotImplementedError(f"Interface method '{method}' not implemented")

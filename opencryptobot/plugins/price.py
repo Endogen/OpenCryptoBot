@@ -41,7 +41,7 @@ class Price(OpenCryptoPlugin):
         msg = str()
         for _, prices in result.items():
             for key, value in prices.items():
-                value = self.trm_zro(value)
+                value = "{0:.8f}".format(value)
                 msg += f"`{key.upper()}: {value}`\n"
 
         if not msg:
