@@ -100,6 +100,8 @@ class Chart(OpenCryptoPlugin):
                 sizex=0.2, sizey=0.2,
                 xanchor="right", yanchor="bottom"
             )],
+            paper_bgcolor='rgb(233,233,233)',
+            plot_bgcolor='rgb(233,233,233)',
             autosize=False,
             width=800,
             height=600,

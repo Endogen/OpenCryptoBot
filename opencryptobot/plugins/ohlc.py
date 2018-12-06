@@ -102,6 +102,8 @@ class Ohlc(OpenCryptoPlugin):
             }])
 
         fig['layout'].update(
+            paper_bgcolor='rgb(233,233,233)',
+            plot_bgcolor='rgb(233,233,233)',
             autosize=False,
             width=800,
             height=600,
