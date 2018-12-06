@@ -136,7 +136,7 @@ class Ohlc(OpenCryptoPlugin):
                f"`"
 
     def get_description(self):
-        return "Candlestick chart with price"
+        return "Candlestick chart"
 
     def _get_cmc_coin_id(self, ticker):
         for listing in Market().listings()["data"]:

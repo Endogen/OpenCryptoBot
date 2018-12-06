@@ -60,4 +60,4 @@ class Price(OpenCryptoPlugin):
                f"`"
 
     def get_description(self):
-        return "Price of coin"
+        return "Coin price"
