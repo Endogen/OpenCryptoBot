@@ -1,5 +1,6 @@
 # Partial URL for coin logo
-LOGO_URL_PARTIAL = "https://s2.coinmarketcap.com/static/img/coins/128x128/"
+CMC_LOGO_URL_PARTIAL = "https://s2.coinmarketcap.com/static/img/coins/128x128/"
+CG_LOGO_URL_PARTIAL = "https://www.cryptocompare.com"
 
 CFG_DIR = "conf"
 CFG_FILE = "config.json"

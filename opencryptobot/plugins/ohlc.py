@@ -119,7 +119,7 @@ class Ohlc(OpenCryptoPlugin):
 
         fig['layout'].update(
             images=[dict(
-                source=f"{con.LOGO_URL_PARTIAL}{self.cmc_coin_id}.png",
+                source=f"{con.CMC_LOGO_URL_PARTIAL}{self.cmc_coin_id}.png",
                 opacity=0.8,
                 xref="paper", yref="paper",
                 x=1.05, y=1,

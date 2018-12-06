@@ -24,3 +24,8 @@ class CryptoCompare(object):
         url_data = f"histominute?fsym={fsym}&tsym={tsym}&limit={limit}"
         self.response = requests.get(f"{self._base_url}{url_data}").json()
         return self.response
+
+    def coin_general_info(self, fsyms, tsym):
+        url_data = f"coin/generalinfo?fsyms={fsyms}&tsym={tsym}"
+        self.response = requests.get(f"{self._base_url}{url_data}").json()
+        return self.response
