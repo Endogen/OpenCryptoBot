@@ -139,7 +139,7 @@ class Chart(OpenCryptoPlugin):
 
     def get_usage(self):
         return f"`" \
-               f"/{self.get_cmd()} <coin>" \
+               f"/{self.get_cmd()} <coin> (<# of days>)\n" \
                f"/{self.get_cmd()} <vs coin>-<coin> (<# of days>)" \
                f"`"
 
