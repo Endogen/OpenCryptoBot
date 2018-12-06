@@ -1,0 +1,1 @@
+# CoinGecko section 'community_data'
