@@ -26,7 +26,7 @@ class Ohlc(OpenCryptoPlugin):
     def get_action(self, bot, update, args):
         time_frame = 120  # Hours
         resolution = None
-        base_coin = "BTC"
+        from_sy = "BTC"
 
         if not args:
             update.message.reply_text(
@@ -38,21 +38,12 @@ class Ohlc(OpenCryptoPlugin):
         # Coin or pair
         if "-" in args[0]:
             pair = args[0].split("-", 1)
-            base_coin = pair[0].upper()
-            coin = pair[1].upper()
+            from_sy = pair[0].upper()
+            to_sy = pair[1].upper()
         else:
-            coin = args[0].upper()
+            to_sy = args[0].upper()
 
-        if coin == "BTC" and base_coin == "BTC":
-            base_coin = "USD"
-
-        if coin == base_coin:
-            update.message.reply_text(
-                text=f"{emo.ERROR} Can't compare *{coin}* to itself",
-                parse_mode=ParseMode.MARKDOWN)
-            return
-
-        cmc_thread = threading.Thread(target=self._get_cmc_coin_id, args=[coin])
+        cmc_thread = threading.Thread(target=self._get_cmc_coin_id, args=[to_sy])
         cmc_thread.start()
 
         # Time frame
@@ -70,17 +61,17 @@ class Ohlc(OpenCryptoPlugin):
                 time_frame = args[1][:-1]
 
         if resolution == "MINUTE":
-            ohlcv = CryptoCompare().historical_ohlcv_minute(coin, base_coin, time_frame)["Data"]
+            ohlcv = CryptoCompare().historical_ohlcv_minute(to_sy, from_sy, time_frame)["Data"]
         elif resolution == "HOUR":
-            ohlcv = CryptoCompare().historical_ohlcv_hourly(coin, base_coin, time_frame)["Data"]
+            ohlcv = CryptoCompare().historical_ohlcv_hourly(to_sy, from_sy, time_frame)["Data"]
         elif resolution == "DAY":
-            ohlcv = CryptoCompare().historical_ohlcv_daily(coin, base_coin, time_frame)["Data"]
+            ohlcv = CryptoCompare().historical_ohlcv_daily(to_sy, from_sy, time_frame)["Data"]
         else:
-            ohlcv = CryptoCompare().historical_ohlcv_hourly(coin, base_coin, time_frame)["Data"]
+            ohlcv = CryptoCompare().historical_ohlcv_hourly(to_sy, from_sy, time_frame)["Data"]
 
         if not ohlcv:
             update.message.reply_text(
-                text=f"{emo.ERROR} Can't retrieve data for {coin}",
+                text=f"{emo.ERROR} Can't retrieve data for *{to_sy}*",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
@@ -90,15 +81,9 @@ class Ohlc(OpenCryptoPlugin):
         c = [value["close"] for value in ohlcv]
         t = [value["time"] for value in ohlcv]
 
-        margin_l = 140
-        tickformat = "0.8f"
-        if max(h) > 1:
-            margin_l = 125
-            tickformat = "0.2f"
-
         fig = fif.create_candlestick(o, h, l, c, pd.to_datetime(t, unit='s'))
-        fig['layout']['yaxis'].update(tickformat=tickformat, ticksuffix=f" {base_coin}  ")
-        fig['layout'].update(title=coin)
+        fig['layout']['yaxis'].update(tickformat="0.8f", ticksuffix="  ")
+        fig['layout'].update(title=f"{from_sy} - {to_sy}")
 
         fig['layout'].update(
             shapes=[{
@@ -123,7 +108,7 @@ class Ohlc(OpenCryptoPlugin):
             width=800,
             height=600,
             margin=go.layout.Margin(
-                l=margin_l,
+                l=125,
                 r=50,
                 b=70,
                 t=100,
