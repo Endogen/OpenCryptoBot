@@ -71,7 +71,7 @@ class Ohlc(OpenCryptoPlugin):
 
         if not ohlcv:
             update.message.reply_text(
-                text=f"{emo.ERROR} Can't retrieve data for {to_sy}",
+                text=f"{emo.ERROR} Can't retrieve data for *{to_sy}*",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
