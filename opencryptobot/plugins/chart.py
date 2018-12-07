@@ -36,10 +36,19 @@ class Chart(OpenCryptoPlugin):
 
         if "-" in args[0]:
             pair = args[0].split("-", 1)
-            base_coin = pair[0]
-            coin = pair[1]
+            base_coin = pair[0].upper()
+            coin = pair[1].upper()
         else:
-            coin = args[0]
+            coin = args[0].upper()
+
+        if coin == "BTC" and base_coin == "BTC":
+            base_coin = "USD"
+
+        if coin == base_coin:
+            update.message.reply_text(
+                text=f"{emo.ERROR} Can't compare *{coin}* to itself",
+                parse_mode=ParseMode.MARKDOWN)
+            return
 
         if len(args) > 1 and args[1].isnumeric():
             time_frame = args[1]
@@ -54,11 +63,14 @@ class Chart(OpenCryptoPlugin):
 
         if not self.cg_coin_id:
             update.message.reply_text(
-                text=f"{emo.ERROR} Can't retrieve data for *{coin.upper()}*",
+                text=f"{emo.ERROR} Can't retrieve data for *{coin}*",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        market = CoinGecko().get_coin_market_chart_by_id(self.cg_coin_id, base_coin, time_frame)
+        market = CoinGecko().get_coin_market_chart_by_id(
+            self.cg_coin_id,
+            base_coin.lower(),
+            time_frame)
 
         # Volume
         df_volume = DataFrame(market["total_volumes"], columns=["DateTime", "Volume"])
@@ -87,9 +99,15 @@ class Chart(OpenCryptoPlugin):
 
         if not self.cmc_coin_id:
             update.message.reply_text(
-                text=f"{emo.ERROR} Can't retrieve data for *{coin.upper()}*",
+                text=f"{emo.ERROR} Can't retrieve data for *{coin}*",
                 parse_mode=ParseMode.MARKDOWN)
             return
+
+        margin_l = 140
+        tickformat = "0.8f"
+        if df_price["Price"].max() > 1:
+            margin_l = 115
+            tickformat = "0.2f"
 
         layout = go.Layout(
             images=[dict(
@@ -106,15 +124,15 @@ class Chart(OpenCryptoPlugin):
             width=800,
             height=600,
             margin=go.layout.Margin(
-                l=125,
+                l=margin_l,
                 r=50,
                 b=70,
                 t=100,
                 pad=4
             ),
             yaxis=dict(domain=[0, 0.20], ticksuffix="  "),
-            yaxis2=dict(domain=[0.25, 1], ticksuffix="  "),
-            title=f"{base_coin.upper()} - {coin.upper()}",
+            yaxis2=dict(domain=[0.25, 1], ticksuffix=f" {base_coin}  "),
+            title=coin,
             legend=dict(orientation="h", yanchor="top", xanchor="center", y=1.05, x=0.45),
             shapes=[{
                 "type": "line",
@@ -133,7 +151,7 @@ class Chart(OpenCryptoPlugin):
         )
 
         fig = go.Figure(data=[price, volume], layout=layout)
-        fig["layout"]["yaxis2"].update(tickformat="0.8f")
+        fig["layout"]["yaxis2"].update(tickformat=tickformat)
 
         update.message.reply_photo(
             photo=io.BufferedReader(BytesIO(pio.to_image(fig, format="webp"))),
@@ -160,6 +178,6 @@ class Chart(OpenCryptoPlugin):
     def _get_cmc_coin_id(self, coin):
         self.cmc_coin_id = None
         for listing in Market().listings()["data"]:
-            if coin.upper() == listing["symbol"].upper():
+            if coin == listing["symbol"].upper():
                 self.cmc_coin_id = listing["id"]
                 break
