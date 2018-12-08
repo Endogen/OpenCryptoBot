@@ -115,6 +115,9 @@ class TelegramBot:
                 description = plugin.get_description()
                 break
 
+        if not value:
+            return
+
         results = list()
         results.append(
             InlineQueryResultArticle(
