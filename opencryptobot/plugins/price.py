@@ -17,7 +17,7 @@ class Price(OpenCryptoPlugin):
         if not args:
             if update.message:
                 update.message.reply_text(
-                    text=f"Usage:\n{self.get_usage()}",
+                    text=f"Usage:\n{self.get_usage(bot.name)}",
                     parse_mode=ParseMode.MARKDOWN)
             return
 
@@ -57,10 +57,12 @@ class Price(OpenCryptoPlugin):
         else:
             return msg
 
-    def get_usage(self):
+    def get_usage(self, bot_name):
         return f"`" \
                f"/{self.get_cmd()} <coin>\n" \
-               f"/{self.get_cmd()} <vs coin>-<coin>" \
+               f"/{self.get_cmd()} <vs coin>-<coin>\n" \
+               f"{bot_name} /{self.get_cmd()} <coin>.\n" \
+               f"{bot_name} /{self.get_cmd()} <vs coin>-<coin>." \
                f"`"
 
     def get_description(self):
