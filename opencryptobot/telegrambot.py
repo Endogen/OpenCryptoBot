@@ -1,11 +1,12 @@
 import os
+import uuid
 import logging
 import importlib
 import opencryptobot.emoji as emo
 
-from telegram import ParseMode
+from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
 from telegram.error import InvalidToken
-from telegram.ext import Updater, CommandHandler
+from telegram.ext import Updater, CommandHandler, InlineQueryHandler
 from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.config import ConfigManager as Cfg
 
@@ -35,10 +36,13 @@ class TelegramBot:
         self.job_queue = self.updater.job_queue
         self.dispatcher = self.updater.dispatcher
 
-        self.load_plugins()
+        self._load_plugins()
+
+        # Handler for inline-mode
+        self.dispatcher.add_handler(InlineQueryHandler(self._inline))
 
         # Handle all Telegram related errors
-        self.dispatcher.add_error_handler(self.handle_tg_errors)
+        self.dispatcher.add_error_handler(self._handle_tg_errors)
 
     # Start the bot
     def bot_start_polling(self):
@@ -59,7 +63,7 @@ class TelegramBot:
                         f"{Cfg.get('webhook', 'port')}/"
                         f"{self.token}")
 
-    def load_plugins(self):
+    def _load_plugins(self):
         for _, _, files in os.walk(os.path.join("opencryptobot", "plugins")):
             for file in files:
                 if not file.lower().endswith(".py"):
@@ -90,8 +94,40 @@ class TelegramBot:
                     msg = f"File '{file}' can't be loaded as a plugin: {ex}"
                     logging.warning(msg)
 
+    def _inline(self, bot, update):
+        query = update.inline_query.query
+        if not query or not query.startswith("/") or not query.endswith("."):
+            return
+
+        args = query.split(" ")
+        args[len(args) - 1] = args[len(args)-1].replace(".", "")
+        cmd = args[0][1:]
+        args.pop(0)
+
+        value = str()
+        description = str()
+        for plugin in self.plugins:
+            if plugin.get_cmd() == cmd:
+                if not plugin.inline_mode():
+                    return
+
+                value = plugin.get_action(bot, update, args=args)
+                description = plugin.get_description()
+                break
+
+        results = list()
+        results.append(
+            InlineQueryResultArticle(
+                id=uuid.uuid4(),
+                title=description,
+                input_message_content=InputTextMessageContent(value, parse_mode=ParseMode.MARKDOWN)
+            )
+        )
+
+        bot.answer_inline_query(update.inline_query.id, results)
+
     # Handle all telegram and telegram.ext related errors
-    def handle_tg_errors(self, bot, update, error):
+    def _handle_tg_errors(self, bot, update, error):
         error_msg = f"{emo.ERROR} Telegram ERROR: *{error}*"
         logging.error(error)
 

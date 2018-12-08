@@ -15,9 +15,10 @@ class Price(OpenCryptoPlugin):
         vs_cur = "BTC,ETH,EUR,USD"
 
         if not args:
-            update.message.reply_text(
-                text=f"Usage:\n{self.get_usage()}",
-                parse_mode=ParseMode.MARKDOWN)
+            if update.message:
+                update.message.reply_text(
+                    text=f"Usage:\n{self.get_usage()}",
+                    parse_mode=ParseMode.MARKDOWN)
             return
 
         if "-" in args[0]:
@@ -40,7 +41,7 @@ class Price(OpenCryptoPlugin):
 
         result = cg.get_simple_price(coin_id, vs_cur)
 
-        msg = str(f"`{coin_name}`\n")
+        msg = str(f"`{coin_name} ({coin.upper()})`\n")
         for _, prices in result.items():
             for key, value in prices.items():
                 value = "{0:.8f}".format(value)
@@ -49,9 +50,12 @@ class Price(OpenCryptoPlugin):
         if not msg:
             msg = f"{emo.ERROR} Can't retrieve data for *{args[0].upper()}*"
 
-        update.message.reply_text(
-            text=msg,
-            parse_mode=ParseMode.MARKDOWN)
+        if update.message:
+            update.message.reply_text(
+                text=msg,
+                parse_mode=ParseMode.MARKDOWN)
+        else:
+            return msg
 
     def get_usage(self):
         return f"`" \
@@ -61,3 +65,6 @@ class Price(OpenCryptoPlugin):
 
     def get_description(self):
         return "Coin price"
+
+    def inline_mode(self):
+        return True

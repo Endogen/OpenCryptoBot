@@ -15,8 +15,10 @@ class OpenCryptoPlugin:
         def _send_typing_action(self, bot, update, **kwargs):
             if update.message:
                 user_id = update.message.chat_id
-            else:
+            elif update.callback_query:
                 user_id = update.callback_query.message.chat_id
+            else:
+                return func(self, bot, update, **kwargs)
 
             bot.send_chat_action(
                 chat_id=user_id,
@@ -37,9 +39,14 @@ class OpenCryptoPlugin:
     def save_data(cls, func):
         def _save_data(self, bot, update, **kwargs):
             if Cfg.get("use_db"):
-                usr = update.message.from_user
-                cmd = update.message.text
-                self.db.save(usr, cmd)
+                if update.message:
+                    usr = update.message.from_user
+                    cmd = update.message.text
+                    self.db.save(usr, cmd)
+                elif update.inline_query:
+                    usr = update.effective_user
+                    cmd = update.inline_query.query[:-1]
+                    self.db.save(usr, cmd)
 
             return func(self, bot, update, **kwargs)
         return _save_data
@@ -59,3 +66,6 @@ class OpenCryptoPlugin:
     def get_description(self):
         method = inspect.currentframe().f_code.co_name
         raise NotImplementedError(f"Interface method '{method}' not implemented")
+
+    def inline_mode(self):
+        return False
