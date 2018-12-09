@@ -14,7 +14,7 @@ from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.cryptocompare import CryptoCompare
 
 
-class Ohlc(OpenCryptoPlugin):
+class Candlestick(OpenCryptoPlugin):
 
     cmc_coin_id = None
 
