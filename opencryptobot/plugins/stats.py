@@ -69,6 +69,10 @@ class Stats(OpenCryptoPlugin):
         p_btc = "{:>13}".format(p_btc)
         p_eth = "{:>13}".format(p_eth)
 
+        # Do not display BTC or ETH price if coin is BTC or ETH
+        btc_str = "" if coin == "BTC" else f"BTC {p_btc}\n"
+        eth_str = "" if coin == "ETH" else f"ETH {p_eth}\n"
+
         v_24h = "{0:,}".format(int(float(data["market_data"]["total_volume"]["usd"])))
         m_cap = "{0:,}".format(int(float(data["market_data"]["market_cap"]["usd"])))
 
@@ -112,8 +116,8 @@ class Stats(OpenCryptoPlugin):
                  f"{name} ({symbol})\n\n"
                  f"USD {p_usd}\n"
                  f"EUR {p_eur}\n"
-                 f"BTC {p_btc}\n"
-                 f"ETH {p_eth}\n\n"
+                 f"{btc_str}"
+                 f"{eth_str}\n"
                  f"Hour  {h1}\n"
                  f"Day   {d1}\n"
                  f"Week  {w1}\n"
