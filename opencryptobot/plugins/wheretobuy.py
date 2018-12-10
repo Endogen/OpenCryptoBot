@@ -5,7 +5,6 @@ from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.coingecko import CoinGecko
 
 
-# TODO: Add links to exchanges
 class Wheretobuy(OpenCryptoPlugin):
 
     def get_cmd(self):
@@ -25,10 +24,9 @@ class Wheretobuy(OpenCryptoPlugin):
         cg = CoinGecko()
         coin_info = None
 
-        # Get coin ID
+        # Get coin ID and data
         for entry in cg.get_coins_list():
-            if entry["symbol"].lower() == coin.lower():
-                # Get coin info
+            if entry["symbol"].upper() == coin:
                 coin_info = cg.get_coin_by_id(entry["id"])
                 break
 
