@@ -40,7 +40,9 @@ class Whitepaper(OpenCryptoPlugin):
             link = self._from_coinpaprika(coin)
 
         if link:
-            update.message.reply_document(document=link, caption=f"{self.name} Whitepaper")
+            update.message.reply_document(
+                document=link,
+                caption=f"{self.name} Whitepaper")
         else:
             update.message.reply_text(
                 text=f"{emo.ERROR} No data for *{coin}*",
