@@ -5,6 +5,7 @@ import opencryptobot.constants as con
 from bs4 import BeautifulSoup
 from telegram import ParseMode
 from coinmarketcap import Market
+from telegram.error import BadRequest
 from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.coinpaprika import CoinPaprika
 from opencryptobot.api.cryptocompare import CryptoCompare
@@ -44,10 +45,9 @@ class Whitepaper(OpenCryptoPlugin):
                 update.message.reply_document(
                     document=link,
                     caption=f"{self.name} Whitepaper")
-            except Exception as ex:
-                if type(ex).__name__ == "BadRequest" and str(ex) == "Failed to get http url content":
-                    msg = f"{self.name} Whitepaper\n{link}"
-                    update.message.reply_text(text=msg)
+            except BadRequest:
+                msg = f"{self.name} Whitepaper\n{link}"
+                update.message.reply_text(text=msg)
         else:
             update.message.reply_text(
                 text=f"{emo.ERROR} No data for *{coin}*",
