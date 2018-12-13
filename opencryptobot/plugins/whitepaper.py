@@ -40,9 +40,14 @@ class Whitepaper(OpenCryptoPlugin):
             link = self._from_coinpaprika(coin)
 
         if link:
-            update.message.reply_document(
-                document=link,
-                caption=f"{self.name} Whitepaper")
+            try:
+                update.message.reply_document(
+                    document=link,
+                    caption=f"{self.name} Whitepaper")
+            except Exception as ex:
+                if type(ex).__name__ == "BadRequest" and str(ex) == "Failed to get http url content":
+                    msg = f"{self.name} Whitepaper\n{link}"
+                    update.message.reply_text(text=msg)
         else:
             update.message.reply_text(
                 text=f"{emo.ERROR} No data for *{coin}*",
