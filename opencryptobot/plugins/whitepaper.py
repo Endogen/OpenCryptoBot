@@ -102,7 +102,7 @@ class Whitepaper(OpenCryptoPlugin):
 
     def _from_coinpaprika(self, coin):
         cp = CoinPaprika()
-        c_list = cp.list_coins()
+        c_list = cp.get_list_coins()
 
         coin_id = str()
 
