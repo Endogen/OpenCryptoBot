@@ -1,5 +1,6 @@
-from telegram import ParseMode
 import opencryptobot.emoji as emo
+
+from telegram import ParseMode
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin
 
