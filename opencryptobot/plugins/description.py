@@ -28,7 +28,6 @@ class Description(OpenCryptoPlugin):
         # Get coin ID
         for entry in cg.get_coins_list():
             if entry["symbol"].lower() == coin.lower():
-                # Get coin info
                 coin_info = cg.get_coin_by_id(entry["id"])
                 break
 

@@ -51,6 +51,23 @@ class OpenCryptoPlugin:
             return func(self, bot, update, **kwargs)
         return _save_data
 
+    @classmethod
+    def is_number(cls, string):
+        try:
+            float(string)
+            return True
+        except ValueError:
+            pass
+
+        try:
+            import unicodedata
+            unicodedata.numeric(string)
+            return True
+        except (TypeError, ValueError):
+            pass
+
+        return False
+
     def get_cmd(self):
         method = inspect.currentframe().f_code.co_name
         raise NotImplementedError(f"Interface method '{method}' not implemented")

@@ -1,1 +1,0 @@
-# Shoud be called 'trend'?
