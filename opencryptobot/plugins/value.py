@@ -37,28 +37,27 @@ class Value(OpenCryptoPlugin):
 
         cg = CoinGecko()
 
-        coin_id = str()
+        prices = dict()
 
         # Get coin ID
         for entry in cg.get_coins_list():
             if entry["symbol"].upper() == coin:
-                coin_id = entry["id"]
+                data = cg.get_coin_by_id(entry["id"])
+                prices = data["market_data"]["current_price"]
                 break
-
-        data = cg.get_coin_by_id(coin_id)
 
         msg = str()
 
-        prices = data["market_data"]["current_price"]
         for c in vs_cur.split(","):
             if c in prices:
-                value = "{0:.8f}".format(prices[c] * qty)
+                value = "{0:,.8f}".format(prices[c] * qty)
                 msg += f"`{c.upper()}: {value}`\n"
 
-        if not msg:
-            msg = f"{emo.ERROR} Can't retrieve data for *{coin}*"
+        if msg:
+            v = "{0:,}".format(int(qty) if str(qty).endswith(".0") else qty)
+            msg = f"`Value of {v} {coin}`\n\n" + msg
         else:
-            msg = f"Value of {str(qty)} {coin}\n" + msg
+            msg = f"{emo.ERROR} Can't retrieve data for *{coin}*"
 
         update.message.reply_text(
             text=msg,
@@ -68,4 +67,4 @@ class Value(OpenCryptoPlugin):
         return f"`/{self.get_cmd()} <coin> <quantity> <target_currency>`"
 
     def get_description(self):
-        return "Value of quantity"
+        return "Value for coin quantity"
