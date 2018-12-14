@@ -51,9 +51,9 @@ class Global(OpenCryptoPlugin):
             if coin:
                 if coin in res["total_market_cap"]:
                     mcap = "{0:,.0f}".format(res["total_market_cap"][coin])
-                    msg = f"Total Market Capital\n`{coin.upper()}: {mcap}`"
+                    msg = f"`Total Market Capital\n{coin.upper()}: {mcap}`"
             else:
-                msg = f"Total Market Capital\n" \
+                msg = f"`Total Market Capital`\n" \
                       f"`USD: {m_cap_usd}`\n" \
                       f"`EUR: {m_cap_eur}`"
 
@@ -62,9 +62,9 @@ class Global(OpenCryptoPlugin):
             if coin:
                 if coin in res["total_volume"]:
                     vol = "{0:,.0f}".format(res["total_volume"][coin])
-                    msg = f"Total Volume\n`{coin.upper()}: {vol}`"
+                    msg = f"`Total Volume\n{coin.upper()}: {vol}`"
             else:
-                msg = f"Total Volume (24h)\n" \
+                msg = f"`Total Volume (24h)`\n" \
                       f"`USD: {vol_usd}`\n" \
                       f"`EUR: {vol_eur}`"
 
@@ -72,7 +72,7 @@ class Global(OpenCryptoPlugin):
             labels = list()
             values = list()
 
-            msg = "Dominance (Market Capital)\n"
+            msg = "`Dominance (Market Capital)`\n"
             for key in sorted(m_cap_per, key=m_cap_per.get, reverse=True):
                 labels.append(key.upper())
                 values.append(m_cap_per[key])
