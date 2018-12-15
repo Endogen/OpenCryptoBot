@@ -31,7 +31,7 @@ class Feedback(OpenCryptoPlugin):
         update.message.reply_text(f"Thanks for letting us know {emo.TOP}")
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <you're feedback>`\n"
+        return f"`/{self.get_cmd()} <your feedback>`\n"
 
     def get_description(self):
         return "Send us your feedback"
