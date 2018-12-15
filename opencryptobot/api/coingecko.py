@@ -8,6 +8,9 @@ class CoinGecko(object):
     _base_url = 'https://api.coingecko.com/api/v3/'
     _request_timeout = 120
 
+    _coin_list = list()
+    _fiat_list = list()
+
     def __init__(self, api_base_url=None, request_timeout=None):
         if api_base_url:
             self._base_url = api_base_url
@@ -66,12 +69,14 @@ class CoinGecko(object):
 
         return self._request(api_url)
 
-    def get_coins_list(self):
+    def get_coins_list(self, use_cache=False):
         """List all supported coins id, name and symbol (no pagination required)"""
 
-        api_url = '{0}coins/list'.format(self._base_url)
-
-        return self._request(api_url)
+        if use_cache and self._coin_list:
+            return self._coin_list
+        else:
+            api_url = '{0}coins/list'.format(self._base_url)
+            return self._request(api_url)
 
     def get_coins_markets(self, vs_currency, **kwargs):
         """List all supported coins price, market cap, volume, and market related data (no pagination required)"""
@@ -138,3 +143,40 @@ class CoinGecko(object):
         api_url = '{0}global'.format(self._base_url)
 
         return self._request(api_url)['data']
+
+    # ---------- NON API ----------
+    def get_fiat_list(self, use_cache=False):
+        """Get list of all fiat currencies"""
+
+        if use_cache and self._fiat_list:
+            return self._fiat_list
+        else:
+            rates = self.get_exchange_rates()
+            for key, value in rates["rates"].items():
+                if value["type"] == "fiat":
+                    self._fiat_list.append(key)
+
+            return self._fiat_list
+
+    @staticmethod
+    def refresh_cache():
+        try:
+
+            # Cache coin list
+            api_url = '{0}coins/list'.format(CoinGecko._base_url)
+            response = requests.get(api_url, timeout=CoinGecko._request_timeout)
+            response.raise_for_status()
+            CoinGecko._coin_list = json.loads(response.content.decode('utf-8'))
+
+            # Cache fiat list
+            api_url = '{0}exchange_rates'.format(CoinGecko._base_url)
+            response = requests.get(api_url, timeout=CoinGecko._request_timeout)
+            response.raise_for_status()
+            data = json.loads(response.content.decode('utf-8'))
+
+            for key, value in data["rates"].items():
+                if value["type"] == "fiat":
+                    CoinGecko._fiat_list.append(key)
+
+        except Exception as e:
+            raise e

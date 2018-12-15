@@ -12,5 +12,6 @@
         "url": "https://somedomain.com"
     },
     "use_db": true,
+    "use_cache": true,
     "update_slug": "endogen/OpenCryptoBot/master"
 }

@@ -39,7 +39,7 @@ class Price(OpenCryptoPlugin):
 
         # Get coin ID and name
         coin_id = str()
-        for entry in cg.get_coins_list():
+        for entry in cg.get_coins_list(use_cache=True):
             if entry["symbol"].upper() == coin:
                 coin_id = entry["id"]
                 break
@@ -84,9 +84,9 @@ class Price(OpenCryptoPlugin):
 
         if msg:
             if exchange:
-                msg = f"`Price of {coin} on {exchange.capitalize()}`\n" + msg
+                msg = f"`Price of {coin} on {exchange.capitalize()}`\n\n" + msg
             else:
-                msg = f"`Price of {coin}`\n" + msg
+                msg = f"`Price of {coin}`\n\n" + msg
         else:
             msg = f"{emo.ERROR} Can't retrieve data for *{coin}*"
 

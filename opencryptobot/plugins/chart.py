@@ -168,7 +168,7 @@ class Chart(OpenCryptoPlugin):
 
     def _get_cg_coin_id(self, coin):
         try:
-            for entry in CoinGecko().get_coins_list():
+            for entry in CoinGecko().get_coins_list(use_cache=True):
                 if entry["symbol"].lower() == coin.lower():
                     self.cg_coin_id = entry["id"]
                     break

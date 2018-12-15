@@ -27,7 +27,7 @@ class Stats(OpenCryptoPlugin):
         cg = CoinGecko()
 
         # Get coin ID and data
-        for entry in cg.get_coins_list():
+        for entry in cg.get_coins_list(use_cache=True):
             if entry["symbol"].upper() == coin:
                 data = cg.get_coin_by_id(entry["id"])
                 cgid = entry["id"]

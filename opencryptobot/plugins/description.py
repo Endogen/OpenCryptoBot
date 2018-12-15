@@ -23,24 +23,23 @@ class Description(OpenCryptoPlugin):
         coin = args[0].upper()
 
         cg = CoinGecko()
-        coin_info = None
+        data = None
 
-        # Get coin ID
-        for entry in cg.get_coins_list():
+        for entry in cg.get_coins_list(use_cache=True):
             if entry["symbol"].lower() == coin.lower():
-                coin_info = cg.get_coin_by_id(entry["id"])
+                data = cg.get_coin_by_id(entry["id"])
                 break
 
-        if not coin_info or not coin_info["description"]["en"]:
+        if not data or not data["description"]["en"]:
             update.message.reply_text(
                 text=f"{emo.ERROR} No data for *{coin}*",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        coin_desc = coin_info["description"]["en"]
+        coin_desc = data["description"]["en"]
 
         if len(coin_desc) > con.MAX_TG_MSG_LEN:
-            url = f"https://www.coingecko.com/en/coins/{coin_info['id']}"
+            url = f"https://www.coingecko.com/en/coins/{data['id']}"
             html_link = f'...\n\n<a href="{url}">Read whole description</a>'
             coin_desc = coin_desc[:(con.MAX_TG_MSG_LEN - 27)] + html_link
 

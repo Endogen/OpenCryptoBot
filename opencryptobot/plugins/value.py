@@ -40,7 +40,7 @@ class Value(OpenCryptoPlugin):
         prices = dict()
 
         # Get coin ID
-        for entry in cg.get_coins_list():
+        for entry in cg.get_coins_list(use_cache=True):
             if entry["symbol"].upper() == coin:
                 data = cg.get_coin_by_id(entry["id"])
                 prices = data["market_data"]["current_price"]
@@ -64,7 +64,7 @@ class Value(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin> <quantity> <target_currency>`"
+        return f"`/{self.get_cmd()} <coin> <quantity> (<target_currency>)`"
 
     def get_description(self):
-        return "Value for coin quantity"
+        return "Value of coin quantity"

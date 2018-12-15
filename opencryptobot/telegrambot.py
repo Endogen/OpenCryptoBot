@@ -7,6 +7,7 @@ import opencryptobot.emoji as emo
 from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
 from telegram.error import InvalidToken
 from telegram.ext import Updater, CommandHandler, InlineQueryHandler
+from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.config import ConfigManager as Cfg
 
@@ -43,6 +44,12 @@ class TelegramBot:
 
         # Handle all Telegram related errors
         self.dispatcher.add_error_handler(self._handle_tg_errors)
+
+        # If enabled, fill cache
+        if Cfg.get("use_cache"):
+            logging.info("Starting Caching")
+            CoinGecko.refresh_cache()
+            logging.info("Finished Caching")
 
     # Start the bot
     def bot_start_polling(self):

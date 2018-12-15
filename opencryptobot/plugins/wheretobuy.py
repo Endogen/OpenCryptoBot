@@ -25,7 +25,7 @@ class Wheretobuy(OpenCryptoPlugin):
         coin_info = None
 
         # Get coin ID and data
-        for entry in cg.get_coins_list():
+        for entry in cg.get_coins_list(use_cache=True):
             if entry["symbol"].upper() == coin:
                 coin_info = cg.get_coin_by_id(entry["id"])
                 break
@@ -43,7 +43,7 @@ class Wheretobuy(OpenCryptoPlugin):
         markets = "\n".join(sorted(markets))
 
         update.message.reply_text(
-            text=f"Exchanges that trade *{coin}*\n\n`{markets}`",
+            text=f"`Exchanges that trade {coin}`\n\n`{markets}`",
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):

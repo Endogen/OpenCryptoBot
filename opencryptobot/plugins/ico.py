@@ -26,7 +26,7 @@ class Ico(OpenCryptoPlugin):
 
         msg = str()
 
-        for entry in cg.get_coins_list():
+        for entry in cg.get_coins_list(use_cache=True):
             if entry["symbol"].lower() == coin.lower():
                 data = cg.get_coin_by_id(entry["id"])
 
