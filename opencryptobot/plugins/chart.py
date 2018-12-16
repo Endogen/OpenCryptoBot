@@ -132,14 +132,38 @@ class Chart(OpenCryptoPlugin):
             margin=go.layout.Margin(
                 l=margin_l,
                 r=50,
-                b=70,
+                b=85,
                 t=100,
                 pad=4
             ),
-            yaxis=dict(domain=[0, 0.20], ticksuffix="  "),
-            yaxis2=dict(domain=[0.25, 1], ticksuffix=f" {base_coin}  "),
+            yaxis=dict(
+                title=base_coin,
+                titlefont=dict(
+                    size=18
+                ),
+                domain=[0, 0.20],
+                ticksuffix="  "
+            ),
+            yaxis2=dict(
+                title=base_coin,
+                titlefont=dict(
+                    size=18
+                ),
+                domain=[0.25, 1],
+                tickprefix="   ",
+                ticksuffix=f"  "
+            ),
             title=coin,
-            legend=dict(orientation="h", yanchor="top", xanchor="center", y=1.05, x=0.45),
+            titlefont=dict(
+                size=26
+            ),
+            legend=dict(
+                orientation="h",
+                yanchor="top",
+                xanchor="center",
+                y=1.05,
+                x=0.45
+            ),
             shapes=[{
                 "type": "line",
                 "xref": "paper",

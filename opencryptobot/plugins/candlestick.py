@@ -103,8 +103,24 @@ class Candlestick(OpenCryptoPlugin):
                 tickformat = "0.2f"
 
         fig = fif.create_candlestick(o, h, l, c, pd.to_datetime(t, unit='s'))
-        fig['layout']['yaxis'].update(tickformat=tickformat, ticksuffix=f" {base_coin}  ")
-        fig['layout'].update(title=coin)
+
+        fig['layout']['yaxis'].update(
+            tickformat=tickformat,
+            tickprefix="   ",
+            ticksuffix=f"  ")
+
+        fig['layout'].update(
+            title=coin,
+            titlefont=dict(
+                size=26
+            ),
+            yaxis=dict(
+                title=base_coin,
+                titlefont=dict(
+                    size=18
+                )
+            )
+        )
 
         fig['layout'].update(
             shapes=[{
@@ -131,7 +147,7 @@ class Candlestick(OpenCryptoPlugin):
             margin=go.layout.Margin(
                 l=margin_l,
                 r=50,
-                b=70,
+                b=85,
                 t=100,
                 pad=4
             ))
