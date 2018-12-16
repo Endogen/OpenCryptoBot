@@ -68,6 +68,26 @@ class OpenCryptoPlugin:
 
         return False
 
+    @classmethod
+    def format(cls, value):
+        try:
+            v = float(value)
+        except:
+            return str(value)
+
+        if v > 0.99:
+            if v < 999:
+                v = "{0:.2f}".format(v)
+            else:
+                v = "{0:,.0f}".format(v)
+        else:
+            v = "{0:.8f}".format(v)
+
+        if v.endswith(".00"):
+            v = v[len(v)-3:]
+
+        return v
+
     def get_cmd(self):
         method = inspect.currentframe().f_code.co_name
         raise NotImplementedError(f"Interface method '{method}' not implemented")

@@ -24,7 +24,7 @@ class Candlestick(OpenCryptoPlugin):
     @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
     def get_action(self, bot, update, args):
-        time_frame = 120  # Hours
+        time_frame = 72  # Hours
         resolution = None
         base_coin = "BTC"
 
@@ -92,9 +92,15 @@ class Candlestick(OpenCryptoPlugin):
 
         margin_l = 140
         tickformat = "0.8f"
-        if max(h) > 1:
-            margin_l = 125
-            tickformat = "0.2f"
+
+        max_value = max(h)
+        if max_value > 0.9:
+            if max_value > 999:
+                margin_l = 120
+                tickformat = "0,.0f"
+            else:
+                margin_l = 125
+                tickformat = "0.2f"
 
         fig = fif.create_candlestick(o, h, l, c, pd.to_datetime(t, unit='s'))
         fig['layout']['yaxis'].update(tickformat=tickformat, ticksuffix=f" {base_coin}  ")

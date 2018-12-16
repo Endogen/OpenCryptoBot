@@ -105,9 +105,15 @@ class Chart(OpenCryptoPlugin):
 
         margin_l = 140
         tickformat = "0.8f"
-        if df_price["Price"].max() > 1:
-            margin_l = 115
-            tickformat = "0.2f"
+
+        max_value = df_price["Price"].max()
+        if max_value > 0.9:
+            if max_value > 999:
+                margin_l = 110
+                tickformat = "0,.0f"
+            else:
+                margin_l = 115
+                tickformat = "0.2f"
 
         layout = go.Layout(
             images=[dict(

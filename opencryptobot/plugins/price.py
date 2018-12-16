@@ -60,10 +60,10 @@ class Price(OpenCryptoPlugin):
                         base_coin = ticker["target"]
                         if vs_list:
                             if base_coin in vs_list:
-                                price = "{0:.8f}".format(ticker["last"])
+                                price = self.format(ticker["last"])
                                 msg += f"`{base_coin}: {price}`\n"
                         else:
-                            price = "{0:.8f}".format(ticker["last"])
+                            price = self.format(ticker["last"])
                             msg += f"`{base_coin}: {price}`\n"
         else:
             if not vs_cur:
@@ -78,9 +78,9 @@ class Price(OpenCryptoPlugin):
 
             if result:
                 for _, prices in result.items():
-                    for key, value in prices.items():
-                        value = "{0:.8f}".format(value)
-                        msg += f"`{key.upper()}: {value}`\n"
+                    for symbol, price in prices.items():
+                        price = self.format(price)
+                        msg += f"`{symbol.upper()}: {price}`\n"
 
         if msg:
             if exchange:
