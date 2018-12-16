@@ -10,9 +10,10 @@ class Start(OpenCryptoPlugin):
         return "start"
 
     def get_action(self, bot, update, args):
-        update.message.reply_text(
-            text=f"{emo.STARS} *Welcome to OpenCryptoBot!* {emo.STARS}",
-            parse_mode=ParseMode.MARKDOWN)
+        if update.message.chat.type == "private":
+            update.message.reply_text(
+                text=f"{emo.STARS} *Welcome to OpenCryptoBot!* {emo.STARS}",
+                parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
         return None
