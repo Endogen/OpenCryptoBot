@@ -121,7 +121,7 @@ class Global(OpenCryptoPlugin):
         return f"`" \
                f"/{self.get_cmd()} mcap (<coin>)\n" \
                f"/{self.get_cmd()} vol (<coin>)\n" \
-               f"/{self.get_cmd()} dom (<coin>)" \
+               f"/{self.get_cmd()} dom" \
                f"`"
 
     def get_description(self):
