@@ -2,7 +2,7 @@ import os
 import opencryptobot.constants as con
 
 from telegram import ParseMode
-from opencryptobot.plugin import OpenCryptoPlugin
+from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class About(OpenCryptoPlugin):
@@ -28,3 +28,6 @@ class About(OpenCryptoPlugin):
 
     def get_description(self):
         return None
+
+    def get_category(self):
+        return Category.BOT
