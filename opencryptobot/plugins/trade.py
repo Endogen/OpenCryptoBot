@@ -5,10 +5,10 @@ from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.coingecko import CoinGecko
 
 
-class Wheretobuy(OpenCryptoPlugin):
+class Trade(OpenCryptoPlugin):
 
     def get_cmd(self):
-        return "buy"
+        return "tr"
 
     @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
@@ -50,4 +50,4 @@ class Wheretobuy(OpenCryptoPlugin):
         return f"`/{self.get_cmd()} <coin>`"
 
     def get_description(self):
-        return "Where to buy a coin"
+        return "Find exchanges to trade coin"
