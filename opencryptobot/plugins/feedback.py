@@ -7,7 +7,7 @@ from opencryptobot.config import ConfigManager as Cfg
 class Feedback(OpenCryptoPlugin):
 
     def get_cmd(self):
-        return "fe"
+        return "feedback"
 
     @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
