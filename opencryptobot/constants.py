@@ -19,4 +19,6 @@ DAT_FILE = "opencryptobot.db"
 
 SQL_DIR = "sql"
 
+RES_DIR = "res"
+
 MAX_TG_MSG_LEN = 4096
