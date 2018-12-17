@@ -10,7 +10,6 @@ class Help(OpenCryptoPlugin):
 
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
-
         help_msg = str("*Available commands*\n\n")
         for plugin in TelegramBot.plugins:
             if plugin.get_description():
