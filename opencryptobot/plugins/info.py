@@ -2,8 +2,8 @@ import opencryptobot.emoji as emo
 import opencryptobot.constants as con
 
 from telegram import ParseMode
-from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.cryptocompare import CryptoCompare
+from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Info(OpenCryptoPlugin):
@@ -57,3 +57,6 @@ class Info(OpenCryptoPlugin):
 
     def get_description(self):
         return "General coin information"
+
+    def get_category(self):
+        return Category.GENERAL

@@ -3,8 +3,8 @@ import opencryptobot.emoji as emo
 
 from datetime import date
 from telegram import ParseMode
-from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.coingecko import CoinGecko
+from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Alltimehigh(OpenCryptoPlugin):
@@ -86,4 +86,7 @@ class Alltimehigh(OpenCryptoPlugin):
         return f"`/{self.get_cmd()} <coin> (<in currency>)`"
 
     def get_description(self):
-        return "All time high"
+        return "All time high price for coin"
+
+    def get_category(self):
+        return Category.PRICE

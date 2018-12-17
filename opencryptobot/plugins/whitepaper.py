@@ -6,9 +6,9 @@ from bs4 import BeautifulSoup
 from telegram import ParseMode
 from coinmarketcap import Market
 from telegram.error import BadRequest
-from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.coinpaprika import CoinPaprika
 from opencryptobot.api.cryptocompare import CryptoCompare
+from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Whitepaper(OpenCryptoPlugin):
@@ -58,6 +58,9 @@ class Whitepaper(OpenCryptoPlugin):
 
     def get_description(self):
         return "Whitepaper for a coin"
+
+    def get_category(self):
+        return Category.GENERAL
 
     def _from_allcryptowhitepaper(self, coin):
         coin_info = CryptoCompare().coin_general_info(coin, "USD")

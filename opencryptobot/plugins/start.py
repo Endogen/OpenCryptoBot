@@ -20,3 +20,6 @@ class Start(OpenCryptoPlugin):
 
     def get_description(self):
         return None
+
+    def get_category(self):
+        return None

@@ -94,6 +94,11 @@ class TelegramBot:
                             CommandHandler(cmd, act, pass_args=True)
                         )
 
+                        for cmd_alt in instance.get_cmd_alt():
+                            self.dispatcher.add_handler(
+                                CommandHandler(cmd_alt, act, pass_args=True)
+                            )
+
                         TelegramBot.plugins.append(instance)
                         logging.info(f"Plugin '{module_name}' added")
 
@@ -130,7 +135,10 @@ class TelegramBot:
             InlineQueryResultArticle(
                 id=uuid.uuid4(),
                 title=description,
-                input_message_content=InputTextMessageContent(value, parse_mode=ParseMode.MARKDOWN)
+                input_message_content=InputTextMessageContent(
+                    value,
+                    parse_mode=ParseMode.MARKDOWN
+                )
             )
         )
 

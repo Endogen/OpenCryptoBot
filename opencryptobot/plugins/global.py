@@ -5,8 +5,8 @@ import opencryptobot.emoji as emo
 
 from io import BytesIO
 from telegram import ParseMode
-from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.coingecko import CoinGecko
+from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Global(OpenCryptoPlugin):
@@ -126,3 +126,6 @@ class Global(OpenCryptoPlugin):
 
     def get_description(self):
         return "Global crypto data"
+
+    def get_category(self):
+        return Category.GENERAL

@@ -13,6 +13,7 @@ class About(OpenCryptoPlugin):
         return "about"
 
     @OpenCryptoPlugin.send_typing
+    @OpenCryptoPlugin.save_data
     def get_action(self, bot, update, args):
         about_file = os.path.join(con.RES_DIR, self.ABOUT_FILENAME)
         with open(about_file, "r", encoding="utf8") as file:
@@ -27,7 +28,7 @@ class About(OpenCryptoPlugin):
         return None
 
     def get_description(self):
-        return None
+        return "Information about bot"
 
     def get_category(self):
         return Category.BOT

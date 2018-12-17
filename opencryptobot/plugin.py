@@ -112,23 +112,21 @@ class OpenCryptoPlugin:
         method = inspect.currentframe().f_code.co_name
         raise NotImplementedError(f"Interface method '{method}' not implemented")
 
+    def get_cmd_alt(self):
+        return list()
+
     def get_action(self, bot, update, args):
         method = inspect.currentframe().f_code.co_name
         raise NotImplementedError(f"Interface method '{method}' not implemented")
 
     def get_usage(self):
-        method = inspect.currentframe().f_code.co_name
-        raise NotImplementedError(f"Interface method '{method}' not implemented")
+        return None
 
     def get_description(self):
-        method = inspect.currentframe().f_code.co_name
-        raise NotImplementedError(f"Interface method '{method}' not implemented")
+        return None
 
-    # TODO: Add method to every command
     def get_category(self):
-        pass
-        #method = inspect.currentframe().f_code.co_name
-        #raise NotImplementedError(f"Interface method '{method}' not implemented")
+        return None
 
     def inline_mode(self):
         return False
@@ -136,11 +134,12 @@ class OpenCryptoPlugin:
 
 class Category:
 
-    BOT = "Bot"
-    NEWS = "News & Events"
-    PRICE = "Price Information"
     GENERAL = "General"
+    PRICE = "Price"
+    CHARTS = "Charts"
+    NEWS = "News & Events"
     UTIL = "Utilities"
+    BOT = "Bot"
     FUN = "Fun"
 
     @classmethod

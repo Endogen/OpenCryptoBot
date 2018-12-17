@@ -1,7 +1,7 @@
 from telegram import ParseMode
 import opencryptobot.emoji as emo
-from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.config import ConfigManager as Cfg
+from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Feedback(OpenCryptoPlugin):
@@ -35,3 +35,6 @@ class Feedback(OpenCryptoPlugin):
 
     def get_description(self):
         return "Send us your feedback"
+
+    def get_category(self):
+        return Category.BOT

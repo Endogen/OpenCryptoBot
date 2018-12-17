@@ -1,9 +1,8 @@
 import opencryptobot.emoji as emo
-import opencryptobot.constants as con
 
 from telegram import ParseMode
-from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.coingecko import CoinGecko
+from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Search(OpenCryptoPlugin):
@@ -44,3 +43,6 @@ class Search(OpenCryptoPlugin):
 
     def get_description(self):
         return "Search for symbol by coin name"
+
+    def get_category(self):
+        return Category.GENERAL

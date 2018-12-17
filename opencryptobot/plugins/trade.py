@@ -1,8 +1,8 @@
 import opencryptobot.emoji as emo
 
 from telegram import ParseMode
-from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.coingecko import CoinGecko
+from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Trade(OpenCryptoPlugin):
@@ -51,3 +51,6 @@ class Trade(OpenCryptoPlugin):
 
     def get_description(self):
         return "Find exchanges to trade coin"
+
+    def get_category(self):
+        return Category.GENERAL

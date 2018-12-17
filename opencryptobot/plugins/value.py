@@ -1,8 +1,8 @@
 import opencryptobot.emoji as emo
 
 from telegram import ParseMode
-from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.coingecko import CoinGecko
+from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Value(OpenCryptoPlugin):
@@ -66,3 +66,6 @@ class Value(OpenCryptoPlugin):
 
     def get_description(self):
         return "Value of coin quantity"
+
+    def get_category(self):
+        return Category.PRICE

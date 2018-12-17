@@ -2,8 +2,8 @@ import opencryptobot.emoji as emo
 import opencryptobot.constants as con
 
 from telegram import ParseMode
-from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.coingecko import CoinGecko
+from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Description(OpenCryptoPlugin):
@@ -53,3 +53,6 @@ class Description(OpenCryptoPlugin):
 
     def get_description(self):
         return "Coin description"
+
+    def get_category(self):
+        return Category.GENERAL

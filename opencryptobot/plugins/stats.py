@@ -1,11 +1,10 @@
 import opencryptobot.emoji as emo
 
 from telegram import ParseMode
-from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.coingecko import CoinGecko
+from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
-# TODO: Add additional data from response
 class Stats(OpenCryptoPlugin):
 
     def get_cmd(self):
@@ -137,3 +136,6 @@ class Stats(OpenCryptoPlugin):
 
     def get_description(self):
         return "Price, market cap and volume"
+
+    def get_category(self):
+        return Category.PRICE

@@ -9,18 +9,32 @@ class Help(OpenCryptoPlugin):
         return "help"
 
     @OpenCryptoPlugin.send_typing
+    @OpenCryptoPlugin.save_data
     def get_action(self, bot, update, args):
-        help_msg = str("*Available commands*\n\n")
+        cat_dict = dict()
+        for p in TelegramBot.plugins:
+            if p.get_category() and p.get_description() and p.get_cmd:
+                des = f"/{p.get_cmd()} - {p.get_description()}\n"
 
-        # TODO: Create list of lists for the categories
-        categories = Category.get_categories()
+                if p.get_category() not in cat_dict:
+                    cat_dict[p.get_category()] = [des]
+                else:
+                    lst = cat_dict[p.get_category()]
+                    lst.append(des)
 
-        # TODO: Add every plugin to corresponding list
-        for plugin in TelegramBot.plugins:
-            if plugin.get_category() and plugin.get_description():
-                help_msg += f"/{plugin.get_cmd()} - {plugin.get_description()}\n"
+        msg = str()
+        for c in Category.get_categories():
+            v = next(iter(c.values()))
 
-        update.message.reply_text(text=help_msg, parse_mode=ParseMode.MARKDOWN)
+            if v in cat_dict:
+                msg += f"*{v}*\n"
+
+                for cmd in sorted(cat_dict[v]):
+                    msg += f"{cmd}"
+
+                msg += "\n"
+
+        update.message.reply_text(text=msg, parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
         return None

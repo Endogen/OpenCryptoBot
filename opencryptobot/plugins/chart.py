@@ -11,7 +11,7 @@ from pandas import DataFrame
 from telegram import ParseMode
 from coinmarketcap import Market
 from opencryptobot.api.coingecko import CoinGecko
-from opencryptobot.plugin import OpenCryptoPlugin
+from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Chart(OpenCryptoPlugin):
@@ -195,6 +195,9 @@ class Chart(OpenCryptoPlugin):
 
     def get_description(self):
         return "Chart with price and volume"
+
+    def get_category(self):
+        return Category.CHARTS
 
     def _get_cg_coin_id(self, coin):
         try:

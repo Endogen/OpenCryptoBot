@@ -10,8 +10,8 @@ import opencryptobot.constants as con
 from io import BytesIO
 from telegram import ParseMode
 from coinmarketcap import Market
-from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.cryptocompare import CryptoCompare
+from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Candlestick(OpenCryptoPlugin):
@@ -175,7 +175,10 @@ class Candlestick(OpenCryptoPlugin):
                f"`"
 
     def get_description(self):
-        return "Candlestick chart"
+        return "Candlestick chart for coin"
+
+    def get_category(self):
+        return Category.CHARTS
 
     def _get_cmc_coin_id(self, ticker):
         for listing in Market().listings()["data"]:
