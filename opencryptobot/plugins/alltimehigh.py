@@ -49,8 +49,8 @@ class Alltimehigh(OpenCryptoPlugin):
 
         for c in vs_cur.split(","):
             if c in ath_price:
-                price = "{0:.8f}".format(ath_price[c])
-                cur_p = "{0:.8f}".format(cur_price[c])
+                ath_p = self.format(ath_price[c])
+                cur_p = self.format(cur_price[c], template=ath_p)
                 change = "{0:.2f}".format(ath_change[c])
 
                 date_time = ath_date[c]
@@ -63,10 +63,13 @@ class Alltimehigh(OpenCryptoPlugin):
                 ath = date(y, m, d)
                 now = datetime.date.today()
 
+                ath_p_str = f"Price ATH: {ath_p} {c.upper()}\n"
+                cur_p_str = f"Price now: {cur_p.rjust(len(ath_p))} {c.upper()}\n"
+
                 msg += f"`" \
                        f"{date_ath} ({(now - ath).days} days ago)\n" \
-                       f"Price ATH: {price} {c.upper()}\n" \
-                       f"Price now: {cur_p} {c.upper()}\n" \
+                       f"{ath_p_str}" \
+                       f"{cur_p_str}" \
                        f"Change: {change}%\n\n" \
                        f"`"
 

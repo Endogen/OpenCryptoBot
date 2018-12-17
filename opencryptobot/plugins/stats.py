@@ -56,18 +56,15 @@ class Stats(OpenCryptoPlugin):
         else:
             sup_t = "N/A"
 
-        p_usd = "{0:.8f}".format(data["market_data"]["current_price"]["usd"])
-        p_eur = "{0:.8f}".format(data["market_data"]["current_price"]["eur"])
-        p_btc = "{0:.8f}".format(data["market_data"]["current_price"]["btc"])
-        p_eth = "{0:.8f}".format(data["market_data"]["current_price"]["eth"])
+        p_usd = self.format(data["market_data"]["current_price"]["usd"])
+        p_eur = self.format(data["market_data"]["current_price"]["eur"], template=p_usd)
+        p_btc = self.format(data["market_data"]["current_price"]["btc"], template=p_usd)
+        p_eth = self.format(data["market_data"]["current_price"]["eth"], template=p_usd)
 
-        # TODO: How to dynamically set the width?
-        #max_len = max([len(p_usd), len(p_eur), len(p_btc), len(p_eth)])
-
-        p_usd = "{:>13}".format(p_usd)
-        p_eur = "{:>13}".format(p_eur)
-        p_btc = "{:>13}".format(p_btc)
-        p_eth = "{:>13}".format(p_eth)
+        p_usd = "{:>12}".format(p_usd)
+        p_eur = "{:>12}".format(p_eur)
+        p_btc = "{:>12}".format(p_btc)
+        p_eth = "{:>12}".format(p_eth)
 
         # Do not display BTC or ETH price if coin is BTC or ETH
         btc_str = "" if coin == "BTC" else f"BTC {p_btc}\n"
@@ -79,37 +76,37 @@ class Stats(OpenCryptoPlugin):
         if data["market_data"]["price_change_percentage_1h_in_currency"]:
             c_1h = data["market_data"]["price_change_percentage_1h_in_currency"]["usd"]
             c1h = "{0:.2f}".format(float(c_1h))
-            h1 = "{:>11}".format(f"{c1h}%")
+            h1 = "{:>10}".format(f"{c1h}%")
         else:
-            h1 = "{:>11}".format("N/A")
+            h1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_24h_in_currency"]:
             c_1d = data["market_data"]["price_change_percentage_24h_in_currency"]["usd"]
             c1d = "{0:.2f}".format(float(c_1d))
-            d1 = "{:>11}".format(f"{c1d}%")
+            d1 = "{:>10}".format(f"{c1d}%")
         else:
-            d1 = "{:>11}".format("N/A")
+            d1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_7d_in_currency"]:
             c_1w = data["market_data"]["price_change_percentage_7d_in_currency"]["usd"]
             c1w = "{0:.2f}".format(float(c_1w))
-            w1 = "{:>11}".format(f"{c1w}%")
+            w1 = "{:>10}".format(f"{c1w}%")
         else:
-            w1 = "{:>11}".format("N/A")
+            w1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_30d_in_currency"]:
             c_1m = data["market_data"]["price_change_percentage_30d_in_currency"]["usd"]
             c1m = "{0:.2f}".format(float(c_1m))
-            m1 = "{:>11}".format(f"{c1m}%")
+            m1 = "{:>10}".format(f"{c1m}%")
         else:
-            m1 = "{:>11}".format("N/A")
+            m1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_1y_in_currency"]:
             c_1y = data["market_data"]["price_change_percentage_1y_in_currency"]["usd"]
             c1y = "{0:.2f}".format(float(c_1y))
-            y1 = "{:>11}".format(f"{c1y}%")
+            y1 = "{:>10}".format(f"{c1y}%")
         else:
-            y1 = "{:>11}".format("N/A")
+            y1 = "{:>10}".format("N/A")
 
         update.message.reply_text(
             text=f"`"

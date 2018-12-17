@@ -1,3 +1,4 @@
+import decimal
 import opencryptobot.emoji as emo
 
 from telegram import ParseMode
@@ -68,19 +69,27 @@ class Price(OpenCryptoPlugin):
         else:
             if not vs_cur:
                 if coin == "BTC":
-                    vs_cur = "ETH,EUR,USD"
+                    vs_cur = "ETH,USD,EUR"
                 elif coin == "ETH":
-                    vs_cur = "BTC,EUR,USD"
+                    vs_cur = "BTC,USD,EUR"
                 else:
-                    vs_cur = "BTC,ETH,EUR,USD"
+                    vs_cur = "BTC,ETH,USD,EUR"
 
             result = cg.get_simple_price(coin_id, vs_cur)
 
             if result:
-                for _, prices in result.items():
-                    for symbol, price in prices.items():
+                fiat_list = cg.get_fiat_list(use_cache=True)
+
+                for symbol, price in next(iter(result.values())).items():
+                    if symbol in fiat_list:
+                        if decimal.Decimal(str(price)).as_tuple().exponent > -3:
+                            price = self.format(price, fiat=True)
+                        else:
+                            price = self.format(price)
+                    else:
                         price = self.format(price)
-                        msg += f"`{symbol.upper()}: {price}`\n"
+
+                    msg += f"`{symbol.upper()}: {price}`\n"
 
         if msg:
             if exchange:

@@ -69,22 +69,42 @@ class OpenCryptoPlugin:
         return False
 
     @classmethod
-    def format(cls, value):
+    def format(cls, value, force_length=True, fiat=False, template=None):
         try:
+            if isinstance(value, str):
+                value = value.replace(",", "")
             v = float(value)
-        except:
+        except Exception:
             return str(value)
 
-        if v > 0.99:
-            if v < 999:
+        try:
+            if isinstance(template, str):
+                template = template.replace(",", "")
+            t = float(template)
+        except Exception:
+            t = v
+
+        if t < 1:
+            if fiat:
                 v = "{0:.2f}".format(v)
             else:
-                v = "{0:,.0f}".format(v)
+                v = "{0:.8f}".format(v)
+        elif t < 100:
+            if fiat:
+                v = "{0:.2f}".format(v)
+            else:
+                v = "{0:.4f}".format(v)
+        elif t < 10000:
+            if fiat:
+                v = "{0:,.2f}".format(v)
+            else:
+                v = "{0:,.2f}".format(v)
         else:
-            v = "{0:.8f}".format(v)
+            v = "{0:,.0f}".format(v)
 
-        if v.endswith(".00"):
-            v = v[len(v)-3:]
+        if not force_length:
+            while v.endswith(("0", ".")):
+                v = v[:-1]
 
         return v
 
