@@ -5,8 +5,6 @@ from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.api.coingecko import CoinGecko
 
 
-# TODO: Check if decimal places exist:
-# https://stackoverflow.com/questions/6189956/easy-way-of-finding-decimal-places
 class Value(OpenCryptoPlugin):
 
     def get_cmd(self):
@@ -50,7 +48,7 @@ class Value(OpenCryptoPlugin):
 
         for c in vs_cur.split(","):
             if c in prices:
-                value = "{0:,.8f}".format(prices[c] * qty)
+                value = self.format(prices[c] * qty)
                 msg += f"`{c.upper()}: {value}`\n"
 
         if msg:
