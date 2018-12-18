@@ -1,3 +1,5 @@
+import os
+
 # Partial URL for coin logo
 CG_LOGO_URL_PARTIAL = "https://www.cryptocompare.com"
 CMC_URL_PARTIAL = "https://coinmarketcap.com/currencies/"
@@ -20,5 +22,6 @@ DAT_FILE = "opencryptobot.db"
 SQL_DIR = "sql"
 
 RES_DIR = "res"
+BPMN_DIR = os.path.join(RES_DIR, "bpmn")
 
 MAX_TG_MSG_LEN = 4096
