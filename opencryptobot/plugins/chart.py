@@ -137,12 +137,7 @@ class Chart(OpenCryptoPlugin):
                 pad=4
             ),
             yaxis=dict(
-                title=base_coin,
-                titlefont=dict(
-                    size=18
-                ),
-                domain=[0, 0.20],
-                ticksuffix="  "
+                domain=[0, 0.20]
             ),
             yaxis2=dict(
                 title=base_coin,
