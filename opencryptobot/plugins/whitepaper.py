@@ -29,15 +29,15 @@ class Whitepaper(OpenCryptoPlugin):
 
         coin = args[0].upper()
 
-        search = "2"
+        search = str()
         if len(args) > 1:
             search = args[1]
 
         link = self._from_allcryptowhitepaper(coin)
 
-        if not link and search == "2":
+        if not link:
             link = self._from_coinmarketcap(coin)
-        if not link and search == "3":
+        if not link and search == "all":
             link = self._from_coinpaprika(coin)
 
         if link:
@@ -50,14 +50,14 @@ class Whitepaper(OpenCryptoPlugin):
                 update.message.reply_text(text=msg)
         else:
             update.message.reply_text(
-                text=f"{emo.ERROR} No data for *{coin}*",
+                text=f"{emo.ERROR} No whitepaper for *{coin}* found",
                 parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin>`"
+        return f"`/{self.get_cmd()} <coin> ('all')`"
 
     def get_description(self):
-        return "Whitepaper for a coin"
+        return "Find whitepaper for a coin"
 
     def get_category(self):
         return Category.GENERAL
