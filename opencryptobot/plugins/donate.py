@@ -32,42 +32,42 @@ class Donate(OpenCryptoPlugin):
 
         # BTC
         if update.message.text == f"/{self.get_cmd_alt()[0]}":
-            qr_code = open(os.path.join(con.RES_DIR, self.BTC), "rb")
-            update.message.reply_photo(
-                photo=qr_code,
-                caption="Bitcoin (BTC)",
-                parse_mode=ParseMode.MARKDOWN)
-
+            qr_code = self._get_qr_code()
+            if qr_code:
+                update.message.reply_photo(
+                    photo=qr_code,
+                    caption="Bitcoin (BTC)",
+                    parse_mode=ParseMode.MARKDOWN)
             return
 
         # BCH
         if update.message.text == f"/{self.get_cmd_alt()[1]}":
-            qr_code = open(os.path.join(con.RES_DIR, self.BCH), "rb")
-            update.message.reply_photo(
-                photo=qr_code,
-                caption="Bitcoin Cash (BCH)",
-                parse_mode=ParseMode.MARKDOWN)
-
+            qr_code = self._get_qr_code()
+            if qr_code:
+                update.message.reply_photo(
+                    photo=qr_code,
+                    caption="Bitcoin Cash (BCH)",
+                    parse_mode=ParseMode.MARKDOWN)
             return
 
         # ETH
         if update.message.text == f"/{self.get_cmd_alt()[2]}":
-            qr_code = open(os.path.join(con.RES_DIR, self.ETH), "rb")
-            update.message.reply_photo(
-                photo=qr_code,
-                caption="Ethereum (ETH)",
-                parse_mode=ParseMode.MARKDOWN)
-
+            qr_code = self._get_qr_code()
+            if qr_code:
+                update.message.reply_photo(
+                    photo=qr_code,
+                    caption="Ethereum (ETH)",
+                    parse_mode=ParseMode.MARKDOWN)
             return
 
         # XMR
         if update.message.text == f"/{self.get_cmd_alt()[3]}":
-            qr_code = open(os.path.join(con.RES_DIR, self.XMR), "rb")
-            update.message.reply_photo(
-                photo=qr_code,
-                caption="Monero (XMR)",
-                parse_mode=ParseMode.MARKDOWN)
-
+            qr_code = self._get_qr_code()
+            if qr_code:
+                update.message.reply_photo(
+                    photo=qr_code,
+                    caption="Monero (XMR)",
+                    parse_mode=ParseMode.MARKDOWN)
             return
 
     def get_usage(self):
@@ -78,3 +78,9 @@ class Donate(OpenCryptoPlugin):
 
     def get_category(self):
         return Category.BOT
+
+    def _get_qr_code(self, symbol):
+        try:
+            return open(os.path.join(con.RES_DIR, symbol), "rb")
+        except Exception:
+            return None
