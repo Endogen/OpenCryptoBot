@@ -80,7 +80,7 @@ class Candlestick(OpenCryptoPlugin):
 
         if not ohlcv:
             update.message.reply_text(
-                text=f"{emo.ERROR} Can't retrieve data for *{coin}*",
+                text=f"{emo.ERROR} No OHLC data for *{coin}*",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
