@@ -3,9 +3,7 @@ import uuid
 import logging
 import importlib
 import opencryptobot.emoji as emo
-import opencryptobot.constants as con
 
-from functools import partial
 from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
 from telegram.error import InvalidToken
 from telegram.ext import Updater, CommandHandler, InlineQueryHandler
@@ -107,14 +105,6 @@ class TelegramBot:
                                     act,
                                     pass_args=True))
 
-                        # Add BPMN command
-                        if Cfg.get("bpmn_cmds"):
-                            bpmn_cmd = f"{cmd}_bpmn"
-                            self.dispatcher.add_handler(
-                                CommandHandler(
-                                    bpmn_cmd,
-                                    partial(self._bpmn, cmd=cmd)))
-
                         TelegramBot.plugins.append(instance)
                         logging.info(f"Plugin '{module_name}' added")
 
@@ -159,19 +149,6 @@ class TelegramBot:
         )
 
         bot.answer_inline_query(update.inline_query.id, results)
-
-    def _bpmn(self, bot, update, cmd):
-        try:
-            bpmn = open(os.path.join(con.BPMN_DIR, f"{cmd}.png"), "rb")
-        except Exception:
-            msg = f"{emo.ERROR} No BPMN diagram found for `/{cmd}`"
-            update.message.reply_text(msg)
-            return
-
-        update.message.reply_photo(
-            photo=bpmn,
-            caption=f"Process flow for `/{cmd}` command",
-            parse_mode=ParseMode.MARKDOWN)
 
     # Handle all telegram and telegram.ext related errors
     def _handle_tg_errors(self, bot, update, error):
