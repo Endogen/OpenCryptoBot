@@ -2,8 +2,8 @@ import io
 import time
 import threading
 import pandas as pd
-import dateutil.parser
 import plotly.io as pio
+import dateutil.parser as dau
 import plotly.graph_objs as go
 import opencryptobot.emoji as emo
 import plotly.figure_factory as fif
@@ -27,8 +27,8 @@ class Candlestick(OpenCryptoPlugin):
     @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
     def get_action(self, bot, update, args):
-        time_frame = 72  # Hours
-        resolution = None
+        time_frame = 72
+        resolution = "HOUR"
         base_coin = "BTC"
 
         if not args:
@@ -60,9 +60,7 @@ class Candlestick(OpenCryptoPlugin):
 
         # Time frame
         if len(args) > 1:
-            if args[1].isnumeric():
-                time_frame = args[1]
-            elif args[1].lower().endswith("m") and args[1][:-1].isnumeric():
+            if args[1].lower().endswith("m") and args[1][:-1].isnumeric():
                 resolution = "MINUTE"
                 time_frame = args[1][:-1]
             elif args[1].lower().endswith("h") and args[1][:-1].isnumeric():
@@ -71,61 +69,101 @@ class Candlestick(OpenCryptoPlugin):
             elif args[1].lower().endswith("d") and args[1][:-1].isnumeric():
                 resolution = "DAY"
                 time_frame = args[1][:-1]
-
-        from_cp = False
+            else:
+                update.message.reply_text(
+                    text=f"{emo.ERROR} Argument *{args[1]}* is invalid",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
 
         if resolution == "MINUTE":
-            ohlcv = CryptoCompare().get_historical_ohlcv_minute(coin, base_coin, time_frame)["Data"]
+            ohlcv = CryptoCompare().get_historical_ohlcv_minute(
+                coin,
+                base_coin,
+                time_frame)
         elif resolution == "HOUR":
-            ohlcv = CryptoCompare().get_historical_ohlcv_hourly(coin, base_coin, time_frame)["Data"]
+            ohlcv = CryptoCompare().get_historical_ohlcv_hourly(
+                coin,
+                base_coin,
+                time_frame)
         elif resolution == "DAY":
-            ohlcv = CryptoCompare().get_historical_ohlcv_daily(coin, base_coin, time_frame)["Data"]
-        else:
-            ohlcv = CryptoCompare().get_historical_ohlcv_hourly(coin, base_coin, time_frame)["Data"]
+            ohlcv = CryptoCompare().get_historical_ohlcv_daily(
+                coin,
+                base_coin,
+                time_frame)
 
+        if ohlcv["Response"] == "Error":
+            if ohlcv["Message"] == "limit is larger than max value.":
+                update.message.reply_text(
+                    text=f"{emo.ERROR} Time frame can't be larger "
+                    f"then *{con.CG_DATA_LIMIT}* data points",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
+            elif ohlcv["Message"].startswith("There is no data for the symbol"):
+                ohlcv = None
+            else:
+                update.message.reply_text(
+                    text=f"{emo.ERROR} CoinGecko ERROR: {ohlcv['Message']}",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
+        else:
+            ohlcv = ohlcv["Data"]
+
+        cp_api = False
         # TODO: Add this to cache
-        # TODO: Check for valid base_coin
         if not ohlcv:
+            if base_coin != "BTC" and base_coin != "USD":
+                update.message.reply_text(
+                    text=f"{emo.ERROR} Base currency for "
+                    f"*{coin}* can only be *BTC* or *USD*",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
+
+            # Time frame
+            if len(args) > 1:
+                if resolution != "DAY":
+                    update.message.reply_text(
+                        text=f"{emo.ERROR} Timeframe for *{coin}* "
+                        f"can only be specified in days",
+                        parse_mode=ParseMode.MARKDOWN)
+                    return
+                else:
+                    time_frame = int(time_frame)
+            else:
+                time_frame = 30  # Days
+
             for c in CoinPaprika().get_list_coins():
                 if c["symbol"] == coin:
+                    # Current datetime in seconds
                     t_now = time.time()
-                    time_frame = float(time_frame)
-
-                    if resolution == "MINUTE":
-                        t_dif = time_frame * 60
-                        t_start = t_now - t_dif
-                    elif resolution == "HOUR":
-                        t_dif = time_frame * 60 * 60
-                        t_start = t_now - t_dif
-                    elif resolution == "DAY":
-                        t_dif = time_frame * 60 * 60 * 24
-                        t_start = t_now - t_dif
-                    else:
-                        t_dif = time_frame * 60 * 60
-                        t_start = t_now - t_dif
+                    # Convert chart time span to seconds
+                    time_frame = time_frame * 24 * 60 * 60
+                    # Start datetime for chart in seconds
+                    t_start = t_now - int(time_frame)
 
                     ohlcv = CoinPaprika().get_historical_ohlc(
                         c["id"],
                         int(t_start),
                         end=int(t_now),
-                        quote=base_coin)
+                        quote=base_coin.lower(),
+                        limit=366)
 
-                    from_cp = True
+                    cp_api = True
+                    break
 
-        if not ohlcv:
-            update.message.reply_text(
-                text=f"{emo.ERROR} No OHLC data for *{coin}*",
-                parse_mode=ParseMode.MARKDOWN)
-            return
+            if not ohlcv:
+                update.message.reply_text(
+                    text=f"{emo.ERROR} No OHLC data for *{coin}* "
+                    f"available or time frame too big",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
 
         o = [value["open"] for value in ohlcv]
         h = [value["high"] for value in ohlcv]
         l = [value["low"] for value in ohlcv]
         c = [value["close"] for value in ohlcv]
 
-        if from_cp:
-            # TODO: Better import possible? Shorter possible?
-            t = [time.mktime(dateutil.parser.parse(value["time_close"]).timetuple()) for value in ohlcv]
+        if cp_api:
+            t = [time.mktime(dau.parse(value["time_close"]).timetuple()) for value in ohlcv]
         else:
             t = [value["time"] for value in ohlcv]
 
