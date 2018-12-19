@@ -68,8 +68,9 @@ class OpenCryptoPlugin:
 
         return False
 
+    # TODO: Still needed to distinguish between crypto and fiat?
     @classmethod
-    def format(cls, value, force_length=True, fiat=False, template=None):
+    def format(cls, value, decimals=None, force_length=True, template=None):
         try:
             if isinstance(value, str):
                 value = value.replace(",", "")
@@ -84,26 +85,31 @@ class OpenCryptoPlugin:
         except Exception:
             t = v
 
+        try:
+            decimals = int(decimals)
+        except Exception:
+            decimals = None
+
         if t < 1:
-            if fiat:
-                v = "{0:.2f}".format(v)
+            if decimals:
+                v = "{1:.{0}f}".format(decimals, v)
             else:
                 v = "{0:.8f}".format(v)
         elif t < 100:
-            if fiat:
-                v = "{0:.2f}".format(v)
+            if decimals:
+                v = "{1:.{0}f}".format(decimals, v)
             else:
                 v = "{0:.4f}".format(v)
         elif t < 10000:
-            if fiat:
-                v = "{0:,.2f}".format(v)
+            if decimals:
+                v = "{1:,.{0}f}".format(decimals, v)
             else:
                 v = "{0:,.2f}".format(v)
         else:
             v = "{0:,.0f}".format(v)
 
         if not force_length:
-            while v.endswith(("0", ".")):
+            while "." in v and v.endswith(("0", ".")):
                 v = v[:-1]
 
         return v

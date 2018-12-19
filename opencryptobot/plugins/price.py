@@ -83,7 +83,7 @@ class Price(OpenCryptoPlugin):
                 for symbol, price in next(iter(result.values())).items():
                     if symbol in fiat_list:
                         if decimal.Decimal(str(price)).as_tuple().exponent > -3:
-                            price = self.format(price, fiat=True)
+                            price = self.format(price, decimals=2)
                         else:
                             price = self.format(price)
                     else:
