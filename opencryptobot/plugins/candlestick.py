@@ -104,8 +104,12 @@ class Candlestick(OpenCryptoPlugin):
                         t_dif = time_frame * 60 * 60
                         t_start = t_now - t_dif
 
-                    # TODO: Data looks weird... Verify
-                    ohlcv = CoinPaprika().get_historical_ohlc(c["id"], int(t_start), end=int(t_now))
+                    ohlcv = CoinPaprika().get_historical_ohlc(
+                        c["id"],
+                        int(t_start),
+                        end=int(t_now),
+                        quote=base_coin)
+
                     from_cp = True
 
         if not ohlcv:
