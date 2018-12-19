@@ -1,11 +1,13 @@
 import opencryptobot.emoji as emo
 
 from telegram import ParseMode
+from opencryptobot.utils import format
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 # FIXME: Data for LOKI is weird because of fiat
+# TODO: Use is_fiat method from 'price' here also
 class Ico(OpenCryptoPlugin):
 
     def get_cmd(self):
@@ -48,7 +50,7 @@ class Ico(OpenCryptoPlugin):
 
                 kyc_req = data["ico_data"]["kyc_required"]
 
-                raised = self.format(raised) if raised is not None else raised
+                raised = format(raised) if raised is not None else raised
 
                 if pre_sale_a:
                     pre_sale_a = int(float(pre_sale_a)) \
@@ -58,7 +60,7 @@ class Ico(OpenCryptoPlugin):
                     pre_sale_a = "{0:,}".format(pre_sale_a)
 
                 if pre_sale_p:
-                    pre_sale_p = self.format(pre_sale_p)
+                    pre_sale_p = format(pre_sale_p)
 
                 if pub_sale_a:
                     pub_sale_a = int(float(pub_sale_a)) \
@@ -70,7 +72,7 @@ class Ico(OpenCryptoPlugin):
                         else pub_sale_a
 
                 if pub_sale_p:
-                    pub_sale_p = self.format(pub_sale_p)
+                    pub_sale_p = format(pub_sale_p)
 
                 if pre_sale_a:
                     pre_sale_str = f"{pre_sale_a} {coin} for {pre_sale_p} {pre_sale_c}\n"

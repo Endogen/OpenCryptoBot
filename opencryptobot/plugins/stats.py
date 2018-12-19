@@ -1,6 +1,7 @@
 import opencryptobot.emoji as emo
 
 from telegram import ParseMode
+from opencryptobot.utils import format
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -55,10 +56,10 @@ class Stats(OpenCryptoPlugin):
         else:
             sup_t = "N/A"
 
-        p_usd = self.format(data["market_data"]["current_price"]["usd"])
-        p_eur = self.format(data["market_data"]["current_price"]["eur"], template=p_usd)
-        p_btc = self.format(data["market_data"]["current_price"]["btc"], template=p_usd)
-        p_eth = self.format(data["market_data"]["current_price"]["eth"], template=p_usd)
+        p_usd = format(data["market_data"]["current_price"]["usd"])
+        p_eur = format(data["market_data"]["current_price"]["eur"], template=p_usd)
+        p_btc = format(data["market_data"]["current_price"]["btc"], template=p_usd)
+        p_eth = format(data["market_data"]["current_price"]["eth"], template=p_usd)
 
         p_usd = "{:>12}".format(p_usd)
         p_eur = "{:>12}".format(p_eur)

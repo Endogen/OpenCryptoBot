@@ -3,6 +3,7 @@ import opencryptobot.emoji as emo
 
 from datetime import date
 from telegram import ParseMode
+from opencryptobot.utils import format
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -49,8 +50,8 @@ class Alltimehigh(OpenCryptoPlugin):
 
         for c in vs_cur.split(","):
             if c in ath_price:
-                ath_p = self.format(ath_price[c])
-                cur_p = self.format(cur_price[c], template=ath_p)
+                ath_p = format(ath_price[c])
+                cur_p = format(cur_price[c], template=ath_p)
                 change = "{0:.2f}".format(ath_change[c])
 
                 date_time = ath_date[c]

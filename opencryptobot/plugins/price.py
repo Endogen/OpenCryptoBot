@@ -2,6 +2,7 @@ import decimal
 import opencryptobot.emoji as emo
 
 from telegram import ParseMode
+from opencryptobot.utils import format
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -61,10 +62,10 @@ class Price(OpenCryptoPlugin):
                         base_coin = ticker["target"]
                         if vs_list:
                             if base_coin in vs_list:
-                                price = self.format(ticker["last"])
+                                price = format(ticker["last"])
                                 msg += f"`{base_coin}: {price}`\n"
                         else:
-                            price = self.format(ticker["last"])
+                            price = format(ticker["last"])
                             msg += f"`{base_coin}: {price}`\n"
         else:
             if not vs_cur:
@@ -78,16 +79,17 @@ class Price(OpenCryptoPlugin):
             result = cg.get_simple_price(coin_id, vs_cur)
 
             if result:
+                # TODO: Get fiat list and iterate over it, in own method
                 fiat_list = cg.get_fiat_list(use_cache=True)
 
                 for symbol, price in next(iter(result.values())).items():
                     if symbol in fiat_list:
                         if decimal.Decimal(str(price)).as_tuple().exponent > -3:
-                            price = self.format(price, decimals=2)
+                            price = format(price, decimals=2)
                         else:
-                            price = self.format(price)
+                            price = format(price)
                     else:
-                        price = self.format(price)
+                        price = format(price)
 
                     msg += f"`{symbol.upper()}: {price}`\n"
 

@@ -51,69 +51,6 @@ class OpenCryptoPlugin:
             return func(self, bot, update, **kwargs)
         return _save_data
 
-    @classmethod
-    def is_number(cls, string):
-        try:
-            float(string)
-            return True
-        except ValueError:
-            pass
-
-        try:
-            import unicodedata
-            unicodedata.numeric(string)
-            return True
-        except (TypeError, ValueError):
-            pass
-
-        return False
-
-    # TODO: Still needed to distinguish between crypto and fiat?
-    @classmethod
-    def format(cls, value, decimals=None, force_length=True, template=None):
-        try:
-            if isinstance(value, str):
-                value = value.replace(",", "")
-            v = float(value)
-        except Exception:
-            return str(value)
-
-        try:
-            if isinstance(template, str):
-                template = template.replace(",", "")
-            t = float(template)
-        except Exception:
-            t = v
-
-        try:
-            decimals = int(decimals)
-        except Exception:
-            decimals = None
-
-        if t < 1:
-            if decimals:
-                v = "{1:.{0}f}".format(decimals, v)
-            else:
-                v = "{0:.8f}".format(v)
-        elif t < 100:
-            if decimals:
-                v = "{1:.{0}f}".format(decimals, v)
-            else:
-                v = "{0:.4f}".format(v)
-        elif t < 10000:
-            if decimals:
-                v = "{1:,.{0}f}".format(decimals, v)
-            else:
-                v = "{0:,.2f}".format(v)
-        else:
-            v = "{0:,.0f}".format(v)
-
-        if not force_length:
-            while "." in v and v.endswith(("0", ".")):
-                v = v[:-1]
-
-        return v
-
     def get_cmd(self):
         method = inspect.currentframe().f_code.co_name
         raise NotImplementedError(f"Interface method '{method}' not implemented")
