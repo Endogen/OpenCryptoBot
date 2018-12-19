@@ -22,7 +22,7 @@ class Info(OpenCryptoPlugin):
 
         coin = args[0].upper()
 
-        coin_info = CryptoCompare().coin_general_info(coin, "USD")
+        coin_info = CryptoCompare().get_coin_general_info(coin, "USD")
 
         if coin_info["Message"] != "Success":
             update.message.reply_text(

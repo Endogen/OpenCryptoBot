@@ -63,7 +63,7 @@ class Whitepaper(OpenCryptoPlugin):
         return Category.GENERAL
 
     def _from_allcryptowhitepaper(self, coin):
-        coin_info = CryptoCompare().coin_general_info(coin, "USD")
+        coin_info = CryptoCompare().get_coin_general_info(coin, "USD")
 
         if coin_info["Message"] != "Success":
             return None

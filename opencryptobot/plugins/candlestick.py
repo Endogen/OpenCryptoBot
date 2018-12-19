@@ -1,6 +1,8 @@
 import io
+import time
 import threading
 import pandas as pd
+import dateutil.parser
 import plotly.io as pio
 import plotly.graph_objs as go
 import opencryptobot.emoji as emo
@@ -10,6 +12,7 @@ import opencryptobot.constants as con
 from io import BytesIO
 from telegram import ParseMode
 from coinmarketcap import Market
+from opencryptobot.api.coinpaprika import CoinPaprika
 from opencryptobot.api.cryptocompare import CryptoCompare
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -69,14 +72,41 @@ class Candlestick(OpenCryptoPlugin):
                 resolution = "DAY"
                 time_frame = args[1][:-1]
 
+        from_cp = False
+
         if resolution == "MINUTE":
-            ohlcv = CryptoCompare().historical_ohlcv_minute(coin, base_coin, time_frame)["Data"]
+            ohlcv = CryptoCompare().get_historical_ohlcv_minute(coin, base_coin, time_frame)["Data"]
         elif resolution == "HOUR":
-            ohlcv = CryptoCompare().historical_ohlcv_hourly(coin, base_coin, time_frame)["Data"]
+            ohlcv = CryptoCompare().get_historical_ohlcv_hourly(coin, base_coin, time_frame)["Data"]
         elif resolution == "DAY":
-            ohlcv = CryptoCompare().historical_ohlcv_daily(coin, base_coin, time_frame)["Data"]
+            ohlcv = CryptoCompare().get_historical_ohlcv_daily(coin, base_coin, time_frame)["Data"]
         else:
-            ohlcv = CryptoCompare().historical_ohlcv_hourly(coin, base_coin, time_frame)["Data"]
+            ohlcv = CryptoCompare().get_historical_ohlcv_hourly(coin, base_coin, time_frame)["Data"]
+
+        # TODO: Add this to cache
+        # TODO: Check for valid base_coin
+        if not ohlcv:
+            for c in CoinPaprika().get_list_coins():
+                if c["symbol"] == coin:
+                    t_now = time.time()
+                    time_frame = float(time_frame)
+
+                    if resolution == "MINUTE":
+                        t_dif = time_frame * 60
+                        t_start = t_now - t_dif
+                    elif resolution == "HOUR":
+                        t_dif = time_frame * 60 * 60
+                        t_start = t_now - t_dif
+                    elif resolution == "DAY":
+                        t_dif = time_frame * 60 * 60 * 24
+                        t_start = t_now - t_dif
+                    else:
+                        t_dif = time_frame * 60 * 60
+                        t_start = t_now - t_dif
+
+                    # TODO: Data looks weird... Verify
+                    ohlcv = CoinPaprika().get_historical_ohlc(c["id"], int(t_start), end=int(t_now))
+                    from_cp = True
 
         if not ohlcv:
             update.message.reply_text(
@@ -88,7 +118,12 @@ class Candlestick(OpenCryptoPlugin):
         h = [value["high"] for value in ohlcv]
         l = [value["low"] for value in ohlcv]
         c = [value["close"] for value in ohlcv]
-        t = [value["time"] for value in ohlcv]
+
+        if from_cp:
+            # TODO: Better import possible? Shorter possible?
+            t = [time.mktime(dateutil.parser.parse(value["time_close"]).timetuple()) for value in ohlcv]
+        else:
+            t = [value["time"] for value in ohlcv]
 
         margin_l = 140
         tickformat = "0.8f"
