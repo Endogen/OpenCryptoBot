@@ -15,7 +15,21 @@ class CoinPaprika(object):
         self.response = requests.get(f"{self._base_url}{url_data}").json()
         return self.response
 
+    def get_coin_by_id(self, coin_id):
+        url_data = f"coins{coin_id}"
+        self.response = requests.get(f"{self._base_url}{url_data}").json()
+        return self.response
+
     def get_global(self):
         url_data = "global"
+        self.response = requests.get(f"{self._base_url}{url_data}").json()
+        return self.response
+
+    def get_historical_ohlc(self, coin_id, start, **kwargs):
+        url_data = f"coins/{coin_id}/ohlcv/historical?start={start}"
+
+        for key, value in kwargs.items():
+            url_data += f"?{key}={value}"
+
         self.response = requests.get(f"{self._base_url}{url_data}").json()
         return self.response
