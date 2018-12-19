@@ -22,7 +22,7 @@ class Value(OpenCryptoPlugin):
         coin = args[0].upper()
 
         if len(args) > 1 and self.is_number(args[1]):
-            qty = float(args[1])
+            qty = args[1]
         else:
             update.message.reply_text(
                 text=f"Usage:\n{self.get_usage()}",
@@ -44,16 +44,23 @@ class Value(OpenCryptoPlugin):
                 prices = data["market_data"]["current_price"]
                 break
 
+        try:
+            qty_float = float(qty)
+        except Exception:
+            update.message.reply_text(
+                text=f"{emo.ERROR} Quantity '{qty}' not valid",
+                parse_mode=ParseMode.MARKDOWN)
+            return
+
         msg = str()
 
         for c in vs_cur.split(","):
             if c in prices:
-                value = self.format(prices[c] * qty)
+                value = self.format(prices[c] * qty_float)
                 msg += f"`{c.upper()}: {value}`\n"
 
         if msg:
-            v = "{0:,}".format(int(qty) if str(qty).endswith(".0") else qty)
-            msg = f"`Value of {v} {coin}`\n\n" + msg
+            msg = f"`Value of {qty} {coin}`\n\n" + msg
         else:
             msg = f"{emo.ERROR} Can't retrieve data for *{coin}*"
 
