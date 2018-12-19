@@ -13,6 +13,5 @@
     },
     "use_db": true,
     "use_cache": true,
-    "bpmn_cmds": true,
     "update_slug": "endogen/OpenCryptoBot/master"
 }
