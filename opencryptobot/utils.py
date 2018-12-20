@@ -61,3 +61,31 @@ def format(value, decimals=None, force_length=True, template=None):
             v = v[:-1]
 
     return v
+
+
+# TODO: Use this also in 'candlestick.py'
+def get_seconds(time_span):
+    if isinstance(time_span, str):
+        if time_span.isnumeric():
+            return int(time_span)
+
+        resolution = time_span.strip()[-1:].lower()
+        time_frame = time_span.strip()[:-1]
+
+        if time_frame.isnumeric():
+            if resolution == "s":
+                return int(time_frame)
+            elif resolution == "m":
+                return int(time_frame) * 60
+            elif resolution == "h":
+                return int(time_frame) * 60 * 60
+            elif resolution == "d":
+                return int(time_frame) * 60 * 60 * 24
+        else:
+            # TODO: ERROR
+            pass
+    elif isinstance(time_span, float):
+        return int(time_span)
+    else:
+        # TODO: ERROR
+        pass

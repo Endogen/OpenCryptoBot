@@ -4,6 +4,7 @@ import logging
 import importlib
 import opencryptobot.emoji as emo
 
+from opencryptobot.utils import get_seconds
 from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
 from telegram.error import InvalidToken
 from telegram.ext import Updater, CommandHandler, InlineQueryHandler
@@ -45,10 +46,13 @@ class TelegramBot:
         # Handle all Telegram related errors
         self.dispatcher.add_error_handler(self._handle_tg_errors)
 
-        # If enabled, fill cache
-        if Cfg.get("use_cache"):
+        # Refresh cache periodically if enabled
+        if Cfg.get("refresh_cache") is not None:
             logging.info("Starting Caching")
-            CoinGecko.refresh_cache()
+
+            seconds = get_seconds(Cfg.get("refresh_cache"))
+            self.job_queue.run_repeating(self._refresh_cache, seconds, first=0)
+
             logging.info("Finished Caching")
 
     # Start the bot
@@ -163,3 +167,7 @@ class TelegramBot:
             update.callback_query.message.reply_text(
                 text=error_msg,
                 parse_mode=ParseMode.MARKDOWN)
+
+    # TODO: Add also CoinPaprika coin list
+    def _refresh_cache(self):
+        CoinGecko.refresh_cache()

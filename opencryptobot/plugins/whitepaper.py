@@ -108,6 +108,7 @@ class Whitepaper(OpenCryptoPlugin):
                     for a in li.find_all("a"):
                         return a["href"]
 
+    # TODO: Use cached list
     def _from_coinpaprika(self, coin):
         cp = CoinPaprika()
         c_list = cp.get_list_coins()
