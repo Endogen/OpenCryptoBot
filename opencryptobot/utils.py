@@ -16,7 +16,7 @@ def is_number(string):
     return False
 
 
-# TODO: Still needed to distinguish between crypto and fiat
+# TODO: Still need to distinguish between crypto and fiat
 def format(value, decimals=None, force_length=True, template=None):
     """Format a crypto coin value so that it isn't unnecessarily long"""
     try:
@@ -81,11 +81,13 @@ def get_seconds(time_span):
                 return int(time_frame) * 60 * 60
             elif resolution == "d":
                 return int(time_frame) * 60 * 60 * 24
+            else:
+                return int(time_frame)
         else:
-            # TODO: ERROR
-            pass
+            return None
     elif isinstance(time_span, float):
         return int(time_span)
+    elif isinstance(time_span, int):
+        return time_span
     else:
-        # TODO: ERROR
-        pass
+        return None

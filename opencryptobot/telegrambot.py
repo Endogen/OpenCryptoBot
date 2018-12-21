@@ -3,6 +3,7 @@ import uuid
 import logging
 import importlib
 import opencryptobot.emoji as emo
+import opencryptobot.constants as con
 
 from opencryptobot.utils import get_seconds
 from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
@@ -48,11 +49,15 @@ class TelegramBot:
 
         # Refresh cache periodically if enabled
         if Cfg.get("refresh_cache") is not None:
+            sec = get_seconds(Cfg.get("refresh_cache"))
+
+            if not sec:
+                sec = con.DEF_CACHE_REFRESH
+                msg = f"Refresh rate for caching not valid. Using {sec} seconds"
+                logging.warning(msg)
+
             logging.info("Starting Caching")
-
-            seconds = get_seconds(Cfg.get("refresh_cache"))
-            self.job_queue.run_repeating(self._refresh_cache, seconds, first=0)
-
+            self.job_queue.run_repeating(self._refresh_cache, sec, first=0)
             logging.info("Finished Caching")
 
     # Start the bot
@@ -169,5 +174,6 @@ class TelegramBot:
                 parse_mode=ParseMode.MARKDOWN)
 
     # TODO: Add also CoinPaprika coin list
-    def _refresh_cache(self):
+    @staticmethod
+    def _refresh_cache(bot, job):
         CoinGecko.refresh_cache()
