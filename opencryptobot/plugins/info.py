@@ -2,6 +2,7 @@ import opencryptobot.emoji as emo
 import opencryptobot.constants as con
 
 from telegram import ParseMode
+from opencryptobot.utils import format
 from opencryptobot.api.cryptocompare import CryptoCompare
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -42,13 +43,13 @@ class Info(OpenCryptoPlugin):
         update.message.reply_photo(
             photo=image,
             caption=f"`"
-                    f"Name:            {name} ({coin})\n"
-                    f"Algorithm:       {algo}\n"
-                    f"Proof type:      {proof}\n"
-                    f"Hashes (sec):    {int(h_per_s)}\n"
-                    f"Block (current): {block}\n"
-                    f"Block time:      {block_time}\n"
-                    f"Block reward:    {block_reward}"
+                    f"Name:         {name} ({coin})\n"
+                    f"Algorithm:    {algo}\n"
+                    f"Proof type:   {proof}\n"
+                    f"Hashes (sec): {format(int(h_per_s))}\n"
+                    f"Block:        {block}\n"
+                    f"Block time:   {block_time}\n"
+                    f"Block reward: {block_reward}"
                     f"`",
             parse_mode=ParseMode.MARKDOWN)
 

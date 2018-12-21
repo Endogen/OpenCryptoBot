@@ -242,7 +242,7 @@ class Candlestick(OpenCryptoPlugin):
             )])
 
         update.message.reply_photo(
-            photo=io.BufferedReader(BytesIO(pio.to_image(fig, format='webp'))),
+            photo=io.BufferedReader(BytesIO(pio.to_image(fig, format='jpeg'))),
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):

@@ -16,8 +16,7 @@ def is_number(string):
     return False
 
 
-# TODO: Still need to distinguish between crypto and fiat
-def format(value, decimals=None, force_length=True, template=None):
+def format(value, decimals=None, force_length=False, template=None):
     """Format a crypto coin value so that it isn't unnecessarily long"""
     try:
         if isinstance(value, str):

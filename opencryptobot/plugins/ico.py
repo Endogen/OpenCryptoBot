@@ -6,8 +6,6 @@ from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
-# FIXME: Data for LOKI is weird because of fiat
-# TODO: Use is_fiat method from 'price' here also
 class Ico(OpenCryptoPlugin):
 
     def get_cmd(self):
@@ -53,23 +51,13 @@ class Ico(OpenCryptoPlugin):
                 raised = format(raised) if raised is not None else raised
 
                 if pre_sale_a:
-                    pre_sale_a = int(float(pre_sale_a)) \
-                        if pre_sale_a.endswith(".0") \
-                        else pre_sale_a
-
-                    pre_sale_a = "{0:,}".format(pre_sale_a)
+                    pre_sale_a = format(pre_sale_a)
 
                 if pre_sale_p:
                     pre_sale_p = format(pre_sale_p)
 
                 if pub_sale_a:
-                    pub_sale_a = int(float(pub_sale_a)) \
-                        if pub_sale_a.endswith(".0") \
-                        else float(pub_sale_a)
-
-                    pub_sale_a = "{0:,}".format(pub_sale_a) \
-                        if pub_sale_a != "None" \
-                        else pub_sale_a
+                    pub_sale_a = format(pub_sale_a)
 
                 if pub_sale_p:
                     pub_sale_p = format(pub_sale_p)

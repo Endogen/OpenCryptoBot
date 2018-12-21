@@ -179,7 +179,7 @@ class Chart(OpenCryptoPlugin):
         fig["layout"]["yaxis2"].update(tickformat=tickformat)
 
         update.message.reply_photo(
-            photo=io.BufferedReader(BytesIO(pio.to_image(fig, format="webp"))),
+            photo=io.BufferedReader(BytesIO(pio.to_image(fig, format="jpeg"))),
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):

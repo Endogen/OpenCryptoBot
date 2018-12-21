@@ -45,21 +45,26 @@ class Stats(OpenCryptoPlugin):
         rank_mc = data["market_cap_rank"]
         rank_cg = data["coingecko_rank"]
 
-        sup_c = "{0:,}".format(
+        sup_c = format(
             int(float(
                 data["market_data"]["circulating_supply"]))) + f" {symbol}"
 
         if data["market_data"]["total_supply"]:
-            sup_t = "{0:,}".format(
+            sup_t = format(
                 int(float(
                     data["market_data"]["total_supply"]))) + f" {symbol}"
         else:
             sup_t = "N/A"
 
-        p_usd = format(data["market_data"]["current_price"]["usd"])
-        p_eur = format(data["market_data"]["current_price"]["eur"], template=p_usd)
-        p_btc = format(data["market_data"]["current_price"]["btc"], template=p_usd)
-        p_eth = format(data["market_data"]["current_price"]["eth"], template=p_usd)
+        usd = data["market_data"]["current_price"]["usd"]
+        eur = data["market_data"]["current_price"]["eur"]
+        btc = data["market_data"]["current_price"]["btc"]
+        eth = data["market_data"]["current_price"]["eth"]
+
+        p_usd = format(usd, force_length=True)
+        p_eur = format(eur, force_length=True, template=p_usd)
+        p_btc = format(btc, force_length=True, template=p_usd)
+        p_eth = format(eth, force_length=True, template=p_usd)
 
         p_usd = "{:>12}".format(p_usd)
         p_eur = "{:>12}".format(p_eur)
@@ -70,40 +75,40 @@ class Stats(OpenCryptoPlugin):
         btc_str = "" if coin == "BTC" else f"BTC {p_btc}\n"
         eth_str = "" if coin == "ETH" else f"ETH {p_eth}\n"
 
-        v_24h = "{0:,}".format(int(float(data["market_data"]["total_volume"]["usd"])))
-        m_cap = "{0:,}".format(int(float(data["market_data"]["market_cap"]["usd"])))
+        v_24h = format(int(float(data["market_data"]["total_volume"]["usd"])))
+        m_cap = format(int(float(data["market_data"]["market_cap"]["usd"])))
 
         if data["market_data"]["price_change_percentage_1h_in_currency"]:
             c_1h = data["market_data"]["price_change_percentage_1h_in_currency"]["usd"]
-            c1h = "{0:.2f}".format(float(c_1h))
+            c1h = format(float(c_1h), decimals=2)
             h1 = "{:>10}".format(f"{c1h}%")
         else:
             h1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_24h_in_currency"]:
             c_1d = data["market_data"]["price_change_percentage_24h_in_currency"]["usd"]
-            c1d = "{0:.2f}".format(float(c_1d))
+            c1d = format(float(c_1d), decimals=2)
             d1 = "{:>10}".format(f"{c1d}%")
         else:
             d1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_7d_in_currency"]:
             c_1w = data["market_data"]["price_change_percentage_7d_in_currency"]["usd"]
-            c1w = "{0:.2f}".format(float(c_1w))
+            c1w = format(float(c_1w), decimals=2)
             w1 = "{:>10}".format(f"{c1w}%")
         else:
             w1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_30d_in_currency"]:
             c_1m = data["market_data"]["price_change_percentage_30d_in_currency"]["usd"]
-            c1m = "{0:.2f}".format(float(c_1m))
+            c1m = format(float(c_1m), decimals=2)
             m1 = "{:>10}".format(f"{c1m}%")
         else:
             m1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_1y_in_currency"]:
             c_1y = data["market_data"]["price_change_percentage_1y_in_currency"]["usd"]
-            c1y = "{0:.2f}".format(float(c_1y))
+            c1y = format(float(c_1y), decimals=2)
             y1 = "{:>10}".format(f"{c1y}%")
         else:
             y1 = "{:>10}".format("N/A")

@@ -5,6 +5,7 @@ import opencryptobot.emoji as emo
 
 from io import BytesIO
 from telegram import ParseMode
+from opencryptobot.utils import format
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -38,19 +39,14 @@ class Global(OpenCryptoPlugin):
         msg = str()
         res = CoinGecko().get_global()
 
-        m_cap_usd = "{0:,.0f}".format(res["total_market_cap"]["usd"])
-        m_cap_eur = "{0:,.0f}".format(res["total_market_cap"]["eur"])
-
-        vol_usd = "{0:,.0f}".format(res["total_volume"]["usd"])
-        vol_eur = "{0:,.0f}".format(res["total_volume"]["eur"])
-
-        m_cap_per = res["market_cap_percentage"]
-
         # Total Market Capital
         if sub_cmd.lower() == "mcap":
+            m_cap_usd = format(res["total_market_cap"]["usd"])
+            m_cap_eur = format(res["total_market_cap"]["eur"])
+
             if coin:
                 if coin in res["total_market_cap"]:
-                    mcap = "{0:,.0f}".format(res["total_market_cap"][coin])
+                    mcap = format(res["total_market_cap"][coin])
                     msg = f"`Total Market Capital\n{coin.upper()}: {mcap}`"
             else:
                 msg = f"`Total Market Capital`\n" \
@@ -59,9 +55,12 @@ class Global(OpenCryptoPlugin):
 
         # Total Volume
         elif sub_cmd.lower() == "vol":
+            vol_usd = format(res["total_volume"]["usd"])
+            vol_eur = format(res["total_volume"]["eur"])
+
             if coin:
                 if coin in res["total_volume"]:
-                    vol = "{0:,.0f}".format(res["total_volume"][coin])
+                    vol = format(res["total_volume"][coin])
                     msg = f"`Total Volume\n{coin.upper()}: {vol}`"
             else:
                 msg = f"`Total Volume (24h)`\n" \
@@ -69,6 +68,8 @@ class Global(OpenCryptoPlugin):
                       f"`EUR: {vol_eur}`"
 
         elif sub_cmd.lower() == "dom":
+            m_cap_per = res["market_cap_percentage"]
+
             labels = list()
             values = list()
 
@@ -77,7 +78,7 @@ class Global(OpenCryptoPlugin):
                 labels.append(key.upper())
                 values.append(m_cap_per[key])
 
-                value = "{0:.2f}".format(m_cap_per[key])
+                value = format(m_cap_per[key], decimals=2)
                 tst = "{:>13}".format(f"{value}%")
                 tst = key.upper() + tst[len(key):]
                 msg += f"`{tst}`\n"
@@ -104,7 +105,7 @@ class Global(OpenCryptoPlugin):
             fig = go.Figure(data=[trace], layout=layout)
 
             update.message.reply_photo(
-                photo=io.BufferedReader(BytesIO(pio.to_image(fig, format="webp"))),
+                photo=io.BufferedReader(BytesIO(pio.to_image(fig, format="jpeg"))),
                 caption=msg,
                 parse_mode=ParseMode.MARKDOWN)
 
