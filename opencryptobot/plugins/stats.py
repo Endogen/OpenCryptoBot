@@ -2,6 +2,7 @@ import opencryptobot.emoji as emo
 
 from telegram import ParseMode
 from opencryptobot.utils import format
+from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -24,12 +25,10 @@ class Stats(OpenCryptoPlugin):
         data = None
         cgid = None
 
-        cg = CoinGecko()
-
         # Get coin ID and data
-        for entry in cg.get_coins_list(use_cache=True):
+        for entry in APICache.get_cg_coins_list():
             if entry["symbol"].upper() == coin:
-                data = cg.get_coin_by_id(entry["id"])
+                data = CoinGecko().get_coin_by_id(entry["id"])
                 cgid = entry["id"]
                 break
 

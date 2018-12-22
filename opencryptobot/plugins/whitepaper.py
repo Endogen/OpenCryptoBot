@@ -4,9 +4,8 @@ import opencryptobot.constants as con
 
 from bs4 import BeautifulSoup
 from telegram import ParseMode
-from coinmarketcap import Market
 from telegram.error import BadRequest
-from opencryptobot.api.coinpaprika import CoinPaprika
+from opencryptobot.api.apicache import APICache
 from opencryptobot.api.cryptocompare import CryptoCompare
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -85,8 +84,7 @@ class Whitepaper(OpenCryptoPlugin):
     def _from_coinmarketcap(self, coin):
         slug = str()
 
-        listings = Market().listings()
-        for listing in listings["data"]:
+        for listing in APICache.get_cmc_coin_list():
             if coin.upper() == listing["symbol"].upper():
                 self.name = listing["name"].capitalize()
                 slug = listing["website_slug"]
@@ -108,14 +106,10 @@ class Whitepaper(OpenCryptoPlugin):
                     for a in li.find_all("a"):
                         return a["href"]
 
-    # TODO: Use cached list
     def _from_coinpaprika(self, coin):
-        cp = CoinPaprika()
-        c_list = cp.get_list_coins()
-
         coin_id = str()
 
-        for c in c_list:
+        for c in APICache.get_cp_coin_list():
             if c["symbol"] == coin:
                 self.name = c["name"]
                 coin_id = c["id"]

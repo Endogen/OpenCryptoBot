@@ -1,0 +1,73 @@
+import logging
+
+from coinmarketcap import Market
+from opencryptobot.api.coingecko import CoinGecko
+from opencryptobot.api.coinpaprika import CoinPaprika
+
+
+class APICache(object):
+
+    cg_fiat_list = list()
+    cg_coin_list = list()
+    cp_coin_list = list()
+    cmc_coin_list = list()
+
+    @staticmethod
+    def refresh(bot, job):
+        try:
+
+            logging.info("Starting Caching")
+
+            APICache.refresh_coingecko_fiat_list()
+            APICache.refresh_coingecko_coin_list()
+            APICache.refresh_coinpaprika_coin_list()
+            APICache.refresh_coinmarketcap_coin_list()
+
+            logging.info("Finished Caching")
+
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def refresh_coingecko_coin_list():
+        APICache.cg_coin_list = CoinGecko().get_coins_list()
+
+    @staticmethod
+    def refresh_coinpaprika_coin_list():
+        APICache.cp_coin_list = CoinPaprika().get_list_coins()
+
+    @staticmethod
+    def refresh_coinmarketcap_coin_list():
+        APICache.cmc_coin_list = Market().listings()["data"]
+
+    @staticmethod
+    def refresh_coingecko_fiat_list():
+        APICache.cg_fiat_list = CoinGecko().get_fiat_list()
+
+    @staticmethod
+    def get_cg_coins_list():
+        if APICache.cg_coin_list:
+            return APICache.cg_coin_list
+        else:
+            return CoinGecko().get_coins_list()
+
+    @staticmethod
+    def get_cg_fiat_list():
+        if APICache.cg_fiat_list:
+            return APICache.cg_fiat_list
+        else:
+            return CoinGecko().get_fiat_list()
+
+    @staticmethod
+    def get_cp_coin_list():
+        if APICache.cp_coin_list:
+            return APICache.cp_coin_list
+        else:
+            return CoinPaprika().get_list_coins()
+
+    @staticmethod
+    def get_cmc_coin_list():
+        if APICache.cmc_coin_list:
+            return APICache.cmc_coin_list
+        else:
+            return Market().listings()["data"]

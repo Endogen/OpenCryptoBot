@@ -9,7 +9,7 @@ import opencryptobot.constants as con
 from io import BytesIO
 from pandas import DataFrame
 from telegram import ParseMode
-from coinmarketcap import Market
+from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -196,7 +196,7 @@ class Chart(OpenCryptoPlugin):
 
     def _get_cg_coin_id(self, coin):
         try:
-            for entry in CoinGecko().get_coins_list(use_cache=True):
+            for entry in APICache.get_cg_coins_list():
                 if entry["symbol"].lower() == coin.lower():
                     self.cg_coin_id = entry["id"]
                     break
@@ -205,7 +205,7 @@ class Chart(OpenCryptoPlugin):
 
     def _get_cmc_coin_id(self, coin):
         self.cmc_coin_id = None
-        for listing in Market().listings()["data"]:
+        for listing in APICache.get_cmc_coin_list():
             if coin == listing["symbol"].upper():
                 self.cmc_coin_id = listing["id"]
                 break

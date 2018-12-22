@@ -1,7 +1,7 @@
 import opencryptobot.emoji as emo
 
 from telegram import ParseMode
-from opencryptobot.api.coingecko import CoinGecko
+from opencryptobot.api.apicache import APICache
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
@@ -22,7 +22,7 @@ class Search(OpenCryptoPlugin):
         search = args[0]
         msg = str()
 
-        for entry in CoinGecko().get_coins_list(use_cache=True):
+        for entry in APICache.get_cg_coins_list():
             if search.lower() in entry["name"].lower():
                 name = entry["name"]
                 symbol = entry["symbol"]

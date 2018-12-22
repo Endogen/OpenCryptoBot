@@ -1,6 +1,7 @@
 import opencryptobot.emoji as emo
 
 from telegram import ParseMode
+from opencryptobot.api.apicache import APICache
 from opencryptobot.utils import is_number, format
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
@@ -34,14 +35,12 @@ class Value(OpenCryptoPlugin):
         if len(args) > 2:
             vs_cur = args[2]
 
-        cg = CoinGecko()
-
         prices = dict()
 
         # Get coin ID
-        for entry in cg.get_coins_list(use_cache=True):
+        for entry in APICache.get_cg_coins_list():
             if entry["symbol"].upper() == coin:
-                data = cg.get_coin_by_id(entry["id"])
+                data = CoinGecko().get_coin_by_id(entry["id"])
                 prices = data["market_data"]["current_price"]
                 break
 

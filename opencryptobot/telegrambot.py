@@ -9,7 +9,7 @@ from opencryptobot.utils import get_seconds
 from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
 from telegram.error import InvalidToken
 from telegram.ext import Updater, CommandHandler, InlineQueryHandler
-from opencryptobot.api.coingecko import CoinGecko
+from opencryptobot.api.apicache import APICache
 from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.config import ConfigManager as Cfg
 
@@ -56,9 +56,7 @@ class TelegramBot:
                 msg = f"Refresh rate for caching not valid. Using {sec} seconds"
                 logging.warning(msg)
 
-            logging.info("Starting Caching")
-            self.job_queue.run_repeating(self._refresh_cache, sec, first=0)
-            logging.info("Finished Caching")
+            self.job_queue.run_repeating(APICache.refresh, sec, first=0)
 
     # Start the bot
     def bot_start_polling(self):
@@ -172,8 +170,3 @@ class TelegramBot:
             update.callback_query.message.reply_text(
                 text=error_msg,
                 parse_mode=ParseMode.MARKDOWN)
-
-    # TODO: Add also CoinPaprika coin list
-    @staticmethod
-    def _refresh_cache(bot, job):
-        CoinGecko.refresh_cache()

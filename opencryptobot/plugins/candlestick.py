@@ -11,7 +11,7 @@ import opencryptobot.constants as con
 
 from io import BytesIO
 from telegram import ParseMode
-from coinmarketcap import Market
+from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coinpaprika import CoinPaprika
 from opencryptobot.api.cryptocompare import CryptoCompare
 from opencryptobot.plugin import OpenCryptoPlugin, Category
@@ -37,7 +37,7 @@ class Candlestick(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        # TODO: Doesn't work. Why?
+        # FIXME: CoinGecko doesn't format OHLC data correctly (example 'eth-loki')
         # Coin or pair
         if "-" in args[0]:
             pair = args[0].split("-", 1)
@@ -109,7 +109,7 @@ class Candlestick(OpenCryptoPlugin):
             ohlcv = ohlcv["Data"]
 
         cp_api = False
-        # TODO: Add this to cache
+
         if not ohlcv:
             if base_coin != "BTC" and base_coin != "USD":
                 update.message.reply_text(
@@ -131,7 +131,7 @@ class Candlestick(OpenCryptoPlugin):
             else:
                 time_frame = 30  # Days
 
-            for c in CoinPaprika().get_list_coins():
+            for c in APICache.get_cp_coin_list():
                 if c["symbol"] == coin:
                     # Current datetime in seconds
                     t_now = time.time()
@@ -258,7 +258,7 @@ class Candlestick(OpenCryptoPlugin):
         return Category.CHARTS
 
     def _get_cmc_coin_id(self, ticker):
-        for listing in Market().listings()["data"]:
+        for listing in APICache.get_cmc_coin_list():
             if ticker.upper() == listing["symbol"].upper():
                 self.cmc_coin_id = listing["id"]
                 break

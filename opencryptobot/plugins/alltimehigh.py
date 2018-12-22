@@ -4,6 +4,7 @@ import opencryptobot.emoji as emo
 from datetime import date
 from telegram import ParseMode
 from opencryptobot.utils import format
+from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -36,7 +37,7 @@ class Alltimehigh(OpenCryptoPlugin):
         ath_change = str()
 
         # Get coin ID
-        for entry in cg.get_coins_list(use_cache=True):
+        for entry in APICache.get_cg_coins_list():
             if entry["symbol"].lower() == coin.lower():
                 coin_info = cg.get_coin_by_id(entry["id"])
 
