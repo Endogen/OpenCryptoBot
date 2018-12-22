@@ -62,14 +62,16 @@ def format(value, decimals=None, force_length=False, template=None):
     return v
 
 
-# TODO: Use this also in 'candlestick.py'
-def get_seconds(time_span):
+def get_seconds(time_span, valid="s,m,h,d"):
     if isinstance(time_span, str):
         if time_span.isnumeric():
             return int(time_span)
 
         resolution = time_span.strip()[-1:].lower()
         time_frame = time_span.strip()[:-1]
+
+        if resolution not in valid.split(","):
+            return None
 
         if time_frame.isnumeric():
             if resolution == "s":
