@@ -78,7 +78,7 @@ class Global(OpenCryptoPlugin):
                 labels.append(key.upper())
                 values.append(m_cap_per[key])
 
-                value = format(m_cap_per[key], decimals=2)
+                value = format(m_cap_per[key], decimals=2, force_length=True)
                 tst = "{:>13}".format(f"{value}%")
                 tst = key.upper() + tst[len(key):]
                 msg += f"`{tst}`\n"
