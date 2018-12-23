@@ -3,6 +3,6 @@ CREATE TABLE users (
 	first_name TEXT NOT NULL,
 	last_name TEXT,
 	username TEXT,
-	language TEXT NOT NULL,
+	language TEXT,
 	date_time DATETIME DEFAULT CURRENT_TIMESTAMP
 )
