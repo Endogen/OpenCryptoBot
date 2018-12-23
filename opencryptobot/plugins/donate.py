@@ -7,11 +7,6 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Donate(OpenCryptoPlugin):
 
-    BTC = "BTC.png"
-    BCH = "BCH.png"
-    ETH = "ETH.png"
-    XMR = "XMR.png"
-
     def get_cmd(self):
         return "donate"
 
