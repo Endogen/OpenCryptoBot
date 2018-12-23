@@ -32,7 +32,7 @@ class Donate(OpenCryptoPlugin):
 
         # BTC
         if update.message.text == f"/{self.get_cmd_alt()[0]}":
-            qr_code = self._get_qr_code()
+            qr_code = self._get_qr_code("BTC")
             if qr_code:
                 update.message.reply_photo(
                     photo=qr_code,
@@ -42,7 +42,7 @@ class Donate(OpenCryptoPlugin):
 
         # BCH
         if update.message.text == f"/{self.get_cmd_alt()[1]}":
-            qr_code = self._get_qr_code()
+            qr_code = self._get_qr_code("BCH")
             if qr_code:
                 update.message.reply_photo(
                     photo=qr_code,
@@ -52,7 +52,7 @@ class Donate(OpenCryptoPlugin):
 
         # ETH
         if update.message.text == f"/{self.get_cmd_alt()[2]}":
-            qr_code = self._get_qr_code()
+            qr_code = self._get_qr_code("ETH")
             if qr_code:
                 update.message.reply_photo(
                     photo=qr_code,
@@ -62,7 +62,7 @@ class Donate(OpenCryptoPlugin):
 
         # XMR
         if update.message.text == f"/{self.get_cmd_alt()[3]}":
-            qr_code = self._get_qr_code()
+            qr_code = self._get_qr_code("XMR")
             if qr_code:
                 update.message.reply_photo(
                     photo=qr_code,
@@ -81,6 +81,6 @@ class Donate(OpenCryptoPlugin):
 
     def _get_qr_code(self, symbol):
         try:
-            return open(os.path.join(con.RES_DIR, symbol), "rb")
+            return open(os.path.join(con.RES_DIR, f"{symbol}.png"), "rb")
         except Exception:
             return None
