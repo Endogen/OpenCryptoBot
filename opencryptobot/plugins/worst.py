@@ -8,6 +8,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Worst(OpenCryptoPlugin):
 
+    DESC_LEN = 25
+
     def get_cmd(self):
         return "worst"
 
@@ -52,20 +54,19 @@ class Worst(OpenCryptoPlugin):
         for coin in best:
             name = coin["Name"]
             symbol = coin["Symbol"]
-            coin_info = f"{name} ({symbol})"
+            desc = f"{name} ({symbol})"
+
+            if len(desc) > self.DESC_LEN:
+                desc = f"{desc[:self.DESC_LEN-3]}..."
 
             if period == CoinData.HOUR:
                 change = coin["Change_1h"]
             else:
                 change = coin["Change_24h"]
 
-            try:
-                formated_change = format(change, decimals=2, force_length=True)
-                change_info = "{1:>{0}}".format(30 - len(coin_info), formated_change)
-                msg += f"`{coin_info}{change_info}%`\n"
-            except Exception as ex:
-                # FIXME: ValueError: Sign not allowed in string format specifier
-                print(f"{ex} - {str(coin)}")
+            change = format(change, decimals=2, force_length=True)
+            change = "{1:>{0}}".format(self.DESC_LEN + 9 - len(desc), change)
+            msg += f"`{desc}{change}%`\n"
 
         vol = str()
         if volume:
