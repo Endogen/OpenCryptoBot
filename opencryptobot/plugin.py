@@ -77,13 +77,13 @@ class OpenCryptoPlugin:
 
 class Category:
 
-    GENERAL = "General"
-    PRICE = "Price"
     CHARTS = "Charts"
+    PRICE = "Price"
+    GENERAL = "General"
     NEWS = "News & Events"
     UTIL = "Utilities"
-    BOT = "Bot"
     FUN = "Fun"
+    BOT = "Bot"
 
     @classmethod
     def get_categories(cls):
