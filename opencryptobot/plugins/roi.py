@@ -92,7 +92,7 @@ class Roi(OpenCryptoPlugin):
         return f"`/{self.get_cmd()} <coin>`"
 
     def get_description(self):
-        return "Return on investment for a coin"
+        return "Return on Investment for a coin"
 
     def get_category(self):
         return Category.PRICE
