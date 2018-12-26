@@ -159,14 +159,20 @@ class TelegramBot:
 
     # Handle all telegram and telegram.ext related errors
     def _handle_tg_errors(self, bot, update, error):
-        error_msg = f"{emo.ERROR} Telegram ERROR: *{error}*"
         logging.error(error)
+        logging.debug(f"'bot' = {bot}")
+        logging.debug(f"'update' = {update}")
+
+        if not update:
+            return
+
+        error_msg = f"{emo.ERROR} Telegram ERROR: *{error}*"
 
         if update.message:
             update.message.reply_text(
                 text=error_msg,
                 parse_mode=ParseMode.MARKDOWN)
-        else:
+        elif update.callback_query:
             update.callback_query.message.reply_text(
                 text=error_msg,
                 parse_mode=ParseMode.MARKDOWN)
