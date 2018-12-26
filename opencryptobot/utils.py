@@ -16,7 +16,7 @@ def is_number(string):
     return False
 
 
-def format(value, decimals=None, force_length=False, template=None):
+def format(value, decimals=None, force_length=False, template=None, on_zero=None):
     """Format a crypto coin value so that it isn't unnecessarily long"""
     try:
         if isinstance(value, str):
@@ -36,6 +36,13 @@ def format(value, decimals=None, force_length=False, template=None):
         decimals = int(decimals)
     except Exception:
         decimals = None
+
+    if on_zero:
+        try:
+            if float(value) == 0:
+                return on_zero
+        except Exception:
+            pass
 
     if t < 1:
         if decimals:
