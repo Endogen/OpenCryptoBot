@@ -50,13 +50,11 @@ class Ico(OpenCryptoPlugin):
 
                 if pre_sale_a:
                     pre_sale_a = format(pre_sale_a)
-
                 if pre_sale_p:
                     pre_sale_p = format(pre_sale_p)
 
                 if pub_sale_a:
                     pub_sale_a = format(pub_sale_a)
-
                 if pub_sale_p:
                     pub_sale_p = format(pub_sale_p)
 

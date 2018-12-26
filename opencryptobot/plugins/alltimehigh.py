@@ -53,7 +53,7 @@ class Alltimehigh(OpenCryptoPlugin):
             if c in ath_price:
                 ath_p = format(ath_price[c])
                 cur_p = format(cur_price[c], template=ath_p)
-                change = "{0:.2f}".format(ath_change[c])
+                change = format(ath_change[c], decimals=2)
 
                 date_time = ath_date[c]
                 date_ath = date_time[:10]
