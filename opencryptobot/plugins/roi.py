@@ -31,18 +31,29 @@ class Roi(OpenCryptoPlugin):
 
         msg = str(f"`Return on Investment for {coin}`\n\n")
 
-        roi_usd = format(data["roi_usd"], decimals=3, force_length=True)
-        roi_usd = "{:>9}".format(roi_usd)
+        roi_usd_x = format(data["roix_usd"], decimals=2, force_length=True, on_none="-")
+        roi_usd_x = "{:>10}".format(roi_usd_x)
 
-        roi_btc = format(data["roi_btc"], decimals=3, force_length=True)
-        roi_btc = "{:>9}".format(roi_btc)
+        roi_btc_x = format(data["roix_btc"], decimals=2, force_length=True, on_none="-")
+        roi_btc_x = "{:>10}".format(roi_btc_x)
 
-        roi_eth = format(data["roi_eth"], decimals=3, force_length=True)
-        roi_eth = "{:>9}".format(roi_eth)
+        roi_eth_x = format(data["roix_eth"], decimals=2, force_length=True, on_none="-")
+        roi_eth_x = "{:>10}".format(roi_eth_x)
 
-        msg += f"`ROI USD: {roi_usd}x`\n"
-        msg += f"`ROI BTC: {roi_btc}x`\n"
-        msg += f"`ROI ETH: {roi_eth}x`\n\n"
+        if data["roi_usd"]:
+            msg += f"`ROI USD: {roi_usd_x}x`\n"
+        else:
+            msg += f"`ROI USD:  {roi_usd_x}`\n"
+
+        if data["roi_btc"]:
+            msg += f"`ROI BTC: {roi_btc_x}x`\n"
+        else:
+            msg += f"`ROI BTC:  {roi_btc_x}`\n"
+
+        if data["roi_eth"]:
+            msg += f"`ROI ETH: {roi_eth_x}x`\n\n"
+        else:
+            msg += f"`ROI ETH:  {roi_eth_x}`\n\n"
 
         pre_p_usd = data["usd_price_at_presale"]
         pre_p_usd_f = format(pre_p_usd, decimals=2, force_length=True, on_zero='-')
