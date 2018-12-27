@@ -16,8 +16,11 @@ def is_number(string):
     return False
 
 
-def format(value, decimals=None, force_length=False, template=None, on_zero=None):
+def format(value, decimals=None, force_length=False, template=None, on_zero=0, on_none=None):
     """Format a crypto coin value so that it isn't unnecessarily long"""
+    if value is None:
+        return on_none
+
     try:
         if isinstance(value, str):
             value = value.replace(",", "")
@@ -37,12 +40,11 @@ def format(value, decimals=None, force_length=False, template=None, on_zero=None
     except Exception:
         decimals = None
 
-    if on_zero:
-        try:
-            if float(value) == 0:
-                return on_zero
-        except Exception:
-            pass
+    try:
+        if float(value) == 0:
+            return on_zero
+    except Exception:
+        return str(value)
 
     if t < 1:
         if decimals:
