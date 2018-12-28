@@ -39,7 +39,6 @@ class CoinData(object):
             CoinData._response = [d for d in CoinData._response if all(d.values())]
 
         data = list()
-        temp = list()
 
         if volume:
             # Sort data by volume
