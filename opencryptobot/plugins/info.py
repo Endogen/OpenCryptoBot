@@ -1,13 +1,18 @@
+import threading
 import opencryptobot.emoji as emo
 import opencryptobot.constants as con
 
 from telegram import ParseMode
 from opencryptobot.utils import format
+from opencryptobot.api.tokenstats import TokenStats
 from opencryptobot.api.cryptocompare import CryptoCompare
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Info(OpenCryptoPlugin):
+
+    coin_type = None
+    based_on = None
 
     def get_cmd(self):
         return "i"
@@ -22,6 +27,9 @@ class Info(OpenCryptoPlugin):
             return
 
         coin = args[0].upper()
+
+        type_thread = threading.Thread(target=self._get_coin_type, args=[coin])
+        type_thread.start()
 
         coin_info = CryptoCompare().get_coin_general_info(coin, "USD")
 
@@ -40,10 +48,19 @@ class Info(OpenCryptoPlugin):
         block_time = coin_info["Data"][0]["CoinInfo"]["BlockTime"]
         block_reward = coin_info["Data"][0]["CoinInfo"]["BlockReward"]
 
+        type_thread.join()
+
+        type = str("-")
+        if self.coin_type:
+            type = f"{self.coin_type}"
+            if self.based_on:
+                type += f" ({self.based_on})"
+
         update.message.reply_photo(
             photo=image,
             caption=f"`"
                     f"Name:         {name} ({coin})\n"
+                    f"Type:         {type}\n"
                     f"Algorithm:    {algo}\n"
                     f"Proof type:   {proof}\n"
                     f"Hashes (sec): {format(int(h_per_s))}\n"
@@ -61,3 +78,13 @@ class Info(OpenCryptoPlugin):
 
     def get_category(self):
         return Category.GENERAL
+
+    def _get_coin_type(self, coin):
+        res = TokenStats().get_roi_for_symbol(coin)
+        if res:
+            if res["type"]:
+                if res["type"] == "coin":
+                    self.coin_type = "Coin"
+                else:
+                    self.coin_type = "Token"
+                    self.based_on = res["type"].capitalize()
