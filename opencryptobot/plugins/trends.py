@@ -30,9 +30,14 @@ class Trends(OpenCryptoPlugin):
 
         tr_data = list()
         for kw in args:
-            tr_data.append(go.Scatter(x=data.get("date"), y=data.get(kw)))
+            tr_data.append(go.Scatter(x=data.get("date"), y=data.get(kw), name=kw))
 
-        fig = go.Figure(data=tr_data)
+        layout = go.Layout(
+            title="Google Trends - Interest Over Time",
+            paper_bgcolor='rgb(233,233,233)',
+            plot_bgcolor='rgb(233,233,233)')
+
+        fig = go.Figure(data=tr_data, layout=layout)
 
         update.message.reply_photo(
             photo=io.BufferedReader(BytesIO(pio.to_image(fig, format="jpeg"))),
