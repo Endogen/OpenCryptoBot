@@ -6,10 +6,13 @@ import opencryptobot.emoji as emo
 from io import BytesIO
 from telegram import ParseMode
 from pytrends.request import TrendReq
+from opencryptobot.utils import get_date
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Trends(OpenCryptoPlugin):
+
+    DEFAULT_T = "today 5-y"
 
     def get_cmd(self):
         return "tr"
@@ -23,19 +26,61 @@ class Trends(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
+        tf = str()
+        for arg in args:
+            if arg.startswith("t="):
+                tf = arg.replace("t=", "")
+                args.remove(arg)
+                break
+
+        if tf:
+            if tf != "all":
+                from datetime import datetime
+                now = datetime.today()
+                date = get_date(now, tf)
+
+                if not date:
+                    update.message.reply_text(
+                        text=f"{emo.ERROR} Timeframe not formated correctly",
+                        parse_mode=ParseMode.MARKDOWN)
+                    return
+                else:
+                    tf = f"{str(date)[:10]} {str(now)[:10]}"
+        else:
+            tf = self.DEFAULT_T
+
+        if len(args) > 5:
+            update.message.reply_text(
+                text=f"{emo.ERROR} Not possible to provide more then 5 keywords",
+                parse_mode=ParseMode.MARKDOWN)
+            return
+
         pytrends = TrendReq(hl='en-US', tz=360)
-        pytrends.build_payload(args, cat=0, timeframe='today 5-y', geo='', gprop='')
+        pytrends.build_payload(args, cat=0, timeframe=tf, geo='', gprop='')
 
         data = pytrends.interest_over_time()
 
+        some_data = None
         tr_data = list()
         for kw in args:
-            tr_data.append(go.Scatter(x=data.get("date"), y=data.get(kw), name=kw))
+            tr_data.append(go.Scatter(x=data.get(kw).index, y=data.get(kw).values, name=kw))
+
+            if not data.get(kw).empty:
+                some_data = True
+
+        if not some_data:
+            update.message.reply_text(
+                text=f"{emo.ERROR} No data for keyword(s): {', '.join(args)}",
+                parse_mode=ParseMode.MARKDOWN)
+            return
 
         layout = go.Layout(
             title="Google Trends - Interest Over Time",
             paper_bgcolor='rgb(233,233,233)',
-            plot_bgcolor='rgb(233,233,233)')
+            plot_bgcolor='rgb(233,233,233)',
+            yaxis=dict(
+                title="Queries",
+                showticklabels=False))
 
         fig = go.Figure(data=tr_data, layout=layout)
 
