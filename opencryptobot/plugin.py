@@ -42,11 +42,13 @@ class OpenCryptoPlugin:
                 if update.message:
                     usr = update.message.from_user
                     cmd = update.message.text
-                    self.db.save(usr, cmd)
-                elif update.inline_query:
+                    cht = update.message.chat
+                    self.db.save(usr, cht, cmd)
+                if update.inline_query:
                     usr = update.effective_user
                     cmd = update.inline_query.query[:-1]
-                    self.db.save(usr, cmd)
+                    cht = update.effective_chat
+                    self.db.save(usr, cht, cmd)
 
             return func(self, bot, update, **kwargs)
         return _save_data

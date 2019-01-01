@@ -1,0 +1,7 @@
+CREATE TABLE chats (
+	chat_id INTEGER NOT NULL PRIMARY KEY,
+	type TEXT NOT NULL,
+	title TEXT,
+	username TEXT,
+	date_time DATETIME DEFAULT CURRENT_TIMESTAMP
+)
