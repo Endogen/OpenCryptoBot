@@ -33,7 +33,7 @@ class Info(OpenCryptoPlugin):
 
         coin_info = CryptoCompare().get_coin_general_info(coin, "USD")
 
-        if coin_info["Message"] != "Success":
+        if coin_info["Message"] != "Success" or not coin_info["Data"]:
             update.message.reply_text(
                 text=f"{emo.ERROR} No data for *{coin}*",
                 parse_mode=ParseMode.MARKDOWN)
