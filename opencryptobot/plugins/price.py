@@ -62,10 +62,10 @@ class Price(OpenCryptoPlugin):
                         base_coin = ticker["target"]
                         if vs_list:
                             if base_coin in vs_list:
-                                price = format(ticker["last"])
+                                price = format(ticker["last"], force_length=True)
                                 msg += f"`{base_coin}: {price}`\n"
                         else:
-                            price = format(ticker["last"])
+                            price = format(ticker["last"], force_length=True)
                             msg += f"`{base_coin}: {price}`\n"
         else:
             if not vs_cur:
@@ -87,7 +87,7 @@ class Price(OpenCryptoPlugin):
                         else:
                             price = format(price, force_length=True)
                     else:
-                        price = format(price)
+                        price = format(price, force_length=True)
 
                     msg += f"`{symbol.upper()}: {price}`\n"
 

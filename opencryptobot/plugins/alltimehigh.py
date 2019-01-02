@@ -66,13 +66,13 @@ class Alltimehigh(OpenCryptoPlugin):
                 now = datetime.date.today()
 
                 ath_p_str = f"Price ATH: {ath_p} {c.upper()}\n"
-                cur_p_str = f"Price now: {cur_p.rjust(len(ath_p))} {c.upper()}\n"
+                cur_p_str = f"Price now: {cur_p.rjust(len(ath_p))} {c.upper()}\n\n"
 
                 msg += f"`" \
-                       f"{date_ath} ({(now - ath).days} days ago)\n" \
+                       f"{date_ath} ({(now - ath).days} days ago)\n\n" \
                        f"{ath_p_str}" \
                        f"{cur_p_str}" \
-                       f"Change: {change}%\n\n" \
+                       f"Change: {change}%\n" \
                        f"`"
 
         if msg:
