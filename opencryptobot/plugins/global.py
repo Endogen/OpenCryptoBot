@@ -90,13 +90,11 @@ class Global(OpenCryptoPlugin):
                 paper_bgcolor='rgb(233,233,233)',
                 plot_bgcolor='rgb(233,233,233)',
                 autosize=True,
-                width=800,
-                height=600,
                 margin=go.layout.Margin(
-                    l=10,
-                    r=10,
-                    b=10,
-                    t=10,
+                    l=20,
+                    r=20,
+                    b=20,
+                    t=20,
                     pad=4
                 )
             )
