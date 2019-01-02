@@ -1,6 +1,7 @@
 import opencryptobot.emoji as emo
 
 from telegram import ParseMode
+from opencryptobot.utils import format
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
@@ -23,6 +24,11 @@ class Market(OpenCryptoPlugin):
         coin = args[0].upper()
         coin_info = None
 
+        volume = False
+        if len(args) > 1:
+            if args[1].lower().startswith("vol"):
+                volume = True
+
         # Get coin ID and data
         for entry in APICache.get_cg_coins_list():
             if entry["symbol"].upper() == coin:
@@ -35,21 +41,46 @@ class Market(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        markets = set()
-        for ticker in coin_info["tickers"]:
-            markets.add(ticker['market']['name'])
+        # Sort markets by volume
+        if volume:
+            data = sorted(
+                coin_info["tickers"],
+                key=lambda k: float(k["volume"]), reverse=True)
 
-        markets = "\n".join(sorted(markets))
+            count = len(data)
+            if count > 10:
+                count = 10
 
-        update.message.reply_text(
-            text=f"`Exchanges that trade {coin}`\n\n`{markets}`",
-            parse_mode=ParseMode.MARKDOWN)
+            msg = str()
+            for i in range(count):
+                vs_cur = data[i]["target"]
+                exchange = data[i]["market"]["name"]
+                vol_usd = data[i]["converted_volume"]["usd"]
+                vol_usd = format(vol_usd, decimals=2, force_length=True)
+
+                msg += f"{exchange} - {vs_cur}\nVolume: {vol_usd} USD\n\n"
+
+            update.message.reply_text(
+                text=f"`Exchanges that trade {coin}`\n"
+                     f"`Top 10 sorted by volume\n\n{msg}`",
+                parse_mode=ParseMode.MARKDOWN)
+
+        else:
+            exchanges = set()
+            for ticker in coin_info["tickers"]:
+                exchanges.add(ticker['market']['name'])
+
+            exchanges = "\n".join(sorted(exchanges))
+
+            update.message.reply_text(
+                text=f"`Exchanges that trade {coin}`\n\n`{exchanges}`",
+                parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin>`"
+        return f"`/{self.get_cmd()} <coin> ('vol')`"
 
     def get_description(self):
-        return "Find where you can buy a coin"
+        return "Find exchanges to trade a coin"
 
     def get_category(self):
         return Category.GENERAL
