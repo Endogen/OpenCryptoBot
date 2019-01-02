@@ -1,8 +1,6 @@
-import requests
 import opencryptobot.emoji as emo
-import opencryptobot.constants as con
+import opencryptobot.api.webscraping as webs
 
-from bs4 import BeautifulSoup
 from telegram import ParseMode
 from telegram.error import BadRequest
 from opencryptobot.api.apicache import APICache
@@ -68,18 +66,7 @@ class Whitepaper(OpenCryptoPlugin):
             return None
 
         self.name = coin_info["Data"][0]["CoinInfo"]["FullName"].replace(" ", "-")
-        url = f"{con.ALL_CRYPTO_WP_PARTIAL}{self.name}-Whitepaper"
-        response = requests.get(url)
-
-        if response.status_code != 200:
-            return None
-
-        soup = BeautifulSoup(response.content, "html.parser")
-        for entry_content in soup.find_all(class_="entry-content"):
-            for p in entry_content.find_all("p"):
-                for a in p.find_all("a"):
-                    if "".join(a.get_text().split()) == f"{self.name}Whitepaper":
-                        return a["href"]
+        return webs.get_wp_allcryptowhitepaper(self.name)
 
     def _from_coinmarketcap(self, coin):
         slug = str()
@@ -93,18 +80,7 @@ class Whitepaper(OpenCryptoPlugin):
         if not slug:
             return None
 
-        url = f"{con.CMC_URL_PARTIAL}{slug}"
-        response = requests.get(url)
-
-        if response.status_code != 200:
-            return None
-
-        soup = BeautifulSoup(response.content, "html.parser")
-        for links in soup.find_all(class_="list-unstyled details-panel-item--links"):
-            for li in links.find_all("li"):
-                if li.find_all(class_="glyphicons glyphicons-file details-list-item-icon"):
-                    for a in li.find_all("a"):
-                        return a["href"]
+        return webs.get_wp_coinmarketcap(slug)
 
     def _from_coinpaprika(self, coin):
         coin_id = str()
@@ -117,12 +93,4 @@ class Whitepaper(OpenCryptoPlugin):
         if not coin_id:
             return None
 
-        url = f"{con.COIN_PAPRIKA_PARTIAL}{coin_id}"
-        response = requests.get(url)
-
-        if response.status_code != 200:
-            return None
-
-        soup = BeautifulSoup(response.content, "html.parser")
-        for link in soup.find_all(class_="cp-details__whitepaper-link"):
-            return link["href"]
+        return webs.get_wp_coinpaprika(coin_id)
