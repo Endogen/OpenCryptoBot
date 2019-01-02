@@ -7,6 +7,7 @@ from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
+# TODO: Complete implementation
 class Exchanges(OpenCryptoPlugin):
 
     def get_cmd(self):
@@ -42,4 +43,4 @@ class Exchanges(OpenCryptoPlugin):
         return "Exchange details"
 
     def get_category(self):
-        Category.GENERAL
+        return Category.GENERAL
