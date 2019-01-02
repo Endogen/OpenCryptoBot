@@ -1,13 +1,16 @@
+import json
 import time
+import logging
 import requests
 
 
 class CoinData(object):
 
     _url = "https://coindata.co.za/api.php"
-
-    _response = None
     _datetime = 0
+
+    response = None
+    res_json = None
 
     BEST = "BEST"
     WORST = "WORST"
@@ -28,22 +31,24 @@ class CoinData(object):
             CoinData._datetime = now
 
             try:
-                CoinData._response = requests.get(self._url).json()
-            except Exception:
-                return None
+                CoinData.response = requests.get(self._url)
+                CoinData.response.raise_for_status()
+                CoinData.res_json = json.loads(CoinData.response.content.decode('utf-8'))
+            except Exception as e:
+                return self._handle_error(e)
 
-            if not CoinData._response:
+            if not CoinData.res_json:
                 return None
 
             # Filter out 'null' values
-            CoinData._response = [d for d in CoinData._response if all(d.values())]
+            CoinData.res_json = [d for d in CoinData.res_json if all(d.values())]
 
         data = list()
 
         if volume:
             # Sort data by volume
             temp = sorted(
-                CoinData._response,
+                CoinData.res_json,
                 key=lambda k: float(k["Volume_24h"]), reverse=True)
 
             for entry in temp:
@@ -52,7 +57,7 @@ class CoinData(object):
                 else:
                     break
         else:
-            data = CoinData._response
+            data = CoinData.res_json
 
         if period == self.HOUR:
             # Sort data period - 1 hour
@@ -86,3 +91,9 @@ class CoinData(object):
             return None
 
         return result
+
+    def _handle_error(self, ex):
+        logging.error(repr(ex))
+        logging.error(f"Request URL: {CoinData.response.url}")
+        logging.error(f"Response Status Code: {CoinData.response.status_code}")
+        return None

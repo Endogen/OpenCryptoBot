@@ -1,12 +1,14 @@
 import json
+import logging
 import requests
 
 
-# TODO: Rework implementation
 class CoinGecko(object):
 
     _base_url = 'https://api.coingecko.com/api/v3/'
     _request_timeout = 120
+
+    response = None
 
     def __init__(self, api_base_url=None, request_timeout=None):
         if api_base_url:
@@ -16,11 +18,11 @@ class CoinGecko(object):
 
     def _request(self, url):
         try:
-            response = requests.get(url, timeout=self._request_timeout)
-            response.raise_for_status()
-            return json.loads(response.content.decode('utf-8'))
+            self.response = requests.get(url, timeout=self._request_timeout)
+            self.response.raise_for_status()
+            return json.loads(self.response.content.decode('utf-8'))
         except Exception as e:
-            raise e
+            return self._handle_error(e)
 
     def _api_url_params(self, api_url, params):
         if params:
@@ -52,7 +54,6 @@ class CoinGecko(object):
         """Get list of supported_vs_currencies"""
 
         api_url = f'{self._base_url}simple/supported_vs_currencies'
-        api_url = self._api_url_params(api_url)
 
         return self._request(api_url)
 
@@ -150,3 +151,9 @@ class CoinGecko(object):
                 fiat_list.append(key)
 
         return fiat_list
+
+    def _handle_error(self, ex):
+        logging.error(repr(ex))
+        logging.error(f"Request URL: {self.response.url}")
+        logging.error(f"Response Status Code: {self.response.status_code}")
+        return None
