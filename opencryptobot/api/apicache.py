@@ -9,6 +9,7 @@ class APICache(object):
 
     cg_fiat_list = list()
     cg_coin_list = list()
+    cg_exch_list = list()
     cp_coin_list = list()
     cmc_coin_list = list()
 
@@ -20,6 +21,7 @@ class APICache(object):
 
             APICache.refresh_coingecko_fiat_list()
             APICache.refresh_coingecko_coin_list()
+            APICache.refresh_coingecko_exchange_list()
             APICache.refresh_coinpaprika_coin_list()
             APICache.refresh_coinmarketcap_coin_list()
 
@@ -27,6 +29,8 @@ class APICache(object):
 
         except Exception as e:
             raise e
+
+    # Functions to refresh cache ------------------------
 
     @staticmethod
     def refresh_coingecko_coin_list():
@@ -43,6 +47,12 @@ class APICache(object):
     @staticmethod
     def refresh_coingecko_fiat_list():
         APICache.cg_fiat_list = CoinGecko().get_fiat_list()
+
+    @staticmethod
+    def refresh_coingecko_exchange_list():
+        APICache.cg_exch_list = CoinGecko().get_exchanges_list()
+
+    # Functions to return cached data -------------------
 
     @staticmethod
     def get_cg_coins_list():
@@ -71,3 +81,10 @@ class APICache(object):
             return APICache.cmc_coin_list
         else:
             return Market().listings()["data"]
+
+    @staticmethod
+    def get_cg_exchanges_list():
+        if APICache.cg_exch_list:
+            return APICache.cg_exch_list
+        else:
+            return CoinGecko().get_exchanges_list()
