@@ -5,7 +5,6 @@ import opencryptobot.constants as con
 
 from datetime import datetime
 from telegram import ParseMode
-from opencryptobot.api.apicache import APICache
 from opencryptobot.api.cryptopanic import CryptoPanic
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -13,6 +12,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 class News(OpenCryptoPlugin):
 
     _token = None
+
+    filters = ["rising", "hot", "bullish", "bearish", "important", "saved", "lol"]
 
     def __init__(self, updater, db):
         super().__init__(updater, db)
@@ -31,29 +32,52 @@ class News(OpenCryptoPlugin):
     @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
     def get_action(self, bot, update, args):
+        symbol = str()
+        filter = str()
+        msg = str()
+
+        data = None
+
         if not args:
-            update.message.reply_text(
-                text=f"Usage:\n{self.get_usage()}",
-                parse_mode=ParseMode.MARKDOWN)
-            return
-
-        symbol = args[0].upper()
-
-        filter = None
-        if len(args) > 1:
-            if args[1].lower().startswith("filter="):
-                filter = args[1][7:]
-
-        if filter:
-            data = CryptoPanic(token=self._token).get_multiple_filters(symbol, filter)
-            msg = str(f"News for <b>{symbol}</b> and filter '{filter}'\n\n")
+            data = CryptoPanic(token=self._token).get_posts()
+            msg = f"<b>Current news</b>\n\n"
         else:
-            data = CryptoPanic(token=self._token).get_currency_news(symbol)
-            msg = str(f"News for <b>{symbol}</b>\n\n")
+            for arg in args:
+                if arg.lower().startswith("filter="):
+                    filter = arg[7:]
+                else:
+                    symbol = arg
+
+            if len(args) > 2:
+                update.message.reply_text(
+                    text=f"{emo.ERROR} Only two arguments allowed",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
+            if len(args) == 2 and (not symbol or not filter):
+                update.message.reply_text(
+                    text=f"{emo.ERROR} Wrong arguments",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
+            if filter.lower() not in self.filters:
+                update.message.reply_text(
+                    text=f"{emo.ERROR} Wrong filter. Choose from: "
+                         f"{', '.join(self.filters)}",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
+
+            if symbol and filter:
+                data = CryptoPanic(token=self._token).get_multiple_filters(symbol, filter)
+                msg = f"<b>News for {symbol} and filter '{filter}'</b>\n\n"
+            elif symbol:
+                data = CryptoPanic(token=self._token).get_currency_news(symbol)
+                msg = f"<b>News for {symbol}</b>\n\n"
+            elif filter:
+                data = CryptoPanic(token=self._token).get_filtered_news(filter)
+                msg = f"<b>News for filter '{filter}</b>'\n\n"
 
         if not data or not data["results"]:
             update.message.reply_text(
-                text=f"{emo.ERROR} Couldn't get news for *{symbol}*",
+                text=f"{emo.ERROR} Couldn't retrieve news",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
@@ -70,8 +94,8 @@ class News(OpenCryptoPlugin):
                 hour = f"0{t.hour}" if len(str(t.hour)) == 1 else t.hour
                 minute = f"0{t.minute}" if len(str(t.minute)) == 1 else t.minute
 
-                msg += f'{t.year}-{month}-{day} {hour}:{minute} - {domain}\n' \
-                       f'<a href="{url}">{title.strip()}</a>\n\n'
+                msg+= f'{t.year}-{month}-{day} {hour}:{minute} - {domain}\n' \
+                    f'<a href="{url}">{title.strip()}</a>\n\n'
 
         update.message.reply_text(
             text=msg,
