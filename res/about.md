@@ -9,6 +9,7 @@ This bot ist open source and the source code can be found at [GitHub](https://gi
 
 Do you have suggestions for additional commands or want to let me know about bugs you encountered? If so, let me know by using the /feedback command or open an issue on GitHub.
 
+🔹 *Donation*
 If you like the bot, please consider a donation to support further development:
 
 /donateBTC Bitcoin
