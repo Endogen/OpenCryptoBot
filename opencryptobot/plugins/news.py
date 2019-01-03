@@ -81,7 +81,7 @@ class News(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        for news in data["results"]:
+        for news in reversed(data["results"]):
             if news["kind"] == "news":
                 published = news["published_at"]
                 domain = news["domain"]
@@ -94,8 +94,8 @@ class News(OpenCryptoPlugin):
                 hour = f"0{t.hour}" if len(str(t.hour)) == 1 else t.hour
                 minute = f"0{t.minute}" if len(str(t.minute)) == 1 else t.minute
 
-                msg+= f'{t.year}-{month}-{day} {hour}:{minute} - {domain}\n' \
-                    f'<a href="{url}">{title.strip()}</a>\n\n'
+                msg += f'{t.year}-{month}-{day} {hour}:{minute} - {domain}\n' \
+                       f'<a href="{url}">{title.strip()}</a>\n\n'
 
         update.message.reply_text(
             text=msg,
