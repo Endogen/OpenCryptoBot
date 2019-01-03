@@ -1,13 +1,11 @@
 import opencryptobot.emoji as emo
-import opencryptobot.constants as con
 
 from telegram import ParseMode
+from opencryptobot.utils import format
 from opencryptobot.api.apicache import APICache
-from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
-# TODO: Complete implementation
 class Exchanges(OpenCryptoPlugin):
 
     def get_cmd(self):
@@ -22,25 +20,79 @@ class Exchanges(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        coin = args[0].upper()
-        data = None
+        msg = str()
+        top = str()
+        exchange = str()
 
-        for entry in APICache.get_cg_coins_list():
-            if entry["symbol"].lower() == coin.lower():
-                data = CoinGecko().get_coin_by_id(entry["id"])
-                break
+        if args[0].lower().startswith("top="):
+            top = args[0][4:]
+        else:
+            exchange = args[0]
 
-        # TODO
+        if top:
+            if not top.isnumeric():
+                update.message.reply_text(
+                    text=f"{emo.ERROR} Value of `top` has to be a number",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
+            if int(top) > 100:
+                update.message.reply_text(
+                    text=f"{emo.ERROR} Max value for `top` is `100`",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
+
+            exchanges = sorted(
+                APICache.get_cg_exchanges_list(),
+                key=lambda k: float(k["trade_volume_24h_btc"]), reverse=True)
+
+            for i in range(int(top)):
+                ex = exchanges[i]
+
+                nr = f"#{i+1}"
+                name = ex["name"]
+                volume = ex["trade_volume_24h_btc"]
+
+                msg += f"`{nr} {name}\n{format(volume)} BTC`\n\n"
+
+            msg = f"`Top {top} exchanges by 24h volume`\n\n{msg}"
+
+        else:
+            for ex in APICache.get_cg_exchanges_list():
+                clean_ex = ex["name"].replace(" ", "")
+                if exchange.lower() in clean_ex.lower():
+                    nme = ex["name"] if ex["name"] else "N/A"
+                    est = ex["year_established"] if ex["year_established"] else "N/A"
+                    cnt = ex["country"] if ex["country"] else "N/A"
+                    des = ex["description"] if ex["description"] else "(No description available)"
+                    url = ex["url"] if ex["url"] else "(No link available)"
+                    vol = ex["trade_volume_24h_btc"] if ex["trade_volume_24h_btc"] else "N/A"
+
+                    if url.endswith("/"):
+                        url = url[:len(url)-1]
+
+                    msg += f"`{nme}`\n" \
+                           f"{url}\n\n" \
+                           f"`Country:     {cnt}`\n" \
+                           f"`Volume 24h:  {format(vol)} BTC`\n" \
+                           f"`Established: {est}`\n\n" \
+                           f"`{des.strip()}`\n\n\n" \
+
+        if not msg:
+            update.message.reply_text(
+                text=f"{emo.ERROR} No exchange '{exchange}' found",
+                parse_mode=ParseMode.MARKDOWN)
+            return
 
         update.message.reply_text(
             text=msg,
-            parse_mode=ParseMode.MARKDOWN)
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <exchange>`"
+        return f"`/{self.get_cmd()} <exchange> | top=<# of exchanges>`"
 
     def get_description(self):
-        return "Exchange details"
+        return "Exchange details and toplist"
 
     def get_category(self):
         return Category.GENERAL
