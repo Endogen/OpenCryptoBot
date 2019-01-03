@@ -11,7 +11,8 @@ GITHUB_BASE_URL = "https://raw.githubusercontent.com/"
 
 CFG_DIR = "conf"
 CFG_FILE = "config.json"
-TOK_FILE = "bot.token"
+BOT_TKN_FILE = "bot.token"
+CRYPAN_TKN_FILE = "cryptopanic.token"
 
 LOG_DIR = "log"
 LOG_FILE = "opencryptobot.log"

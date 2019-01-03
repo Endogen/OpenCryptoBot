@@ -165,7 +165,7 @@ class OpenCryptoBot:
         if self.args.token:
             return self.args.token
 
-        token_path = os.path.join(con.CFG_DIR, con.TOK_FILE)
+        token_path = os.path.join(con.CFG_DIR, con.BOT_TKN_FILE)
 
         if os.path.isfile(token_path):
             with open(token_path, 'r') as file:
