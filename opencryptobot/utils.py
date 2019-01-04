@@ -158,3 +158,11 @@ def remove_html_links(text):
         text = text.replace(html_link, title)
 
     return text.strip()
+
+
+def url(url, join=True):
+    if isinstance(url, list):
+        url = [x[:len(x) - 1] if x.endswith("/") else x for x in url]
+        return "\n".join(url) if join else url
+    else:
+        return url[:len(url) - 1] if url.endswith("/") else url
