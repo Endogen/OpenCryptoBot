@@ -15,6 +15,7 @@ psutil = "*"
 requests = "*"
 beautifulsoup4 = "*"
 pytrends = "*"
+html2text = "*"
 
 [requires]
 python_version = "3.7"
