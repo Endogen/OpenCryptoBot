@@ -40,7 +40,7 @@ class OpenCryptoBot:
         desc = "Telegram bot for crypto currency info"
         parser = ArgumentParser(description=desc)
 
-        # Config file
+        # Config file path
         parser.add_argument(
             "-cfg",
             dest="config",
@@ -58,7 +58,7 @@ class OpenCryptoBot:
             required=False)
         parser.set_defaults(savelog=True)
 
-        # Save history
+        # Use database
         parser.add_argument(
             "--no-database",
             dest="savedata",
@@ -67,7 +67,7 @@ class OpenCryptoBot:
             required=False)
         parser.set_defaults(savedata=True)
 
-        # Logfile
+        # Logfile path
         parser.add_argument(
             "-log",
             dest="logfile",
@@ -94,7 +94,7 @@ class OpenCryptoBot:
             default=None,
             required=False)
 
-        # Database
+        # Database path
         parser.add_argument(
             "-db",
             dest="database",
