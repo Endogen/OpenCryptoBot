@@ -67,11 +67,8 @@ class Exchanges(OpenCryptoPlugin):
                     url = ex["url"] if ex["url"] else "(No link available)"
                     vol = ex["trade_volume_24h_btc"] if ex["trade_volume_24h_btc"] else "N/A"
 
-                    if url.endswith("/"):
-                        url = url[:len(url)-1]
-
                     msg += f"`{nme}`\n" \
-                           f"{url}\n\n" \
+                           f"{utl.url(url)}\n\n" \
                            f"`Country:     {cnt}`\n" \
                            f"`Volume 24h:  {utl.format(vol)} BTC`\n" \
                            f"`Established: {est}`\n\n" \
