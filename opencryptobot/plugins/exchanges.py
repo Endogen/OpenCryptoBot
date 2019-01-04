@@ -1,7 +1,7 @@
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 
 from telegram import ParseMode
-from opencryptobot.utils import format
 from opencryptobot.api.apicache import APICache
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -52,7 +52,7 @@ class Exchanges(OpenCryptoPlugin):
                 name = ex["name"]
                 volume = ex["trade_volume_24h_btc"]
 
-                msg += f"`{nr} {name}\n{format(volume)} BTC`\n\n"
+                msg += f"`{nr} {name}\n{utl.format(volume)} BTC`\n\n"
 
             msg = f"`Top {top} exchanges by 24h volume`\n\n{msg}"
 
@@ -73,9 +73,9 @@ class Exchanges(OpenCryptoPlugin):
                     msg += f"`{nme}`\n" \
                            f"{url}\n\n" \
                            f"`Country:     {cnt}`\n" \
-                           f"`Volume 24h:  {format(vol)} BTC`\n" \
+                           f"`Volume 24h:  {utl.format(vol)} BTC`\n" \
                            f"`Established: {est}`\n\n" \
-                           f"`{des.strip()}`\n\n\n" \
+                           f"`{utl.remove_html_links(des)}`\n\n\n" \
 
         if not msg:
             update.message.reply_text(
