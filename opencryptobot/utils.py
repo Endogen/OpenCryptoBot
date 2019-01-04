@@ -126,3 +126,35 @@ def get_date(from_date, time_span):
         t = from_date - timedelta(days=time_frame * 365)
 
     return str(t)[:10]
+
+
+def get_keywords(args):
+    keywords = dict()
+
+    if args:
+        for arg in args:
+            if "=" in arg:
+                kv = arg.split("=")
+                keywords[kv[0]] = kv[1]
+
+    return keywords
+
+
+def remove_html_links(text):
+    import html2text
+
+    h = html2text.HTML2Text()
+    h.ignore_links = True
+
+    start = "<a href="
+    end = "</a>"
+
+    while start in text and end in text:
+        s_index = text.find(start)
+        e_index = text.find(end) + len(end)
+
+        html_link = text[s_index:e_index]
+        title = h.handle(html_link).strip()
+        text = text.replace(html_link, title)
+
+    return text.strip()
