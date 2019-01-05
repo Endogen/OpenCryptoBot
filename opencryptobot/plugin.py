@@ -64,6 +64,9 @@ class OpenCryptoPlugin:
         method = inspect.currentframe().f_code.co_name
         raise NotImplementedError(f"Interface method '{method}' not implemented")
 
+    def get_rate_limit(self):
+        return {"rate": 3, "time": 10}
+
     def get_usage(self):
         return None
 
