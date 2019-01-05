@@ -58,7 +58,7 @@ class News(OpenCryptoPlugin):
                     text=f"{emo.ERROR} Wrong arguments",
                     parse_mode=ParseMode.MARKDOWN)
                 return
-            if filter.lower() not in self.filters:
+            if filter and filter.lower() not in self.filters:
                 update.message.reply_text(
                     text=f"{emo.ERROR} Wrong filter. Choose from: "
                          f"{', '.join(self.filters)}",
