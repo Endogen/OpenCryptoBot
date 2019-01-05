@@ -41,6 +41,10 @@ class CoinPaprika(object):
         url_data = "global"
         return self._request(f"{self._base_url}{url_data}")
 
+    def get_people_by_id(self, person_id):
+        url_data = f"people/{person_id}"
+        return self._request(f"{self._base_url}{url_data}")
+
     def _handle_error(self, ex):
         logging.error(repr(ex))
         logging.error(f"Request URL: {self.response.url}")
