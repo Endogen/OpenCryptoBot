@@ -26,6 +26,7 @@
 /g - Global crypto data
 /i - General coin information
 /m - Find exchanges to trade a coin
+/pe - Info about team behind a coin
 /se - Search for symbol by coin name
 /tr - Google Trends - Interest Over Time
 /wp - Find whitepaper for a coin
