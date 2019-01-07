@@ -12,6 +12,7 @@
         "url": "https://somedomain.com"
     },
     "use_db": true,
+    "rate_limit": "6-30",
     "refresh_cache": "6h",
     "update_slug": "endogen/OpenCryptoBot/master"
 }

@@ -1,6 +1,7 @@
 import inspect
 
 from telegram import ChatAction
+from opencryptobot.ratelimit import RateLimit
 from opencryptobot.config import ConfigManager as Cfg
 
 
@@ -28,6 +29,25 @@ class OpenCryptoPlugin:
         return _send_typing_action
 
     @classmethod
+    def check_limit(cls, func):
+        def _check_limit(self, bot, update, **kwargs):
+            if Cfg.get("rate_limit"):
+                if update.message:
+                    uid = update.message.from_user.id
+                    cmd = update.message.text.split(" ")[0]
+                elif update.inline_query:
+                    uid = update.effective_user.id
+                    cmd = update.inline_query.query[:-1].split(" ")[0]
+                else:
+                    uid = cmd = None
+
+                if RateLimit.limit_reached(uid, cmd):
+                    return
+
+            return func(self, bot, update, **kwargs)
+        return _check_limit
+
+    @classmethod
     def only_owner(cls, func):
         def _only_owner(self, bot, update, **kwargs):
             if Cfg.get("admin_id") == update.effective_user.id:
@@ -44,7 +64,7 @@ class OpenCryptoPlugin:
                     cmd = update.message.text
                     cht = update.message.chat
                     self.db.save(usr, cht, cmd)
-                if update.inline_query:
+                elif update.inline_query:
                     usr = update.effective_user
                     cmd = update.inline_query.query[:-1]
                     cht = update.effective_chat
