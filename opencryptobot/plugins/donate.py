@@ -13,8 +13,8 @@ class Donate(OpenCryptoPlugin):
     def get_cmd_alt(self):
         return ["donateBTC", "donateBCH", "donateETH", "donateXMR"]
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         # Donate
         if update.message.text == f"/{self.get_cmd()}":

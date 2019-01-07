@@ -12,8 +12,8 @@ class About(OpenCryptoPlugin):
     def get_cmd(self):
         return "about"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         about_file = os.path.join(con.RES_DIR, self.ABOUT_FILENAME)
         with open(about_file, "r", encoding="utf8") as file:

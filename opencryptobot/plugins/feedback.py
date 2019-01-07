@@ -9,8 +9,8 @@ class Feedback(OpenCryptoPlugin):
     def get_cmd(self):
         return "feedback"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
 
         if not args:

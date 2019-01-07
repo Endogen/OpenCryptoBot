@@ -8,8 +8,8 @@ class Help(OpenCryptoPlugin):
     def get_cmd(self):
         return "help"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         cat_dict = dict()
         for p in TelegramBot.plugins:

@@ -5,6 +5,7 @@ import opencryptobot.constants as con
 
 from datetime import datetime
 from telegram import ParseMode
+from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.cryptopanic import CryptoPanic
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -29,8 +30,8 @@ class News(OpenCryptoPlugin):
     def get_cmd(self):
         return "news"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         symbol = str()
         filter = str()
@@ -39,6 +40,9 @@ class News(OpenCryptoPlugin):
         data = None
 
         if not args:
+            if RateLimit.limit_reached(update):
+                return
+
             data = CryptoPanic(token=self._token).get_posts()
             msg = f"<b>Current news</b>\n\n"
         else:
@@ -63,6 +67,9 @@ class News(OpenCryptoPlugin):
                     text=f"{emo.ERROR} Wrong filter. Choose from: "
                          f"{', '.join(self.filters)}",
                     parse_mode=ParseMode.MARKDOWN)
+                return
+
+            if RateLimit.limit_reached(update):
                 return
 
             if symbol and filter:

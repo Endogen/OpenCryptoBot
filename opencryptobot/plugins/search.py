@@ -1,6 +1,7 @@
 import opencryptobot.emoji as emo
 
 from telegram import ParseMode
+from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -10,13 +11,16 @@ class Search(OpenCryptoPlugin):
     def get_cmd(self):
         return "se"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         if not args:
             update.message.reply_text(
                 text=f"Usage:\n{self.get_usage()}",
                 parse_mode=ParseMode.MARKDOWN)
+            return
+
+        if RateLimit.limit_reached(update):
             return
 
         search = args[0]

@@ -3,6 +3,7 @@ import opencryptobot.emoji as emo
 
 from telegram import ParseMode
 from opencryptobot.utils import format
+from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
@@ -13,8 +14,8 @@ class Price(OpenCryptoPlugin):
     def get_cmd(self):
         return "p"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         vs_cur = str()
 
@@ -44,6 +45,9 @@ class Price(OpenCryptoPlugin):
             if entry["symbol"].upper() == coin:
                 coin_id = entry["id"]
                 break
+
+        if RateLimit.limit_reached(update):
+            return
 
         cg = CoinGecko()
         msg = str()

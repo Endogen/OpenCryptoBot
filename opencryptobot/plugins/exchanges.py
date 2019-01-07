@@ -2,6 +2,7 @@ import opencryptobot.emoji as emo
 import opencryptobot.utils as utl
 
 from telegram import ParseMode
+from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -11,8 +12,8 @@ class Exchanges(OpenCryptoPlugin):
     def get_cmd(self):
         return "ex"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         if not args:
             update.message.reply_text(
@@ -41,6 +42,9 @@ class Exchanges(OpenCryptoPlugin):
                     parse_mode=ParseMode.MARKDOWN)
                 return
 
+            if RateLimit.limit_reached(update):
+                return
+
             exchanges = sorted(
                 APICache.get_cg_exchanges_list(),
                 key=lambda k: float(k["trade_volume_24h_btc"]), reverse=True)
@@ -57,6 +61,9 @@ class Exchanges(OpenCryptoPlugin):
             msg = f"`Top {top} exchanges by 24h volume`\n\n{msg}"
 
         else:
+            if RateLimit.limit_reached(update):
+                return
+
             for ex in APICache.get_cg_exchanges_list():
                 clean_ex = ex["name"].replace(" ", "")
                 if exchange.lower() in clean_ex.lower():

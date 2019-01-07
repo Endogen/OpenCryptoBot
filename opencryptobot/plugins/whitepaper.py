@@ -3,6 +3,7 @@ import opencryptobot.api.webscraping as webs
 
 from telegram import ParseMode
 from telegram.error import BadRequest
+from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.cryptocompare import CryptoCompare
 from opencryptobot.plugin import OpenCryptoPlugin, Category
@@ -15,8 +16,8 @@ class Whitepaper(OpenCryptoPlugin):
     def get_cmd(self):
         return "wp"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         if not args:
             update.message.reply_text(
@@ -33,7 +34,11 @@ class Whitepaper(OpenCryptoPlugin):
         link = self._from_allcryptowhitepaper(coin)
 
         if not link:
+            if RateLimit.limit_reached(update):
+                return
+
             link = self._from_coinmarketcap(coin)
+
         if not link and search == "all":
             link = self._from_coinpaprika(coin)
 

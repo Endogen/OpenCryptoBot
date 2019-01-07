@@ -6,6 +6,7 @@ import opencryptobot.emoji as emo
 from io import BytesIO
 from telegram import ParseMode
 from opencryptobot.utils import format
+from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -15,8 +16,8 @@ class Global(OpenCryptoPlugin):
     def get_cmd(self):
         return "g"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         if not args:
             update.message.reply_text(
@@ -34,6 +35,9 @@ class Global(OpenCryptoPlugin):
             update.message.reply_text(
                 text=f"Usage:\n{self.get_usage()}",
                 parse_mode=ParseMode.MARKDOWN)
+            return
+
+        if RateLimit.limit_reached(update):
             return
 
         msg = str()

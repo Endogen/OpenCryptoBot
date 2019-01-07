@@ -9,6 +9,7 @@ import opencryptobot.constants as con
 from io import BytesIO
 from pandas import DataFrame
 from telegram import ParseMode
+from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
@@ -22,17 +23,17 @@ class Chart(OpenCryptoPlugin):
     def get_cmd(self):
         return "c"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
-        time_frame = 3  # Days
-        base_coin = "BTC"
-
         if not args:
             update.message.reply_text(
                 text=f"Usage:\n{self.get_usage()}",
                 parse_mode=ParseMode.MARKDOWN)
             return
+
+        time_frame = 3  # Days
+        base_coin = "BTC"
 
         if "-" in args[0]:
             pair = args[0].split("-", 1)
@@ -52,6 +53,9 @@ class Chart(OpenCryptoPlugin):
 
         if len(args) > 1 and args[1].isnumeric():
             time_frame = args[1]
+
+        if RateLimit.limit_reached(update):
+            return
 
         cg_thread = threading.Thread(target=self._get_cg_coin_id, args=[coin])
         cmc_thread = threading.Thread(target=self._get_cmc_coin_id, args=[coin])

@@ -4,6 +4,7 @@ import opencryptobot.emoji as emo
 from datetime import date
 from telegram import ParseMode
 from opencryptobot.utils import format
+from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
@@ -14,8 +15,8 @@ class Alltimehigh(OpenCryptoPlugin):
     def get_cmd(self):
         return "ath"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         if not args:
             update.message.reply_text(
@@ -23,13 +24,14 @@ class Alltimehigh(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
+        if RateLimit.limit_reached(update):
+            return
+
         coin = args[0].upper()
 
         vs_cur = "usd"
         if len(args) > 1:
             vs_cur = args[1]
-
-        cg = CoinGecko()
 
         ath_date = str()
         ath_price = str()
@@ -39,7 +41,7 @@ class Alltimehigh(OpenCryptoPlugin):
         # Get coin ID
         for entry in APICache.get_cg_coins_list():
             if entry["symbol"].lower() == coin.lower():
-                coin_info = cg.get_coin_by_id(entry["id"])
+                coin_info = CoinGecko().get_coin_by_id(entry["id"])
 
                 cur_price = coin_info["market_data"]["current_price"]
                 ath_price = coin_info["market_data"]["ath"]

@@ -1,24 +1,45 @@
-import time
 import logging
+import opencryptobot.emoji as emo
 
 from opencryptobot.config import ConfigManager as Cfg
 
 
-# TODO: How to best send msg to user if limit reached?
 class RateLimit:
 
     _data = dict()
 
     @staticmethod
-    def limit_reached(user_id, command):
+    def limit_reached(update):
+        if Cfg.get("rate_limit"):
+            if update.message:
+                uid = update.message.from_user.id
+                cmd = update.message.text.split(" ")[0]
+            elif update.inline_query:
+                uid = update.effective_user.id
+                cmd = update.inline_query.query[:-1].split(" ")[0]
+            else:
+                uid = cmd = None
+
+            rate = Cfg.get("rate_limit").split("-")[0]
+            time = Cfg.get("rate_limit").split("-")[1]
+
+            if RateLimit.reached(uid, cmd, rate, time):
+                msg = f"{emo.NO_ENTRY} Rate limit ({rate} requests in " \
+                      f"{time} seconds) exceeded. Wait a few seconds..."
+
+                update.message.reply_text(msg)
+                return True
+            return False
+        else:
+            return False
+
+    @staticmethod
+    def reached(user_id, command, rate, t):
         if not user_id or not command:
             return False
 
+        import time
         now = int(time.time())
-
-        rate_limit = Cfg.get("rate_limit")
-        cmds = rate_limit.split("-")[0]
-        time = rate_limit.split("-")[1]
 
         if command not in RateLimit._data:
             RateLimit._data[command] = dict()
@@ -29,9 +50,10 @@ class RateLimit:
         count = RateLimit._data[command][user_id][0]
         start = RateLimit._data[command][user_id][1]
 
-        if (start + time) > now:
-            if count > cmds:
-                logging.debug(f"User {user_id} reached rate limit at command '{command}'")
+        if (start + int(t)) > now:
+            if count == int(rate):
+                logging.debug(f"User {user_id} reached rate "
+                              f"limit at command '{command}'")
                 return True
             else:
                 RateLimit._data[command][user_id][0] += 1

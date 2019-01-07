@@ -2,6 +2,7 @@ import opencryptobot.emoji as emo
 
 from telegram import ParseMode
 from opencryptobot.utils import format
+from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.coindata import CoinData
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -13,9 +14,12 @@ class Worst(OpenCryptoPlugin):
     def get_cmd(self):
         return "worst"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
+        if RateLimit.limit_reached(update):
+            return
+
         period = CoinData.HOUR
         volume = None
         entries = 10

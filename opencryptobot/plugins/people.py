@@ -2,6 +2,7 @@ import opencryptobot.emoji as emo
 import opencryptobot.utils as utl
 
 from telegram import ParseMode
+from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coinpaprika import CoinPaprika
 from opencryptobot.plugin import OpenCryptoPlugin, Category
@@ -12,8 +13,8 @@ class People(OpenCryptoPlugin):
     def get_cmd(self):
         return "pe"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         if not args:
             update.message.reply_text(
@@ -33,6 +34,9 @@ class People(OpenCryptoPlugin):
 
         if kw_dict:
             if keyword in kw_dict:
+                if RateLimit.limit_reached(update):
+                    return
+
                 d = CoinPaprika().get_people_by_id(kw_dict[keyword])
 
                 if "description" in d and d["description"]:
@@ -66,6 +70,9 @@ class People(OpenCryptoPlugin):
                     parse_mode=ParseMode.MARKDOWN)
                 return
         else:
+            if RateLimit.limit_reached(update):
+                return
+
             coin = args[0].upper()
 
             for c in APICache.get_cp_coin_list():

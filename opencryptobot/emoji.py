@@ -23,3 +23,4 @@ INFO = "ℹ"  # Info / Help
 CHECK = "✅"  # Done
 BULLETPOINT = "🔹"  # Bulletpoint
 OH_NO = "☹"  # No data
+NO_ENTRY = "🚫"  # Rate limit reached

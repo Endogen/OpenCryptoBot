@@ -12,8 +12,8 @@ class Bpmn(OpenCryptoPlugin):
     def get_cmd(self):
         return "bpmn"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         if not args:
             update.message.reply_text(

@@ -2,22 +2,23 @@ import opencryptobot.emoji as emo
 
 from telegram import ParseMode
 from opencryptobot.utils import format
+from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.tokenstats import TokenStats
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Roi(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "roi"
-
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         if not args:
             update.message.reply_text(
                 text=f"Usage:\n{self.get_usage()}",
                 parse_mode=ParseMode.MARKDOWN)
+            return
+
+        if RateLimit.limit_reached(update):
             return
 
         coin = args[0].upper()
@@ -98,6 +99,9 @@ class Roi(OpenCryptoPlugin):
             text=msg,
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True)
+
+    def get_cmd(self):
+        return "roi"
 
     def get_usage(self):
         return f"`/{self.get_cmd()} <coin>`"

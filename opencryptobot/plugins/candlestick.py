@@ -11,6 +11,7 @@ import opencryptobot.constants as con
 
 from io import BytesIO
 from telegram import ParseMode
+from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coinpaprika import CoinPaprika
 from opencryptobot.api.cryptocompare import CryptoCompare
@@ -24,18 +25,18 @@ class Candlestick(OpenCryptoPlugin):
     def get_cmd(self):
         return "cs"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
-        time_frame = 72
-        resolution = "HOUR"
-        base_coin = "BTC"
-
         if not args:
             update.message.reply_text(
                 text=f"Usage:\n{self.get_usage()}",
                 parse_mode=ParseMode.MARKDOWN)
             return
+
+        time_frame = 72
+        resolution = "HOUR"
+        base_coin = "BTC"
 
         # FIXME: CoinGecko doesn't format OHLC data correctly (example 'eth-loki')
         # Coin or pair
@@ -53,6 +54,9 @@ class Candlestick(OpenCryptoPlugin):
             update.message.reply_text(
                 text=f"{emo.ERROR} Can't compare *{coin}* to itself",
                 parse_mode=ParseMode.MARKDOWN)
+            return
+
+        if RateLimit.limit_reached(update):
             return
 
         cmc_thread = threading.Thread(target=self._get_cmc_coin_id, args=[coin])

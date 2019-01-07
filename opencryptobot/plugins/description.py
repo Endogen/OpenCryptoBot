@@ -2,6 +2,7 @@ import opencryptobot.emoji as emo
 import opencryptobot.constants as con
 
 from telegram import ParseMode
+from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
@@ -12,13 +13,16 @@ class Description(OpenCryptoPlugin):
     def get_cmd(self):
         return "des"
 
-    @OpenCryptoPlugin.send_typing
     @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         if not args:
             update.message.reply_text(
                 text=f"Usage:\n{self.get_usage()}",
                 parse_mode=ParseMode.MARKDOWN)
+            return
+
+        if RateLimit.limit_reached(update):
             return
 
         coin = args[0].upper()
