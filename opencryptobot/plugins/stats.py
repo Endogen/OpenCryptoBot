@@ -81,35 +81,35 @@ class Stats(OpenCryptoPlugin):
 
         if data["market_data"]["price_change_percentage_1h_in_currency"]:
             c_1h = data["market_data"]["price_change_percentage_1h_in_currency"]["usd"]
-            c1h = utl.format(float(c_1h), decimals=2)
+            c1h = utl.format(float(c_1h), decimals=2, force_length=True)
             h1 = "{:>10}".format(f"{c1h}%")
         else:
             h1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_24h_in_currency"]:
             c_1d = data["market_data"]["price_change_percentage_24h_in_currency"]["usd"]
-            c1d = utl.format(float(c_1d), decimals=2)
+            c1d = utl.format(float(c_1d), decimals=2, force_length=True)
             d1 = "{:>10}".format(f"{c1d}%")
         else:
             d1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_7d_in_currency"]:
             c_1w = data["market_data"]["price_change_percentage_7d_in_currency"]["usd"]
-            c1w = utl.format(float(c_1w), decimals=2)
+            c1w = utl.format(float(c_1w), decimals=2, force_length=True)
             w1 = "{:>10}".format(f"{c1w}%")
         else:
             w1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_30d_in_currency"]:
             c_1m = data["market_data"]["price_change_percentage_30d_in_currency"]["usd"]
-            c1m = utl.format(float(c_1m), decimals=2)
+            c1m = utl.format(float(c_1m), decimals=2, force_length=True)
             m1 = "{:>10}".format(f"{c1m}%")
         else:
             m1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_1y_in_currency"]:
             c_1y = data["market_data"]["price_change_percentage_1y_in_currency"]["usd"]
-            c1y = utl.format(float(c_1y), decimals=2)
+            c1y = utl.format(float(c_1y), decimals=2, force_length=True)
             y1 = "{:>10}".format(f"{c1y}%")
         else:
             y1 = "{:>10}".format("N/A")
