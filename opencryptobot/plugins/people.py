@@ -48,7 +48,7 @@ class People(OpenCryptoPlugin):
                         fol = v[0]["followers"] if "followers" in v[0] else None
 
                         fol_str = f"({fol} Followers)" if fol else ""
-                        msg += f"`{k.title()} {fol_str}`\n{url}\n"
+                        msg += f"`{k.title()} {fol_str}`\n{utl.esc_md(url)}\n"
 
                 if "positions" in d and d["positions"]:
                     msg += "\n`Positions:`\n" if msg else "`Positions:`\n"

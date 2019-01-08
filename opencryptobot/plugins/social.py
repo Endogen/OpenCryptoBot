@@ -53,32 +53,42 @@ class Social(OpenCryptoPlugin):
                 rd_subsc = data["community_data"]["reddit_subscribers"]
                 tg_usr_cnt = data["community_data"]["telegram_channel_user_count"]
 
-                msg = f"Social data for {data['name']} ({coin})\n\n"
+                msg = f"`Social data for {data['name']} ({coin})`\n\n"
 
                 if home_lst:
-                    msg += f"Homepage:\n{utl.url(home_lst)}\n"
+                    url = utl.esc_md(utl.url(home_lst))
+                    msg += f"`Homepage:`\n{url}\n"
                 if block_lst:
-                    msg += f"Block Explorer:\n{utl.url(block_lst)}\n"
+                    url = utl.esc_md(utl.url(block_lst))
+                    msg += f"`Block Explorer:`\n{url}\n"
                 if annou_lst:
-                    msg += f"Announcements:\n{utl.url(annou_lst)}\n"
+                    url = utl.esc_md(utl.url(annou_lst))
+                    msg += f"`Announcements:`\n{url}\n"
                 if chat_lst:
-                    msg += f"Chat:\n{utl.url(chat_lst)}\n"
+                    url = utl.esc_md(utl.url(chat_lst))
+                    msg += f"`Chat:`\n{url}\n"
                 if forum_lst:
-                    msg += f"Forum:\n{utl.url(forum_lst)}\n"
+                    url = utl.esc_md(utl.url(forum_lst))
+                    msg += f"`Forum:`\n{url}\n"
                 if twitter:
                     tw_follow = utl.format(tw_follow)
-                    msg += f"Twitter ({tw_follow} Followers):\n{self.TW_URL}{twitter}\n"
+                    url = utl.esc_md(f"{self.TW_URL}{twitter}")
+                    msg += f"`Twitter ({tw_follow} Followers):`\n{url}\n"
                 if facebook:
                     fb_likes = utl.format(fb_likes)
-                    msg += f"Facebook ({fb_likes} Likes):\n{self.FB_URL}{facebook}\n"
+                    url = utl.esc_md(f"{self.FB_URL}{facebook}")
+                    msg += f"`Facebook ({fb_likes} Likes):`\n{url}\n"
                 if btctalk:
-                    msg += f"BitcoinTalk:\n{self.BT_URL}{btctalk}\n"
+                    url = utl.esc_md(f"{self.BT_URL}{btctalk}")
+                    msg += f"`BitcoinTalk:`\n{url}\n"
                 if telegram:
                     tg_usr_cnt = utl.format(tg_usr_cnt)
-                    msg += f"Telegram ({tg_usr_cnt} Users):\n{self.TG_URL}{telegram}\n"
+                    url = utl.esc_md(f"{self.TG_URL}{telegram}")
+                    msg += f"`Telegram ({tg_usr_cnt} Users):`\n{url}\n"
                 if reddit:
                     rd_subsc = utl.format(rd_subsc)
-                    msg += f"Reddit ({rd_subsc} Subscribers):\n{utl.url(reddit)}\n"
+                    url = utl.esc_md(f"{utl.url(reddit)}")
+                    msg += f"`Reddit ({rd_subsc} Subscribers):`\n{url}\n"
 
                 break
 
@@ -90,7 +100,8 @@ class Social(OpenCryptoPlugin):
 
         update.message.reply_text(
             text=msg,
-            disable_web_page_preview=True)
+            disable_web_page_preview=True,
+            parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
         return f"`/{self.get_cmd()} <coin>`"
