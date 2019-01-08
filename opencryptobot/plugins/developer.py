@@ -12,6 +12,9 @@ class Developer(OpenCryptoPlugin):
     def get_cmd(self):
         return "dev"
 
+    def get_cmd_alt(self):
+        return ["developer"]
+
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):

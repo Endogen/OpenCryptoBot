@@ -13,6 +13,9 @@ class Stats(OpenCryptoPlugin):
     def get_cmd(self):
         return "s"
 
+    def get_cmd_alt(self):
+        return ["stats"]
+
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):

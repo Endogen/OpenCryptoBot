@@ -13,6 +13,9 @@ class Change(OpenCryptoPlugin):
     def get_cmd(self):
         return "ch"
 
+    def get_cmd_alt(self):
+        return ["change"]
+
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):

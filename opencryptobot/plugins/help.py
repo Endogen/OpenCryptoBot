@@ -8,6 +8,9 @@ class Help(OpenCryptoPlugin):
     def get_cmd(self):
         return "help"
 
+    def get_cmd_alt(self):
+        return list("h")
+
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):

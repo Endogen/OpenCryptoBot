@@ -18,6 +18,9 @@ class Trends(OpenCryptoPlugin):
     def get_cmd(self):
         return "tr"
 
+    def get_cmd_alt(self):
+        return ["trend"]
+
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
@@ -54,6 +57,9 @@ class Trends(OpenCryptoPlugin):
             update.message.reply_text(
                 text=f"{emo.ERROR} Not possible to provide more then 5 keywords",
                 parse_mode=ParseMode.MARKDOWN)
+            return
+
+        if RateLimit.limit_reached(update):
             return
 
         pytrends = TrendReq(hl='en-US', tz=360)

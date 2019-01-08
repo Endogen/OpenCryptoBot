@@ -14,6 +14,9 @@ class Price(OpenCryptoPlugin):
     def get_cmd(self):
         return "p"
 
+    def get_cmd_alt(self):
+        return ["price"]
+
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):

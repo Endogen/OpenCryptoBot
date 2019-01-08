@@ -23,6 +23,9 @@ class Chart(OpenCryptoPlugin):
     def get_cmd(self):
         return "c"
 
+    def get_cmd_alt(self):
+        return ["chart"]
+
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):

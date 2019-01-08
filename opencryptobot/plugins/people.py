@@ -13,6 +13,9 @@ class People(OpenCryptoPlugin):
     def get_cmd(self):
         return "pe"
 
+    def get_cmd_alt(self):
+        return ["people"]
+
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):

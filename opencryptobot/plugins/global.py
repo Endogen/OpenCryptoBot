@@ -16,6 +16,9 @@ class Global(OpenCryptoPlugin):
     def get_cmd(self):
         return "g"
 
+    def get_cmd_alt(self):
+        return ["global"]
+
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):

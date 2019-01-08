@@ -25,6 +25,9 @@ class Candlestick(OpenCryptoPlugin):
     def get_cmd(self):
         return "cs"
 
+    def get_cmd_alt(self):
+        return ["candle", "candlestick"]
+
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):

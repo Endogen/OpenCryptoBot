@@ -13,6 +13,9 @@ class Compare(OpenCryptoPlugin):
     def get_cmd(self):
         return "comp"
 
+    def get_cmd_alt(self):
+        return ["compare"]
+
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):

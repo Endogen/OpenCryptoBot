@@ -13,6 +13,9 @@ class Value(OpenCryptoPlugin):
     def get_cmd(self):
         return "v"
 
+    def get_cmd_alt(self):
+        return ["value"]
+
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):

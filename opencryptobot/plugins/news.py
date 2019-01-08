@@ -28,7 +28,10 @@ class News(OpenCryptoPlugin):
             logging.error(f"No token file found at '{token_path}'")
 
     def get_cmd(self):
-        return "news"
+        return "n"
+
+    def get_cmd_alt(self):
+        return ["news"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing

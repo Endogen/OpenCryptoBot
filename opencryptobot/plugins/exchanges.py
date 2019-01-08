@@ -12,6 +12,9 @@ class Exchanges(OpenCryptoPlugin):
     def get_cmd(self):
         return "ex"
 
+    def get_cmd_alt(self):
+        return ["exchange"]
+
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
