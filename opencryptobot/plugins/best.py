@@ -81,7 +81,7 @@ class Best(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} 'hour' or 'day' (<# of entries> <min. volume>)`"
+        return f"`/{self.get_cmd()} hour | day (<# of entries>) (<min. volume>)`"
 
     def get_description(self):
         return "Best movers for hour or day"
