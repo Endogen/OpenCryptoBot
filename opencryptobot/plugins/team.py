@@ -1,0 +1,66 @@
+import opencryptobot.emoji as emo
+
+from telegram import ParseMode
+from opencryptobot.ratelimit import RateLimit
+from opencryptobot.api.apicache import APICache
+from opencryptobot.api.coinpaprika import CoinPaprika
+from opencryptobot.plugin import OpenCryptoPlugin, Category
+
+
+class Team(OpenCryptoPlugin):
+
+    def get_cmd(self):
+        return "t"
+
+    def get_cmd_alt(self):
+        return ["team"]
+
+    @OpenCryptoPlugin.save_data
+    @OpenCryptoPlugin.send_typing
+    def get_action(self, bot, update, args):
+        if not args:
+            update.message.reply_text(
+                text=f"Usage:\n{self.get_usage()}",
+                parse_mode=ParseMode.MARKDOWN)
+            return
+
+        if len(args) > 1:
+            update.message.reply_text(
+                text=f"{emo.ERROR} Only one argument allowed",
+                parse_mode=ParseMode.MARKDOWN)
+            return
+
+        if RateLimit.limit_reached(update):
+            return
+
+        coin = args[0].upper()
+        msg = str()
+
+        for c in APICache.get_cp_coin_list():
+            if c["symbol"] == coin:
+                for p in CoinPaprika().get_coin_by_id(c["id"])["team"]:
+                    details = f"/pe details={p['id']}"
+                    msg += f"{p['name']}\n{p['position']}\n{details}\n\n"
+                break
+
+        if not msg:
+            update.message.reply_text(
+                text=f"{emo.ERROR} No team data for *{coin}*",
+                parse_mode=ParseMode.MARKDOWN)
+            return
+
+        msg = f"`Team behind {coin}\n\n{msg}`"
+
+        update.message.reply_text(
+            text=msg,
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True)
+
+    def get_usage(self):
+        return f"`/{self.get_cmd()} <coin>`"
+
+    def get_description(self):
+        return "Info about team behind a coin"
+
+    def get_category(self):
+        return Category.GENERAL
