@@ -4,11 +4,12 @@ import logging
 import importlib
 import opencryptobot.emoji as emo
 import opencryptobot.constants as con
+import opencryptobot.utils as utl
 
 from opencryptobot.utils import get_seconds
 from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
 from telegram.error import InvalidToken
-from telegram.ext import Updater, CommandHandler, InlineQueryHandler
+from telegram.ext import Updater, CommandHandler, InlineQueryHandler, RegexHandler
 from opencryptobot.api.apicache import APICache
 from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.config import ConfigManager as Cfg
@@ -39,6 +40,7 @@ class TelegramBot:
         self.job_queue = self.updater.job_queue
         self.dispatcher = self.updater.dispatcher
 
+        self._add_link_handler()
         self._load_plugins()
 
         # Handler for inline-mode
@@ -76,6 +78,19 @@ class TelegramBot:
             webhook_url=f"{Cfg.get('webhook', 'url')}:"
                         f"{Cfg.get('webhook', 'port')}/"
                         f"{self.token}")
+
+    def _cmd_link_callback(self, bot, update):
+        cmd = update.effective_message.text.split('__')[0].replace("/_", "")
+        args = update.effective_message.text.split('__')[1].split("_")
+
+        for p in self.plugins:
+            if p.get_cmd().lower() == cmd.lower() or cmd.lower() in p.get_cmd_alt():
+                p.get_action(bot, update, args=args)
+                break
+
+    def _add_link_handler(self):
+        self.dispatcher.add_handler(RegexHandler(
+            utl.comp("^/_([a-zA-Z0-9]*)__([\w]*)$"), self._cmd_link_callback))
 
     def _load_plugins(self):
         for _, _, files in os.walk(os.path.join("opencryptobot", "plugins")):

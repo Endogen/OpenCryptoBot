@@ -176,3 +176,9 @@ def esc_md(text):
     pattern = re.compile("|".join(rep.keys()))
 
     return pattern.sub(lambda m: rep[re.escape(m.group(0))], text)
+
+
+# Returns a pre compiled Regex pattern to ignore case
+def comp(pattern):
+    import re
+    return re.compile(pattern, re.IGNORECASE)
