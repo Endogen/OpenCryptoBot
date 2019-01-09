@@ -9,6 +9,7 @@
 ```
 /ath - All time high price for coin
 /best - Best movers for hour or day
+/ch - Price change over time
 /ico - ICO info for coin
 /p - Coin price
 /roi - Return on Investment for a coin
@@ -26,15 +27,16 @@
 /g - Global crypto data
 /i - General coin information
 /m - Find exchanges to trade a coin
-/pe - Info about team behind a coin
+/pe - Info about person from a team
 /se - Search for symbol by coin name
+/t - Info about team behind a coin
 /tr - Google Trends - Interest Over Time
 /wp - Find whitepaper for a coin
 ```
 
 ##### News & Events
 ```
-/news - News about a coin
+/n - News about a coin
 /soc - Social media details
 ```
 
