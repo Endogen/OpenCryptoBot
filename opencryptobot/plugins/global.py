@@ -2,10 +2,10 @@ import io
 import plotly.io as pio
 import plotly.graph_objs as go
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 
 from io import BytesIO
 from telegram import ParseMode
-from opencryptobot.utils import format
 from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
@@ -48,12 +48,12 @@ class Global(OpenCryptoPlugin):
 
         # Total Market Capital
         if sub_cmd.lower() == "mcap":
-            m_cap_usd = format(res["total_market_cap"]["usd"])
-            m_cap_eur = format(res["total_market_cap"]["eur"])
+            m_cap_usd = utl.format(res["total_market_cap"]["usd"])
+            m_cap_eur = utl.format(res["total_market_cap"]["eur"])
 
             if coin:
                 if coin in res["total_market_cap"]:
-                    mcap = format(res["total_market_cap"][coin])
+                    mcap = utl.format(res["total_market_cap"][coin])
                     msg = f"`Total Market Capital\n{coin.upper()}: {mcap}`"
             else:
                 msg = f"`Total Market Capital`\n" \
@@ -62,12 +62,12 @@ class Global(OpenCryptoPlugin):
 
         # Total Volume
         elif sub_cmd.lower() == "vol":
-            vol_usd = format(res["total_volume"]["usd"])
-            vol_eur = format(res["total_volume"]["eur"])
+            vol_usd = utl.format(res["total_volume"]["usd"])
+            vol_eur = utl.format(res["total_volume"]["eur"])
 
             if coin:
                 if coin in res["total_volume"]:
-                    vol = format(res["total_volume"][coin])
+                    vol = utl.format(res["total_volume"][coin])
                     msg = f"`Total Volume\n{coin.upper()}: {vol}`"
             else:
                 msg = f"`Total Volume (24h)`\n" \
@@ -85,7 +85,7 @@ class Global(OpenCryptoPlugin):
                 labels.append(key.upper())
                 values.append(m_cap_per[key])
 
-                value = format(m_cap_per[key], decimals=2, force_length=True)
+                value = utl.format(m_cap_per[key], decimals=2, force_length=True)
                 tst = "{:>13}".format(f"{value}%")
                 tst = key.upper() + tst[len(key):]
                 msg += f"`{tst}`\n"

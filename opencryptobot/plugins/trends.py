@@ -2,11 +2,11 @@ import io
 import plotly.io as pio
 import plotly.graph_objs as go
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 
 from io import BytesIO
 from telegram import ParseMode
 from pytrends.request import TrendReq
-from opencryptobot.utils import get_date
 from opencryptobot.ratelimit import RateLimit
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -41,7 +41,7 @@ class Trends(OpenCryptoPlugin):
             if tf != "all":
                 from datetime import datetime
                 now = datetime.today()
-                date = get_date(now, tf)
+                date = utl.get_date(now, tf)
 
                 if not date:
                     update.message.reply_text(
@@ -96,7 +96,7 @@ class Trends(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <keyword> (<keyword> ...)`"
+        return f"`/{self.get_cmd()} <keyword> (<keyword> ... t=<# of>d|m|y)`"
 
     def get_description(self):
         return "Google Trends - Interest Over Time"

@@ -1,4 +1,5 @@
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 
 from telegram import ParseMode
 from opencryptobot.ratelimit import RateLimit
@@ -39,8 +40,8 @@ class Team(OpenCryptoPlugin):
         for c in APICache.get_cp_coin_list():
             if c["symbol"] == coin:
                 for p in CoinPaprika().get_coin_by_id(c["id"])["team"]:
-                    details = f"/pe details={p['id']}"
-                    msg += f"{p['name']}\n{p['position']}\n{details}\n\n"
+                    details = utl.esc_md(f"/_people__{p['id'].replace('-', '_')}")
+                    msg += f"`{p['name']}\n{p['position']}`\n{details}\n\n"
                 break
 
         if not msg:
@@ -49,7 +50,7 @@ class Team(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        msg = f"`Team behind {coin}\n\n{msg}`"
+        msg = f"`Team behind {coin}`\n\n{msg}"
 
         update.message.reply_text(
             text=msg,

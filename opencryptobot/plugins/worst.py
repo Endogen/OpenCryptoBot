@@ -1,12 +1,13 @@
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 
 from telegram import ParseMode
-from opencryptobot.utils import format
 from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.coindata import CoinData
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
+# TODO: Add better error handling for arguments (example: timeframe not set)
 class Worst(OpenCryptoPlugin):
 
     DESC_LEN = 25
@@ -68,20 +69,20 @@ class Worst(OpenCryptoPlugin):
             else:
                 change = coin["Change_24h"]
 
-            change = format(change, decimals=2, force_length=True)
+            change = utl.format(change, decimals=2, force_length=True)
             change = "{1:>{0}}".format(self.DESC_LEN + 9 - len(desc), change)
             msg += f"`{desc}{change}%`\n"
 
         vol = str()
         if volume:
-            vol = f" (vol > {format(volume)})"
+            vol = f" (vol > {utl.format(volume)})"
 
         update.message.reply_text(
             text=f"`Worst movers 1{period.lower()[:1]}{vol}\n\n`" + msg,
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} 'hour' or 'day' (<# of entries> <min. volume>)`"
+        return f"`/{self.get_cmd()} hour|day (<# of entries> <min. volume>)`"
 
     def get_description(self):
         return "Worst movers for hour or day"

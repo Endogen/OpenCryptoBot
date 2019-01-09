@@ -1,9 +1,9 @@
 import threading
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 import opencryptobot.constants as con
 
 from telegram import ParseMode
-from opencryptobot.utils import format
 from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.tokenstats import TokenStats
 from opencryptobot.api.cryptocompare import CryptoCompare
@@ -70,7 +70,7 @@ class Info(OpenCryptoPlugin):
                     f"Type:         {type}\n"
                     f"Algorithm:    {algo}\n"
                     f"Proof type:   {proof}\n"
-                    f"Hashes (sec): {format(int(h_per_s))}\n"
+                    f"Hashes (sec): {utl.format(int(h_per_s))}\n"
                     f"Block:        {block}\n"
                     f"Block time:   {block_time}\n"
                     f"Block reward: {block_reward}"
@@ -92,6 +92,7 @@ class Info(OpenCryptoPlugin):
             if res["type"]:
                 if res["type"] == "coin":
                     self.coin_type = "Coin"
+                    self.based_on = None
                 else:
                     self.coin_type = "Token"
                     self.based_on = res["type"].capitalize()

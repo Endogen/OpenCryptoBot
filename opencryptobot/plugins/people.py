@@ -3,7 +3,6 @@ import opencryptobot.utils as utl
 
 from telegram import ParseMode
 from opencryptobot.ratelimit import RateLimit
-from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coinpaprika import CoinPaprika
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -46,7 +45,7 @@ class People(OpenCryptoPlugin):
                 url = v[0]["url"]
                 fol = v[0]["followers"] if "followers" in v[0] else None
 
-                fol_str = f"({fol} Followers)" if fol else ""
+                fol_str = f"({utl.format(fol)} Followers)" if fol else ""
                 msg += f"`{k.title()} {fol_str}`\n{utl.esc_md(url)}\n"
 
         if "positions" in d and d["positions"]:

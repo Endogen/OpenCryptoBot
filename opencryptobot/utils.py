@@ -64,7 +64,7 @@ def format(value, decimals=None, force_length=False, template=None, on_zero=0, o
     else:
         v = "{0:,.0f}".format(v)
 
-    if not force_length:
+    if not force_length and not t < 1:
         while "." in v and v.endswith(("0", ".")):
             v = v[:-1]
 

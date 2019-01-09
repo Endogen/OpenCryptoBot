@@ -1,9 +1,9 @@
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 
 from telegram import ParseMode
 from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
-from opencryptobot.utils import is_number, format
 from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
@@ -27,7 +27,7 @@ class Value(OpenCryptoPlugin):
 
         coin = args[0].upper()
 
-        if len(args) > 1 and is_number(args[1]):
+        if len(args) > 1 and utl.is_number(args[1]):
             qty = args[1]
         else:
             update.message.reply_text(
@@ -63,7 +63,7 @@ class Value(OpenCryptoPlugin):
 
         for c in vs_cur.split(","):
             if c in prices:
-                value = format(prices[c] * qty_float)
+                value = utl.format(prices[c] * qty_float)
                 msg += f"`{c.upper()}: {value}`\n"
 
         if msg:

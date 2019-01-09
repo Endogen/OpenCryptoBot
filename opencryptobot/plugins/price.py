@@ -1,8 +1,8 @@
 import decimal
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 
 from telegram import ParseMode
-from opencryptobot.utils import format
 from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coingecko import CoinGecko
@@ -69,10 +69,10 @@ class Price(OpenCryptoPlugin):
                         base_coin = ticker["target"]
                         if vs_list:
                             if base_coin in vs_list:
-                                price = format(ticker["last"], force_length=True)
+                                price = utl.format(ticker["last"], force_length=True)
                                 msg += f"`{base_coin}: {price}`\n"
                         else:
-                            price = format(ticker["last"], force_length=True)
+                            price = utl.format(ticker["last"], force_length=True)
                             msg += f"`{base_coin}: {price}`\n"
         else:
             if not vs_cur:
@@ -90,11 +90,11 @@ class Price(OpenCryptoPlugin):
                 for symbol, price in next(iter(result.values())).items():
                     if symbol in fiat_list:
                         if decimal.Decimal(str(price)).as_tuple().exponent > -3:
-                            price = format(price, decimals=2, force_length=True)
+                            price = utl.format(price, decimals=2, force_length=True)
                         else:
-                            price = format(price, force_length=True)
+                            price = utl.format(price, force_length=True)
                     else:
-                        price = format(price, force_length=True)
+                        price = utl.format(price, force_length=True)
 
                     msg += f"`{symbol.upper()}: {price}`\n"
 

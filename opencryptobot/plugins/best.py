@@ -1,7 +1,7 @@
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 
 from telegram import ParseMode
-from opencryptobot.utils import format
 from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.coindata import CoinData
 from opencryptobot.plugin import OpenCryptoPlugin, Category
@@ -68,13 +68,13 @@ class Best(OpenCryptoPlugin):
             else:
                 change = coin["Change_24h"]
 
-            change = format(change, decimals=2, force_length=True)
+            change = utl.format(change, decimals=2, force_length=True)
             change = "{1:>{0}}".format(self.DESC_LEN + 9 - len(desc), change)
             msg += f"`{desc}{change}%`\n"
 
         vol = str()
         if volume:
-            vol = f" (vol > {format(volume)})"
+            vol = f" (vol > {utl.format(volume)})"
 
         update.message.reply_text(
             text=f"`Best movers 1{period.lower()[:1]}{vol}\n\n`" + msg,

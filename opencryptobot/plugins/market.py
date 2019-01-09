@@ -1,7 +1,7 @@
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 
 from telegram import ParseMode
-from opencryptobot.utils import format
 from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coingecko import CoinGecko
@@ -63,7 +63,7 @@ class Market(OpenCryptoPlugin):
                 vs_cur = data[i]["target"]
                 exchange = data[i]["market"]["name"]
                 vol_usd = data[i]["converted_volume"]["usd"]
-                vol_usd = format(vol_usd, decimals=2, force_length=True)
+                vol_usd = utl.format(vol_usd, decimals=2, force_length=True)
 
                 msg += f"{exchange} - {vs_cur}\nVolume: {vol_usd} USD\n\n"
 
@@ -84,7 +84,7 @@ class Market(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin> ('vol')`"
+        return f"`/{self.get_cmd()} <coin> (vol)`"
 
     def get_description(self):
         return "Find exchanges to trade a coin"

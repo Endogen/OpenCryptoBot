@@ -1,4 +1,5 @@
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 
 from telegram import ParseMode
 from opencryptobot.utils import format
@@ -50,17 +51,17 @@ class Ico(OpenCryptoPlugin):
 
                 kyc_req = data["ico_data"]["kyc_required"]
 
-                raised = format(raised) if raised is not None else raised
+                raised = utl.format(raised) if raised is not None else raised
 
                 if pre_sale_a:
-                    pre_sale_a = format(pre_sale_a)
+                    pre_sale_a = utl.format(pre_sale_a)
                 if pre_sale_p:
-                    pre_sale_p = format(pre_sale_p)
+                    pre_sale_p = utl.format(pre_sale_p)
 
                 if pub_sale_a:
-                    pub_sale_a = format(pub_sale_a)
+                    pub_sale_a = utl.format(pub_sale_a)
                 if pub_sale_p:
-                    pub_sale_p = format(pub_sale_p)
+                    pub_sale_p = utl.format(pub_sale_p)
 
                 if pre_sale_a:
                     pre_sale_str = f"{pre_sale_a} {coin} for {pre_sale_p} {pre_sale_c}\n"
