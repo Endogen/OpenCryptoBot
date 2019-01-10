@@ -26,7 +26,9 @@ class Feedback(OpenCryptoPlugin):
             name = user.first_name
 
         feedback = update.message.text.replace(f"/{self.get_cmd()} ", "")
-        bot.send_message(Cfg.get("admin_id"), f"Feedback from {name}: {feedback}")
+
+        for admin in Cfg.get("admin_id"):
+            bot.send_message(admin, f"Feedback from {name}: {feedback}")
 
         update.message.reply_text(f"Thanks for letting us know {emo.TOP}")
 

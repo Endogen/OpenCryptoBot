@@ -30,7 +30,7 @@ class OpenCryptoPlugin:
     @classmethod
     def only_owner(cls, func):
         def _only_owner(self, bot, update, **kwargs):
-            if Cfg.get("admin_id") == update.effective_user.id:
+            if update.effective_user.id in Cfg.get("admin_id"):
                 return func(self, bot, update, **kwargs)
 
         return _only_owner
