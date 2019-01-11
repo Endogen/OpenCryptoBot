@@ -1,4 +1,8 @@
+import os
 import io
+import sys
+import time
+import shutil
 import zipfile
 import requests
 import opencryptobot.emoji as emo
@@ -8,8 +12,6 @@ from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.config import ConfigManager as Cfg
 
 
-# TODO: Params: force, 'branch-name', release, check, restart
-# TODO: Only update 'opencryptobot' and 'res'
 class Update(OpenCryptoPlugin):
 
     def get_cmd(self):
@@ -18,6 +20,13 @@ class Update(OpenCryptoPlugin):
     @OpenCryptoPlugin.only_owner
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
+        # TODO: Implement arguments
+        force = False
+        check = False
+        restart = False
+        branch = False
+        release = False
+
         uid = update.message.from_user.id
 
         msg = f"{emo.WAIT} Checking for new version..."
@@ -26,7 +35,7 @@ class Update(OpenCryptoPlugin):
         user = Cfg.get('update', 'github_user')
         repo = Cfg.get('update', 'github_repo')
 
-        # Get newest version of this script from GitHub
+        # Get newest version of the project from GitHub
         url = f"{con.GH_URL}{user}/{repo}{con.GH_MASTER}"
         response = requests.get(url)
 
@@ -42,20 +51,50 @@ class Update(OpenCryptoPlugin):
                 update.message.reply_text(msg)
                 return
 
-            # Save current ETag (hash) of project zip to config
-            Cfg.set(new_etag, "update", "update_hash")
-
             zip_file = zipfile.ZipFile(io.BytesIO(response.content))
             zip_file.extractall()
 
-            msg = f"{emo.CHECK} Update completed! /restart"
-            update.message.reply_text(msg)
+            udp_dir = response.headers.get('Content-Disposition')
+            udp_dir = udp_dir.split('=')[1].split('.')[0]
 
-            # time.sleep(0.2)
-            # os.execl(sys.executable, sys.executable, *sys.argv)
+            cur_path = os.getcwd()
+            upd_path = os.path.join(cur_path, udp_dir)
+
+            shutil.rmtree(os.path.join(upd_path, con.CFG_DIR))
+
+            for _, dirs, files in os.walk(upd_path):
+                for dir in dirs:
+                    cp = os.path.join(cur_path, dir)
+
+                    if os.path.exists(cp):
+                        shutil.rmtree(cp)
+
+                    up = os.path.join(upd_path, dir)
+                    shutil.copytree(up, cp)
+
+                for file in files:
+                    up = os.path.join(upd_path, file)
+                    cp = os.path.join(cur_path, file)
+                    shutil.copy(up, cp)
+
+            # Save current ETag (hash) of project zip to config
+            Cfg.set(new_etag, "update", "update_hash")
+
+            if restart:
+                msg = f"{emo.CHECK} Update completed..."
+                update.message.reply_text(msg)
+                msg = f"{emo.WAIT} Restarting bot..."
+                update.message.reply_text(msg)
+
+                time.sleep(0.2)
+                os.execl(sys.executable, sys.executable, *sys.argv)
+            else:
+                msg = f"{emo.CHECK} Update completed. /restart"
+                update.message.reply_text(msg)
 
         else:
-            msg = emo.ERROR + "Update not executed. Unexpected status code: " + response.status_code
+            msg = f"{emo.ERROR} Update not executed. " \
+                  f"Unexpected status code: {response.status_code}"
             update.message.reply_text(msg)
 
     def get_usage(self):
