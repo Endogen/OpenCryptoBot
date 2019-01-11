@@ -6,6 +6,7 @@ import opencryptobot.emoji as emo
 from opencryptobot.plugin import OpenCryptoPlugin
 
 
+# TODO: Show notification after bot is available again
 class Restart(OpenCryptoPlugin):
 
     def get_cmd(self):

@@ -1,5 +1,7 @@
 {
-    "admin_id": [134166731],
+    "admin_id": [
+        134166731
+    ],
     "telegram": {
         "read_timeout": 10,
         "connect_timeout": 10
@@ -14,5 +16,9 @@
     "use_db": true,
     "rate_limit": "6-30",
     "refresh_cache": "6h",
-    "update_slug": "endogen/OpenCryptoBot/master"
+    "update": {
+        "github_user": "endogen",
+        "github_repo": "OpenCryptoBot",
+        "update_hash": null
+    }
 }

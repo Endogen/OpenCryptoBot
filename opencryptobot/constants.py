@@ -7,7 +7,9 @@ CMC_LOGO_URL_PARTIAL = "https://s2.coinmarketcap.com/static/img/coins/128x128/"
 ALL_CRYPTO_WP_PARTIAL = "https://www.allcryptowhitepapers.com/"
 COIN_PAPRIKA_PARTIAL = "https://coinpaprika.com/coin/"
 
-GITHUB_BASE_URL = "https://raw.githubusercontent.com/"
+# GitHub
+GH_URL = "https://github.com/"
+GH_MASTER = "/archive/master.zip"
 
 CFG_DIR = "conf"
 CFG_FILE = "config.json"

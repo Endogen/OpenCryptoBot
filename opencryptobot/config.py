@@ -1,6 +1,8 @@
 import os
 import json
 
+from functools import reduce
+from operator import getitem
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
@@ -47,15 +49,21 @@ class ConfigManager:
             exit(f"ERROR: No configuration file '{cfg_file}' found")
 
     @staticmethod
-    def get(*args):
+    def get(*keys):
         if not ConfigManager._cfg:
             ConfigManager._read_cfg()
 
         value = ConfigManager._cfg
-        for key in args:
+        for key in keys:
             value = value[key]
 
         return value if value is not None else None
+
+    @staticmethod
+    def set(value, *keys):
+        reduce(getitem, keys[:-1], ConfigManager._cfg)[keys[-1]] = value
+        ConfigManager._write_cfg()
+        # TODO: Do not reload config if changes done by SettingsManager
 
 
 class ChangeHandler(FileSystemEventHandler):
