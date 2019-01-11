@@ -15,7 +15,7 @@ class Restart(OpenCryptoPlugin):
     @OpenCryptoPlugin.only_owner
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
-        msg = f"{emo.WAIT} Bot is restarting..."
+        msg = f"{emo.WAIT} Restarting bot..."
         update.message.reply_text(msg)
 
         time.sleep(0.2)
