@@ -10,7 +10,10 @@ from watchdog.events import FileSystemEventHandler
 class ConfigManager:
 
     _CFG_FILE = "config.json"
+
     _cfg = dict()
+
+    ignore = False
 
     def __init__(self, config_file=None):
         if config_file:
@@ -62,13 +65,15 @@ class ConfigManager:
     @staticmethod
     def set(value, *keys):
         reduce(getitem, keys[:-1], ConfigManager._cfg)[keys[-1]] = value
+
+        ConfigManager.ignore = True
         ConfigManager._write_cfg()
-        # TODO: Do not reload config if changes done by SettingsManager
 
 
 class ChangeHandler(FileSystemEventHandler):
     file = None
     method = None
+    old = 0
 
     def __init__(self, file, method):
         type(self).file = file
@@ -76,7 +81,15 @@ class ChangeHandler(FileSystemEventHandler):
 
     @staticmethod
     def on_modified(event):
-        event_file = os.path.basename(event.src_path)
-        config_file = os.path.basename(ChangeHandler.file)
-        if event_file == config_file:
-            ChangeHandler.method()
+        # TODO: Change path to use existing constants
+        if event.src_path == ".\\conf\\config.json":
+            statbuf = os.stat(event.src_path)
+            new = statbuf.st_mtime
+
+            if (new - ChangeHandler.old) > 0.5:
+                if ConfigManager.ignore:
+                    ConfigManager.ignore = False
+                else:
+                    ChangeHandler.method()
+
+            ChangeHandler.old = new
