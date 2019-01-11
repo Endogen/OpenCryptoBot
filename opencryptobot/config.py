@@ -1,5 +1,6 @@
 import os
 import json
+import opencryptobot.constants as con
 
 from functools import reduce
 from operator import getitem
@@ -9,7 +10,7 @@ from watchdog.events import FileSystemEventHandler
 
 class ConfigManager:
 
-    _CFG_FILE = "config.json"
+    _CFG_FILE = con.CFG_FILE
 
     _cfg = dict()
 
@@ -81,11 +82,13 @@ class ChangeHandler(FileSystemEventHandler):
 
     @staticmethod
     def on_modified(event):
-        # TODO: Change path to use existing constants
-        if event.src_path == ".\\conf\\config.json":
+        cfg_path = os.path.join('.', con.CFG_DIR, con.CFG_FILE)
+
+        if event.src_path == cfg_path:
             statbuf = os.stat(event.src_path)
             new = statbuf.st_mtime
 
+            # FIXME: Workaround for watchdog bug
             if (new - ChangeHandler.old) > 0.5:
                 if ConfigManager.ignore:
                     ConfigManager.ignore = False
