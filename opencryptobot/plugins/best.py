@@ -17,6 +17,32 @@ class Best(OpenCryptoPlugin):
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
+        if args:
+            t = args[0].lower()
+            if not t == "hour" and not t == "day":
+                update.message.reply_text(
+                    text=f"{emo.ERROR} First argument has to be `day` or `hour`",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
+
+        if len(args) > 1:
+            entries = args[1]
+            if not entries.isnumeric():
+                update.message.reply_text(
+                    text=f"{emo.ERROR} Second argument (# of positions "
+                         f"to display) has to be a number",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
+
+        if len(args) > 2:
+            entries = args[2]
+            if not entries.isnumeric():
+                update.message.reply_text(
+                    text=f"{emo.ERROR} Third argument (min. volume) "
+                         f"has to be a number",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
+
         if RateLimit.limit_reached(update):
             return
 
