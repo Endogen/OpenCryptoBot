@@ -17,8 +17,8 @@
     "rate_limit": "6-30",
     "refresh_cache": "6h",
     "update": {
-        "github_user": "endogen",
+        "github_user": "Endogen",
         "github_repo": "OpenCryptoBot",
-        "update_hash": null
+        "update_hash": "a20434b7d213ff1321b7eaf896246dbf67b9fdbd"
     }
 }

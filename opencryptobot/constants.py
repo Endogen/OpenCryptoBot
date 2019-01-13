@@ -11,6 +11,12 @@ COIN_PAPRIKA_PARTIAL = "https://coinpaprika.com/coin/"
 GH_URL = "https://github.com/"
 GH_MASTER = "/archive/master.zip"
 
+GH_API_URL = "https://api.github.com/repos/"
+GH_API_BRANCH = "/branches/"
+GH_API_RELEASE = "/releases/"
+GH_API_RELEASES = "/releases"
+GH_API_TAGS = "/tags"
+
 CFG_DIR = "conf"
 CFG_FILE = "config.json"
 BOT_TKN_FILE = "bot.token"
