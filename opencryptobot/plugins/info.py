@@ -1,7 +1,6 @@
 import threading
 import opencryptobot.emoji as emo
 import opencryptobot.utils as utl
-import opencryptobot.constants as con
 
 from telegram import ParseMode
 from opencryptobot.ratelimit import RateLimit
@@ -11,6 +10,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Info(OpenCryptoPlugin):
+
+    LOGO_URL_PARTIAL = "https://www.cryptocompare.com"
 
     coin_type = None
     based_on = None
@@ -51,7 +52,7 @@ class Info(OpenCryptoPlugin):
             return
 
         name = coin_info["Data"][0]["CoinInfo"]["FullName"]
-        image = f"{con.CG_LOGO_URL_PARTIAL}{coin_info['Data'][0]['CoinInfo']['ImageUrl']}"
+        image = f"{self.LOGO_URL_PARTIAL}{coin_info['Data'][0]['CoinInfo']['ImageUrl']}"
         algo = coin_info["Data"][0]["CoinInfo"]["Algorithm"]
         proof = coin_info["Data"][0]["CoinInfo"]["ProofType"]
         h_per_s = coin_info["Data"][0]["CoinInfo"]["NetHashesPerSecond"]
@@ -70,7 +71,8 @@ class Info(OpenCryptoPlugin):
         update.message.reply_photo(
             photo=image,
             caption=f"`"
-                    f"Name:         {name} ({coin})\n"
+                    f"Name:         {name}\n"
+                    f"Ticker:       {coin}\n"
                     f"Type:         {type}\n"
                     f"Algorithm:    {algo}\n"
                     f"Proof type:   {proof}\n"
