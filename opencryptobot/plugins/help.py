@@ -37,6 +37,9 @@ class Help(OpenCryptoPlugin):
 
                 msg += "\n"
 
+        msg += "Visit the [homepage](https://endogen.github.io/OpenCryptoBot) " \
+               "to get an explanation for every command an every possible argument"
+
         update.message.reply_text(text=msg, parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
