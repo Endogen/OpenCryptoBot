@@ -82,21 +82,30 @@ class Candlestick(OpenCryptoPlugin):
                     parse_mode=ParseMode.MARKDOWN)
                 return
 
-        if resolution == "MINUTE":
-            ohlcv = CryptoCompare().get_historical_ohlcv_minute(
-                coin,
-                base_coin,
-                time_frame)
-        elif resolution == "HOUR":
-            ohlcv = CryptoCompare().get_historical_ohlcv_hourly(
-                coin,
-                base_coin,
-                time_frame)
-        elif resolution == "DAY":
-            ohlcv = CryptoCompare().get_historical_ohlcv_daily(
-                coin,
-                base_coin,
-                time_frame)
+        try:
+            if resolution == "MINUTE":
+                ohlcv = CryptoCompare().get_historical_ohlcv_minute(
+                    coin,
+                    base_coin,
+                    time_frame)
+            elif resolution == "HOUR":
+                ohlcv = CryptoCompare().get_historical_ohlcv_hourly(
+                    coin,
+                    base_coin,
+                    time_frame)
+            elif resolution == "DAY":
+                ohlcv = CryptoCompare().get_historical_ohlcv_daily(
+                    coin,
+                    base_coin,
+                    time_frame)
+            else:
+                ohlcv = CryptoCompare().get_historical_ohlcv_hourly(
+                    coin,
+                    base_coin,
+                    time_frame)
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
 
         if ohlcv["Response"] == "Error":
             if ohlcv["Message"] == "limit is larger than max value.":
@@ -138,7 +147,13 @@ class Candlestick(OpenCryptoPlugin):
             else:
                 time_frame = 30  # Days
 
-            for c in APICache.get_cp_coin_list():
+            try:
+                cp_ohlc = APICache.get_cp_coin_list()
+            except Exception as e:
+                self.handle_api_error(e, update)
+                return
+
+            for c in cp_ohlc:
                 if c["symbol"] == coin:
                     # Current datetime in seconds
                     t_now = time.time()
@@ -147,12 +162,16 @@ class Candlestick(OpenCryptoPlugin):
                     # Start datetime for chart in seconds
                     t_start = t_now - int(time_frame)
 
-                    ohlcv = CoinPaprika().get_historical_ohlc(
-                        c["id"],
-                        int(t_start),
-                        end=int(t_now),
-                        quote=base_coin.lower(),
-                        limit=366)
+                    try:
+                        ohlcv = CoinPaprika().get_historical_ohlc(
+                            c["id"],
+                            int(t_start),
+                            end=int(t_now),
+                            quote=base_coin.lower(),
+                            limit=366)
+                    except Exception as e:
+                        self.handle_api_error(e, update)
+                        return
 
                     cp_api = True
                     break

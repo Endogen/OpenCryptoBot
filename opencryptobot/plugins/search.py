@@ -29,7 +29,13 @@ class Search(OpenCryptoPlugin):
         search = args[0]
         msg = str()
 
-        for entry in APICache.get_cg_coins_list():
+        try:
+            response = APICache.get_cg_coins_list()
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
+
+        for entry in response:
             if search.lower() in entry["name"].lower():
                 name = entry["name"]
                 symbol = entry["symbol"]

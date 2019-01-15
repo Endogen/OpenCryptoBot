@@ -58,7 +58,10 @@ class TelegramBot:
                 msg = f"Refresh rate for caching not valid. Using {sec} seconds"
                 logging.warning(msg)
 
-            self.job_queue.run_repeating(APICache.refresh, sec, first=0)
+            try:
+                self.job_queue.run_repeating(APICache.refresh, sec, first=0)
+            except Exception as e:
+                logging.error(repr(e))
 
     # Start the bot
     def bot_start_polling(self):

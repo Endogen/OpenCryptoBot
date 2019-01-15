@@ -37,9 +37,21 @@ class Team(OpenCryptoPlugin):
         coin = args[0].upper()
         msg = str()
 
-        for c in APICache.get_cp_coin_list():
+        try:
+            response = APICache.get_cp_coin_list()
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
+
+        for c in response:
             if c["symbol"] == coin:
-                for p in CoinPaprika().get_coin_by_id(c["id"])["team"]:
+                try:
+                    cp_coin_detail = CoinPaprika().get_coin_by_id(c["id"])["team"]
+                except Exception as e:
+                    self.handle_api_error(e, update)
+                    return
+
+                for p in cp_coin_detail:
                     details = utl.esc_md(f"/_people__{p['id'].replace('-', '_')}")
                     msg += f"`{p['name']}\n{p['position']}`\n{details}\n\n"
                 break

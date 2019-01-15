@@ -67,11 +67,15 @@ class Best(OpenCryptoPlugin):
             if len(args) > 2 and args[2].isnumeric():
                 volume = int(args[2])
 
-        best = CoinData().get_movers(
-            CoinData.BEST,
-            period=period,
-            entries=entries,
-            volume=volume)
+        try:
+            best = CoinData().get_movers(
+                CoinData.BEST,
+                period=period,
+                entries=entries,
+                volume=volume)
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
 
         if not best:
             update.message.reply_text(

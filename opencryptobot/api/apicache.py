@@ -15,20 +15,15 @@ class APICache(object):
 
     @staticmethod
     def refresh(bot, job):
-        try:
+        logging.info("Starting Caching")
 
-            logging.info("Starting Caching")
+        APICache.refresh_coingecko_fiat_list()
+        APICache.refresh_coingecko_coin_list()
+        APICache.refresh_coingecko_exchange_list()
+        APICache.refresh_coinpaprika_coin_list()
+        APICache.refresh_coinmarketcap_coin_list()
 
-            APICache.refresh_coingecko_fiat_list()
-            APICache.refresh_coingecko_coin_list()
-            APICache.refresh_coingecko_exchange_list()
-            APICache.refresh_coinpaprika_coin_list()
-            APICache.refresh_coinmarketcap_coin_list()
-
-            logging.info("Finished Caching")
-
-        except Exception as e:
-            raise e
+        logging.info("Finished Caching")
 
     # Functions to refresh cache ------------------------
 

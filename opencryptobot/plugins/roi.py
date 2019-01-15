@@ -22,7 +22,12 @@ class Roi(OpenCryptoPlugin):
             return
 
         coin = args[0].upper()
-        data = TokenStats().get_roi_for_symbol(coin)
+
+        try:
+            data = TokenStats().get_roi_for_symbol(coin)
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
 
         if not data:
             update.message.reply_text(

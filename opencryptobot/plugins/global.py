@@ -44,7 +44,12 @@ class Global(OpenCryptoPlugin):
             return
 
         msg = str()
-        res = CoinGecko().get_global()
+
+        try:
+            res = CoinGecko().get_global()
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
 
         # Total Market Capital
         if sub_cmd.lower() == "mcap":

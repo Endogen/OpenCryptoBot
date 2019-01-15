@@ -33,6 +33,8 @@ class Exchanges(OpenCryptoPlugin):
         else:
             exchange = args[0]
 
+        # ---------- TOP EXCHANGES ----------
+
         if top:
             if not top.isnumeric():
                 update.message.reply_text(
@@ -48,8 +50,14 @@ class Exchanges(OpenCryptoPlugin):
             if RateLimit.limit_reached(update):
                 return
 
+            try:
+                response = APICache.get_cg_exchanges_list()
+            except Exception as e:
+                self.handle_api_error(e, update)
+                return
+
             exchanges = sorted(
-                APICache.get_cg_exchanges_list(),
+                response,
                 key=lambda k: float(k["trade_volume_24h_btc"]), reverse=True)
 
             for i in range(int(top)):
@@ -63,11 +71,19 @@ class Exchanges(OpenCryptoPlugin):
 
             msg = f"`Top {top} exchanges by 24h volume`\n\n{msg}"
 
+        # ---------- EXCHANGE DETAILS ----------
+
         else:
             if RateLimit.limit_reached(update):
                 return
 
-            for ex in APICache.get_cg_exchanges_list():
+            try:
+                response = APICache.get_cg_exchanges_list()
+            except Exception as e:
+                self.handle_api_error(e, update)
+                return
+
+            for ex in response:
                 clean_ex = ex["name"].replace(" ", "")
                 if exchange.lower() in clean_ex.lower():
                     nme = ex["name"] if ex["name"] else "N/A"

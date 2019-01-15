@@ -35,7 +35,11 @@ class People(OpenCryptoPlugin):
         name_clean = name.replace('-', " ").title()
         msg = str()
 
-        d = CoinPaprika().get_people_by_id(name)
+        try:
+            d = CoinPaprika().get_people_by_id(name)
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
 
         if "description" in d and d["description"]:
             msg = f"`{d['description']}`\n\n"

@@ -39,9 +39,19 @@ class Alltimehigh(OpenCryptoPlugin):
         ath_change = str()
 
         # Get coin ID
-        for entry in APICache.get_cg_coins_list():
+        try:
+            response = APICache.get_cg_coins_list()
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
+
+        for entry in response:
             if entry["symbol"].lower() == coin.lower():
-                coin_info = CoinGecko().get_coin_by_id(entry["id"])
+                try:
+                    coin_info = CoinGecko().get_coin_by_id(entry["id"])
+                except Exception as e:
+                    self.handle_api_error(e, update)
+                    return
 
                 cur_price = coin_info["market_data"]["current_price"]
                 ath_price = coin_info["market_data"]["ath"]

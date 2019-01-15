@@ -36,10 +36,20 @@ class Market(OpenCryptoPlugin):
             if args[1].lower().startswith("vol"):
                 volume = True
 
+        try:
+            response = APICache.get_cg_coins_list()
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
+
         # Get coin ID and data
-        for entry in APICache.get_cg_coins_list():
+        for entry in response:
             if entry["symbol"].upper() == coin:
-                coin_info = CoinGecko().get_coin_by_id(entry["id"])
+                try:
+                    coin_info = CoinGecko().get_coin_by_id(entry["id"])
+                except Exception as e:
+                    self.handle_api_error(e, update)
+                    return
                 break
 
         if not coin_info or not coin_info["tickers"]:

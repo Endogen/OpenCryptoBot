@@ -62,10 +62,14 @@ class Trends(OpenCryptoPlugin):
         if RateLimit.limit_reached(update):
             return
 
-        pytrends = TrendReq(hl='en-US', tz=360)
-        pytrends.build_payload(args, cat=0, timeframe=tf, geo='', gprop='')
+        try:
+            pytrends = TrendReq(hl='en-US', tz=360)
+            pytrends.build_payload(args, cat=0, timeframe=tf, geo='', gprop='')
 
-        data = pytrends.interest_over_time()
+            data = pytrends.interest_over_time()
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
 
         some_data = None
         tr_data = list()

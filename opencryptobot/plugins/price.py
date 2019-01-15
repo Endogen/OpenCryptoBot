@@ -42,9 +42,15 @@ class Price(OpenCryptoPlugin):
         if len(args) > 1:
             exchange = args[1]
 
+        try:
+            response = APICache.get_cg_coins_list()
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
+
         # Get coin ID and name
         coin_id = str()
-        for entry in APICache.get_cg_coins_list():
+        for entry in response:
             if entry["symbol"].upper() == coin:
                 coin_id = entry["id"]
                 break
@@ -56,7 +62,11 @@ class Price(OpenCryptoPlugin):
         msg = str()
 
         if exchange:
-            result = cg.get_coin_by_id(coin_id)
+            try:
+                result = cg.get_coin_by_id(coin_id)
+            except Exception as e:
+                self.handle_api_error(e, update)
+                return
 
             if result:
                 vs_list = list()
@@ -83,7 +93,11 @@ class Price(OpenCryptoPlugin):
                 else:
                     vs_cur = "BTC,ETH,USD,EUR"
 
-            result = cg.get_simple_price(coin_id, vs_cur)
+            try:
+                result = cg.get_simple_price(coin_id, vs_cur)
+            except Exception as e:
+                self.handle_api_error(e, update)
+                return
 
             if result:
                 fiat_list = APICache.get_cg_fiat_list()

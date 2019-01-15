@@ -36,9 +36,19 @@ class Social(OpenCryptoPlugin):
         coin = args[0].upper()
         msg = str()
 
-        for entry in APICache.get_cg_coins_list():
+        try:
+            response = APICache.get_cg_coins_list()
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
+
+        for entry in response:
             if entry["symbol"].lower() == coin.lower():
-                data = CoinGecko().get_coin_by_id(entry["id"])
+                try:
+                    data = CoinGecko().get_coin_by_id(entry["id"])
+                except Exception as e:
+                    self.handle_api_error(e, update)
+                    return
 
                 home_lst = list(filter(None, data["links"]["homepage"]))
                 block_lst = list(filter(None, data["links"]["blockchain_site"]))

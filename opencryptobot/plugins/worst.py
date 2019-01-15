@@ -7,7 +7,6 @@ from opencryptobot.api.coindata import CoinData
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
-# TODO: Add better error handling for arguments (example: timeframe not set)
 class Worst(OpenCryptoPlugin):
 
     DESC_LEN = 25
@@ -68,11 +67,15 @@ class Worst(OpenCryptoPlugin):
             if len(args) > 2 and args[2].isnumeric():
                 volume = int(args[2])
 
-        best = CoinData().get_movers(
-            CoinData.WORST,
-            period=period,
-            entries=entries,
-            volume=volume)
+        try:
+            best = CoinData().get_movers(
+                CoinData.WORST,
+                period=period,
+                entries=entries,
+                volume=volume)
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
 
         if not best:
             update.message.reply_text(

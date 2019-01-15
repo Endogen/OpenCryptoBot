@@ -74,10 +74,7 @@ class Update(OpenCryptoPlugin):
                 # Get latest commit info for branch
                 response = gh.get_latest_branch(branch)
             except Exception as e:
-                utl.handle_api_error(e)
-
-                msg = f"{emo.ERROR} Couldn't get branch info"
-                update.message.reply_text(msg)
+                self.handle_api_error(e, update)
                 return
 
             cfg_hash = Cfg.get("update", "update_hash")
@@ -109,10 +106,7 @@ class Update(OpenCryptoPlugin):
                     # Get latest release
                     response = gh.get_latest_release()
             except Exception as e:
-                utl.handle_api_error(e)
-
-                msg = f"{emo.ERROR} Couldn't get release info..."
-                update.message.reply_text(msg)
+                self.handle_api_error(e, update)
                 return
 
             if release:
@@ -123,10 +117,7 @@ class Update(OpenCryptoPlugin):
             try:
                 response = gh.get_tags()
             except Exception as e:
-                utl.handle_api_error(e)
-
-                msg = f"{emo.ERROR} Couldn't get release tags"
-                update.message.reply_text(msg)
+                self.handle_api_error(e, update)
                 return
 
             new_hash = str()
@@ -164,10 +155,7 @@ class Update(OpenCryptoPlugin):
             response = requests.get(download_url)
             response.raise_for_status()
         except Exception as e:
-            utl.handle_api_error(e)
-
-            msg = f"{emo.ERROR} Couldn't download update"
-            update.message.reply_text(msg)
+            self.handle_api_error(e, update)
             return
 
         msg = f"{emo.CHECK} Downloading update..."

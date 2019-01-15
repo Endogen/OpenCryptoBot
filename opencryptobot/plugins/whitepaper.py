@@ -34,16 +34,20 @@ class Whitepaper(OpenCryptoPlugin):
         if len(args) > 1:
             search = args[1]
 
-        link = self._from_allcryptowhitepaper(coin)
+        try:
+            link = self._from_allcryptowhitepaper(coin)
 
-        if not link:
-            if RateLimit.limit_reached(update):
-                return
+            if not link:
+                if RateLimit.limit_reached(update):
+                    return
 
-            link = self._from_coinmarketcap(coin)
+                link = self._from_coinmarketcap(coin)
 
-        if not link and search == "all":
-            link = self._from_coinpaprika(coin)
+            if not link and search == "all":
+                link = self._from_coinpaprika(coin)
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
 
         if link:
             try:

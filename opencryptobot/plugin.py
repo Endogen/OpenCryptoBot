@@ -1,4 +1,6 @@
 import inspect
+import logging
+import opencryptobot.emoji as emo
 
 from telegram import ChatAction
 from opencryptobot.config import ConfigManager as Cfg
@@ -52,6 +54,13 @@ class OpenCryptoPlugin:
 
             return func(self, bot, update, **kwargs)
         return _save_data
+
+    def handle_api_error(self, exception, update):
+        logging.error(repr(exception))
+
+        if update and update.message:
+            msg = f"{emo.ERROR} {exception}"
+            update.message.reply_text(msg)
 
     def get_cmd(self):
         method = inspect.currentframe().f_code.co_name

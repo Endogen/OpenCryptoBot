@@ -46,7 +46,12 @@ class News(OpenCryptoPlugin):
             if RateLimit.limit_reached(update):
                 return
 
-            data = CryptoPanic(token=self._token).get_posts()
+            try:
+                data = CryptoPanic(token=self._token).get_posts()
+            except Exception as e:
+                self.handle_api_error(e, update)
+                return
+
             msg = f"<b>Current news</b>\n\n"
         else:
             for arg in args:
@@ -75,15 +80,19 @@ class News(OpenCryptoPlugin):
             if RateLimit.limit_reached(update):
                 return
 
-            if symbol and filter:
-                data = CryptoPanic(token=self._token).get_multiple_filters(symbol, filter)
-                msg = f"<b>News for {symbol} and filter '{filter}'</b>\n\n"
-            elif symbol:
-                data = CryptoPanic(token=self._token).get_currency_news(symbol)
-                msg = f"<b>News for {symbol}</b>\n\n"
-            elif filter:
-                data = CryptoPanic(token=self._token).get_filtered_news(filter)
-                msg = f"<b>News for filter '{filter}</b>'\n\n"
+            try:
+                if symbol and filter:
+                    data = CryptoPanic(token=self._token).get_multiple_filters(symbol, filter)
+                    msg = f"<b>News for {symbol} and filter '{filter}'</b>\n\n"
+                elif symbol:
+                    data = CryptoPanic(token=self._token).get_currency_news(symbol)
+                    msg = f"<b>News for {symbol}</b>\n\n"
+                elif filter:
+                    data = CryptoPanic(token=self._token).get_filtered_news(filter)
+                    msg = f"<b>News for filter '{filter}</b>'\n\n"
+            except Exception as e:
+                self.handle_api_error(e, update)
+                return
 
         if not data or not data["results"]:
             update.message.reply_text(

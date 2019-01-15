@@ -35,10 +35,14 @@ class Info(OpenCryptoPlugin):
 
         coin = args[0].upper()
 
-        type_thread = threading.Thread(target=self._get_coin_type, args=[coin])
-        type_thread.start()
+        try:
+            type_thread = threading.Thread(target=self._get_coin_type, args=[coin])
+            type_thread.start()
 
-        coin_info = CryptoCompare().get_coin_general_info(coin, "USD")
+            coin_info = CryptoCompare().get_coin_general_info(coin, "USD")
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
 
         if coin_info["Message"] != "Success" or not coin_info["Data"]:
             update.message.reply_text(

@@ -74,10 +74,14 @@ class Chart(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        market = CoinGecko().get_coin_market_chart_by_id(
-            self.cg_coin_id,
-            base_coin.lower(),
-            time_frame)
+        try:
+            market = CoinGecko().get_coin_market_chart_by_id(
+                self.cg_coin_id,
+                base_coin.lower(),
+                time_frame)
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
 
         # Volume
         df_volume = DataFrame(market["total_volumes"], columns=["DateTime", "Volume"])

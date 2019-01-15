@@ -44,8 +44,14 @@ class Value(OpenCryptoPlugin):
 
         prices = dict()
 
+        try:
+            response = APICache.get_cg_coins_list()
+        except Exception as e:
+            self.handle_api_error(e, update)
+            return
+
         # Get coin ID
-        for entry in APICache.get_cg_coins_list():
+        for entry in response:
             if entry["symbol"].upper() == coin:
                 data = CoinGecko().get_coin_by_id(entry["id"])
                 prices = data["market_data"]["current_price"]
