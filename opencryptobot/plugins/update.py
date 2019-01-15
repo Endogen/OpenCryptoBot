@@ -7,7 +7,6 @@ import zipfile
 import requests
 import opencryptobot.emoji as emo
 import opencryptobot.utils as utl
-import opencryptobot.constants as con
 
 from opencryptobot.api.github import GitHub
 from opencryptobot.plugin import OpenCryptoPlugin
