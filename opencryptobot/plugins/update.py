@@ -7,6 +7,7 @@ import zipfile
 import requests
 import opencryptobot.emoji as emo
 import opencryptobot.utils as utl
+import opencryptobot.constants as con
 
 from opencryptobot.api.github import GitHub
 from opencryptobot.plugin import OpenCryptoPlugin
@@ -154,7 +155,7 @@ class Update(OpenCryptoPlugin):
                 update.message.reply_text(msg)
                 return
 
-        # ---------- UPDATE ----------
+        # ---------- DOWNLOAD & UPDATE ----------
 
         msg = f"{emo.WAIT} Downloading update..."
         m = update.message.reply_text(msg)
@@ -208,7 +209,7 @@ class Update(OpenCryptoPlugin):
     def _update_bot(self, upd_dir):
         cur_path = os.getcwd()
         upd_path = os.path.join(cur_path, upd_dir)
-        """
+
         shutil.rmtree(os.path.join(upd_path, con.CFG_DIR))
 
         for _, dirs, files in os.walk(upd_path):
@@ -227,7 +228,7 @@ class Update(OpenCryptoPlugin):
                 shutil.copy(up, cp)
 
         shutil.rmtree(upd_path)
-        """
+
     def get_usage(self):
         return None
 
