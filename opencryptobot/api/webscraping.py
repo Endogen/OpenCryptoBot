@@ -1,11 +1,14 @@
 import requests
-import opencryptobot.constants as con
 
 from bs4 import BeautifulSoup
 
+COIN_PAPRIKA_PARTIAL = "https://coinpaprika.com/coin/"
+CMC_URL_PARTIAL = "https://coinmarketcap.com/currencies/"
+ALL_CRYPTO_WP_PARTIAL = "https://www.allcryptowhitepapers.com/"
+
 
 def get_wp_allcryptowhitepaper(name):
-    url = f"{con.ALL_CRYPTO_WP_PARTIAL}{name}-Whitepaper"
+    url = f"{ALL_CRYPTO_WP_PARTIAL}{name}-Whitepaper"
     response = requests.get(url)
     response.raise_for_status()
 
@@ -21,7 +24,7 @@ def get_wp_allcryptowhitepaper(name):
 
 
 def get_wp_coinmarketcap(slug):
-    url = f"{con.CMC_URL_PARTIAL}{slug}"
+    url = f"{CMC_URL_PARTIAL}{slug}"
     response = requests.get(url)
     response.raise_for_status()
 
@@ -37,7 +40,7 @@ def get_wp_coinmarketcap(slug):
 
 
 def get_wp_coinpaprika(coin_id):
-    url = f"{con.COIN_PAPRIKA_PARTIAL}{coin_id}"
+    url = f"{COIN_PAPRIKA_PARTIAL}{coin_id}"
     response = requests.get(url)
     response.raise_for_status()
 
