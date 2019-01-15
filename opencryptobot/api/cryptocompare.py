@@ -1,5 +1,4 @@
 import json
-import logging
 import requests
 
 
@@ -19,7 +18,7 @@ class CryptoCompare(object):
             self.response.raise_for_status()
             return json.loads(self.response.content.decode('utf-8'))
         except Exception as e:
-            return self._handle_error(e)
+            raise e
 
     def get_historical_ohlcv_daily(self, fsym, tsym, limit):
         url_data = f"histoday?fsym={fsym}&tsym={tsym}&limit={limit}"
@@ -36,9 +35,3 @@ class CryptoCompare(object):
     def get_coin_general_info(self, fsyms, tsym):
         url_data = f"coin/generalinfo?fsyms={fsyms}&tsym={tsym}"
         return self._request(f"{self._base_url}{url_data}")
-
-    def _handle_error(self, ex):
-        logging.error(repr(ex))
-        logging.error(f"Request URL: {self.response.url}")
-        logging.error(f"Response Status Code: {self.response.status_code}")
-        return None

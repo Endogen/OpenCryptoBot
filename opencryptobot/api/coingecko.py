@@ -1,5 +1,4 @@
 import json
-import logging
 import requests
 
 
@@ -22,7 +21,7 @@ class CoinGecko(object):
             self.response.raise_for_status()
             return json.loads(self.response.content.decode('utf-8'))
         except Exception as e:
-            return self._handle_error(e)
+            raise e
 
     def _api_url_params(self, api_url, params):
         if params:
@@ -151,9 +150,3 @@ class CoinGecko(object):
                 fiat_list.append(key)
 
         return fiat_list
-
-    def _handle_error(self, ex):
-        logging.error(repr(ex))
-        logging.error(f"Request URL: {self.response.url}")
-        logging.error(f"Response Status Code: {self.response.status_code}")
-        return None

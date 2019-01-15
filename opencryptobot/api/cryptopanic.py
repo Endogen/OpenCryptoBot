@@ -22,7 +22,7 @@ class CryptoPanic(object):
             self.response.raise_for_status()
             return json.loads(self.response.content.decode('utf-8'))
         except Exception as e:
-            return self._handle_error(e)
+            raise e
 
     def load_key(self, path):
         with open(path, 'r') as f:

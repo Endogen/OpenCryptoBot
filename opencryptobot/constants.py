@@ -1,21 +1,11 @@
 import os
-
+# TODO: Check if these can be part or the corresponding module
 # Partial URL for coin logo
 CG_LOGO_URL_PARTIAL = "https://www.cryptocompare.com"
 CMC_URL_PARTIAL = "https://coinmarketcap.com/currencies/"
 CMC_LOGO_URL_PARTIAL = "https://s2.coinmarketcap.com/static/img/coins/128x128/"
 ALL_CRYPTO_WP_PARTIAL = "https://www.allcryptowhitepapers.com/"
 COIN_PAPRIKA_PARTIAL = "https://coinpaprika.com/coin/"
-
-# GitHub
-GH_URL = "https://github.com/"
-GH_MASTER = "/archive/master.zip"
-
-GH_API_URL = "https://api.github.com/repos/"
-GH_API_BRANCH = "/branches/"
-GH_API_RELEASE = "/releases/"
-GH_API_RELEASES = "/releases"
-GH_API_TAGS = "/tags"
 
 CFG_DIR = "conf"
 CFG_FILE = "config.json"

@@ -182,3 +182,8 @@ def esc_md(text):
 def comp(pattern):
     import re
     return re.compile(pattern, re.IGNORECASE)
+
+
+def handle_api_error(exception):
+    import logging
+    logging.error(repr(exception))

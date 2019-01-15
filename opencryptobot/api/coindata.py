@@ -1,6 +1,5 @@
 import json
 import time
-import logging
 import requests
 
 
@@ -35,10 +34,10 @@ class CoinData(object):
                 CoinData.response.raise_for_status()
                 CoinData.res_json = json.loads(CoinData.response.content.decode('utf-8'))
             except Exception as e:
-                return self._handle_error(e)
+                raise e
 
             if not CoinData.res_json:
-                return None
+                raise ValueError("No response data available")
 
             # Filter out 'null' values
             CoinData.res_json = [d for d in CoinData.res_json if all(d.values())]
@@ -91,9 +90,3 @@ class CoinData(object):
             return None
 
         return result
-
-    def _handle_error(self, ex):
-        logging.error(repr(ex))
-        logging.error(f"Request URL: {CoinData.response.url}")
-        logging.error(f"Response Status Code: {CoinData.response.status_code}")
-        return None

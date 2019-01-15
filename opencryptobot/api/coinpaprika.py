@@ -1,5 +1,4 @@
 import json
-import logging
 import requests
 
 
@@ -18,8 +17,8 @@ class CoinPaprika(object):
             self.response = requests.get(url)
             self.response.raise_for_status()
             return json.loads(self.response.content.decode('utf-8'))
-        except Exception as ex:
-            return self._handle_error(ex)
+        except Exception as e:
+            raise e
 
     def get_list_coins(self):
         url_data = "coins"
@@ -44,9 +43,3 @@ class CoinPaprika(object):
     def get_people_by_id(self, person_id):
         url_data = f"people/{person_id}"
         return self._request(f"{self._base_url}{url_data}")
-
-    def _handle_error(self, ex):
-        logging.error(repr(ex))
-        logging.error(f"Request URL: {self.response.url}")
-        logging.error(f"Response Status Code: {self.response.status_code}")
-        return None
