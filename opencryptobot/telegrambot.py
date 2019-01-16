@@ -50,18 +50,10 @@ class TelegramBot:
         self.dispatcher.add_error_handler(self._handle_tg_errors)
 
         # Refresh cache periodically if enabled
-        if Cfg.get("refresh_cache") is not None:
-            sec = get_seconds(Cfg.get("refresh_cache"))
+        self._refresh_cache()
 
-            if not sec:
-                sec = con.DEF_CACHE_REFRESH
-                msg = f"Refresh rate for caching not valid. Using {sec} seconds"
-                logging.warning(msg)
-
-            try:
-                self.job_queue.run_repeating(APICache.refresh, sec, first=0)
-            except Exception as e:
-                logging.error(repr(e))
+        # Check for updates periodically
+        self._update_check()
 
     # Start the bot
     def bot_start_polling(self):
@@ -194,3 +186,35 @@ class TelegramBot:
             update.callback_query.message.reply_text(
                 text=error_msg,
                 parse_mode=ParseMode.MARKDOWN)
+
+    def _refresh_cache(self):
+        if Cfg.get("refresh_cache") is not None:
+            sec = get_seconds(Cfg.get("refresh_cache"))
+
+            if not sec:
+                sec = con.DEF_CACHE_REFRESH
+                msg = f"Refresh rate for caching not valid. Using {sec} seconds"
+                logging.warning(msg)
+
+            try:
+                self.job_queue.run_repeating(APICache.refresh, sec, first=0)
+            except Exception as e:
+                logging.error(repr(e))
+
+    def _update_check(self):
+        def _check_for_update():
+            # TODO: Implement update check
+            pass
+
+        if Cfg.get("update_check") is not None:
+            sec = get_seconds(Cfg.get("update_check"))
+
+            if not sec:
+                sec = con.DEF_UPDATE_CHECK
+                msg = f"Update check time not valid. Using {sec} seconds"
+                logging.warning(msg)
+
+            try:
+                self.job_queue.run_repeating(_check_for_update, sec, first=0)
+            except Exception as e:
+                logging.error(repr(e))

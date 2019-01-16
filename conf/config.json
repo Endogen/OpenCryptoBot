@@ -19,6 +19,7 @@
     "update": {
         "github_user": "Endogen",
         "github_repo": "OpenCryptoBot",
-        "update_hash": null
+        "update_hash": null,
+        "update_check": "1d"
     }
 }

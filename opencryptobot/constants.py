@@ -22,3 +22,4 @@ BPMN_DIR = os.path.join(RES_DIR, "bpmn")
 MAX_TG_MSG_LEN = 4096
 CG_DATA_LIMIT = 2000
 DEF_CACHE_REFRESH = 86400  # In seconds
+DEF_UPDATE_CHECK = 86400  # In seconds
