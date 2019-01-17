@@ -56,7 +56,8 @@ class OpenCryptoPlugin:
         return _save_data
 
     def handle_api_error(self, exception, update):
-        logging.error(repr(exception))
+        cls_name = f"Class: {type(self).__name__}"
+        logging.error(f"{repr(exception)} - {cls_name} - {update}")
 
         if update and update.message:
             msg = f"{emo.ERROR} {exception}"
