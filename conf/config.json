@@ -14,7 +14,12 @@
         "url": "https://somedomain.com"
     },
     "use_db": true,
-    "rate_limit": "6-30",
+    "rate_limit": {
+        "enabled": true,
+        "requests": 5,
+        "timespan": 30,
+        "incl_cmd": false
+    },
     "refresh_cache": "6h",
     "update": {
         "github_user": "Endogen",

@@ -10,7 +10,7 @@ class RateLimit:
 
     @staticmethod
     def limit_reached(update):
-        if Cfg.get("rate_limit"):
+        if Cfg.get("rate_limit", "enabled"):
             if update.message:
                 uid = update.message.from_user.id
                 cmd = update.message.text.split(" ")[0]
@@ -20,10 +20,13 @@ class RateLimit:
             else:
                 uid = cmd = None
 
-            rate = Cfg.get("rate_limit").split("-")[0]
-            time = Cfg.get("rate_limit").split("-")[1]
+            if not Cfg.get("rate_limit", "incl_cmd"):
+                cmd = None
 
-            if RateLimit.reached(uid, cmd, rate, time):
+            rate = Cfg.get("rate_limit", "requests")
+            time = Cfg.get("rate_limit", "timespan")
+
+            if RateLimit.reached(uid, rate, time, command=cmd):
                 msg = f"{emo.NO_ENTRY} Rate limit ({rate} requests in " \
                       f"{time} seconds) exceeded. Wait a few seconds..."
 
@@ -34,30 +37,52 @@ class RateLimit:
             return False
 
     @staticmethod
-    def reached(user_id, command, rate, t):
-        if not user_id or not command:
+    def reached(user_id, rate, t, command=None):
+        if not user_id:
             return False
 
         import time
         now = int(time.time())
 
-        if command not in RateLimit._data:
-            RateLimit._data[command] = dict()
-        if user_id not in RateLimit._data[command]:
-            RateLimit._data[command][user_id] = [1, now]
-            return False
+        if command:
+            # Rate limit per user & command
+            if command not in RateLimit._data:
+                RateLimit._data[command] = dict()
+            if user_id not in RateLimit._data[command]:
+                RateLimit._data[command][user_id] = [1, now]
+                return False
 
-        count = RateLimit._data[command][user_id][0]
-        start = RateLimit._data[command][user_id][1]
+            count = RateLimit._data[command][user_id][0]
+            start = RateLimit._data[command][user_id][1]
 
-        if (start + int(t)) > now:
-            if count == int(rate):
-                logging.debug(f"User {user_id} reached rate "
-                              f"limit at command '{command}'")
-                return True
+            if (start + int(t)) > now:
+                if count == int(rate):
+                    logging.debug(f"User {user_id} reached rate "
+                                  f"limit at command '{command}'")
+                    return True
+                else:
+                    RateLimit._data[command][user_id][0] += 1
+                    return False
             else:
-                RateLimit._data[command][user_id][0] += 1
+                RateLimit._data[command][user_id] = [1, now]
                 return False
         else:
-            RateLimit._data[command][user_id] = [1, now]
-            return False
+            # Rate limit per user
+            if user_id not in RateLimit._data:
+                RateLimit._data[user_id] = [1, now]
+                return False
+
+            count = RateLimit._data[user_id][0]
+            start = RateLimit._data[user_id][1]
+
+            if (start + int(t)) > now:
+                if count == int(rate):
+                    logging.debug(f"User {user_id} reached rate limit")
+                    return True
+                else:
+                    RateLimit._data[user_id][0] += 1
+                    return False
+            else:
+                RateLimit._data[user_id] = [1, now]
+                return False
+
