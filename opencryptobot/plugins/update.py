@@ -125,6 +125,7 @@ class Update(OpenCryptoPlugin):
                 if t["name"] == tag:
                     new_hash = t["commit"]["sha"]
                     download_url = t["zipball_url"]
+                    break
 
             if not new_hash:
                 msg = f"{emo.ERROR} Tag '{tag}' unknown"
