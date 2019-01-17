@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 import opencryptobot.constants as con
 
 from functools import reduce
@@ -59,7 +60,12 @@ class ConfigManager:
 
         value = ConfigManager._cfg
         for key in keys:
-            value = value[key]
+            try:
+                value = value[key]
+            except KeyError as e:
+                err = f"Couldn't read '{key}' from Config"
+                logging.error(f"{repr(e)} - {err}")
+                value = None
 
         return value if value is not None else None
 
