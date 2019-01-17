@@ -9,6 +9,7 @@ import opencryptobot.emoji as emo
 import opencryptobot.utils as utl
 import opencryptobot.constants as con
 
+from telegram import ParseMode
 from opencryptobot.api.github import GitHub
 from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.config import ConfigManager as Cfg
@@ -111,8 +112,10 @@ class Update(OpenCryptoPlugin):
 
             if release:
                 tag = response[0]["tag_name"]
+                release_notes = response[0]["body"]
             else:
                 tag = response["tag_name"]
+                release_notes = response["body"]
 
             try:
                 response = gh.get_tags()
@@ -143,8 +146,9 @@ class Update(OpenCryptoPlugin):
                 return
 
             if check:
-                msg = f"{emo.CHECK} New release available!"
-                update.message.reply_text(msg)
+                msg = f"{emo.CHECK} New release *{tag}* available!\n\n" \
+                      f"*Release Notes*\n{release_notes}"
+                update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
                 return
 
         # ---------- DOWNLOAD & UPDATE ----------
