@@ -6,13 +6,14 @@ import opencryptobot.emoji as emo
 import opencryptobot.constants as con
 import opencryptobot.utils as utl
 
-from opencryptobot.utils import get_seconds
-from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
-from telegram.error import InvalidToken
-from telegram.ext import Updater, CommandHandler, InlineQueryHandler, RegexHandler
+from opencryptobot.api.github import GitHub
 from opencryptobot.api.apicache import APICache
 from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.config import ConfigManager as Cfg
+
+from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
+from telegram.ext import Updater, CommandHandler, InlineQueryHandler, RegexHandler
+from telegram.error import InvalidToken
 
 
 class TelegramBot:
@@ -189,7 +190,7 @@ class TelegramBot:
 
     def _refresh_cache(self):
         if Cfg.get("refresh_cache") is not None:
-            sec = get_seconds(Cfg.get("refresh_cache"))
+            sec = utl.get_seconds(Cfg.get("refresh_cache"))
 
             if not sec:
                 sec = con.DEF_CACHE_REFRESH
@@ -202,12 +203,55 @@ class TelegramBot:
                 logging.error(repr(e))
 
     def _update_check(self):
-        def _check_for_update():
-            # TODO: Implement update check
-            pass
+        def _check_for_update(bot, job):
+            user = Cfg.get('update', 'github_user')
+            repo = Cfg.get('update', 'github_repo')
+            gh = GitHub(github_user=user, github_repo=repo)
 
-        if Cfg.get("update_check") is not None:
-            sec = get_seconds(Cfg.get("update_check"))
+            try:
+                # Get latest release
+                response = gh.get_latest_release()
+            except Exception as ex:
+                logging.error(repr(ex))
+                return
+
+            if job.context:
+                if job.context["tag"] == response["tag_name"]:
+                    return
+            else:
+                job.context = dict()
+                job.context["tag"] = response["tag_name"]
+
+            release_notes = response["body"]
+
+            try:
+                response = gh.get_tags()
+            except Exception as ex:
+                logging.error(repr(ex))
+                return
+
+            new_hash = str()
+            for t in response:
+                if t["name"] == job.context["tag"]:
+                    new_hash = t["commit"]["sha"]
+                    break
+
+            cfg_hash = Cfg.get("update", "update_hash")
+
+            if cfg_hash != new_hash:
+                for admin in Cfg.get("admin_id"):
+                    update_cmd = utl.esc_md("/update")
+                    tag = job.context['tag']
+
+                    bot.send_message(
+                        admin,
+                        f"New release *{tag}* available\n\n"
+                        f"*Release Notes*\n{release_notes}\n\n"
+                        f"{update_cmd}",
+                        parse_mode=ParseMode.MARKDOWN)
+
+        if Cfg.get("update", "update_check") is not None:
+            sec = utl.get_seconds(Cfg.get("update", "update_check"))
 
             if not sec:
                 sec = con.DEF_UPDATE_CHECK
