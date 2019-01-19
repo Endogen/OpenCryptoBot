@@ -97,7 +97,7 @@ class Alltimehigh(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin> (<in currency>)`"
+        return f"`/{self.get_cmd()} <coin> (<target currency>)`"
 
     def get_description(self):
         return "All time high price for coin"
