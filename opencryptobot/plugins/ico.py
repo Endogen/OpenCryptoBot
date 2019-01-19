@@ -63,14 +63,14 @@ class Ico(OpenCryptoPlugin):
                 raised = utl.format(raised) if raised is not None else raised
 
                 if pre_sale_a:
-                    pre_sale_a = utl.format(pre_sale_a)
+                    pre_sale_a = utl.format(pre_sale_a, symbol=coin)
                 if pre_sale_p:
-                    pre_sale_p = utl.format(pre_sale_p)
+                    pre_sale_p = utl.format(pre_sale_p, symbol=pre_sale_c)
 
                 if pub_sale_a:
-                    pub_sale_a = utl.format(pub_sale_a)
+                    pub_sale_a = utl.format(pub_sale_a, symbol=coin)
                 if pub_sale_p:
-                    pub_sale_p = utl.format(pub_sale_p)
+                    pub_sale_p = utl.format(pub_sale_p, symbol=pub_sale_c)
 
                 if pre_sale_a:
                     pre_sale_str = f"{pre_sale_a} {coin} for {pre_sale_p} {pre_sale_c}\n"

@@ -17,7 +17,6 @@ class APICache(object):
     def refresh(bot, job):
         logging.info("Starting Caching")
 
-        APICache.refresh_coingecko_fiat_list()
         APICache.refresh_coingecko_coin_list()
         APICache.refresh_coingecko_exchange_list()
         APICache.refresh_coinpaprika_coin_list()
@@ -40,10 +39,6 @@ class APICache(object):
         APICache.cmc_coin_list = Market().listings()["data"]
 
     @staticmethod
-    def refresh_coingecko_fiat_list():
-        APICache.cg_fiat_list = CoinGecko().get_fiat_list()
-
-    @staticmethod
     def refresh_coingecko_exchange_list():
         APICache.cg_exch_list = CoinGecko().get_exchanges_list()
 
@@ -55,13 +50,6 @@ class APICache(object):
             return APICache.cg_coin_list
         else:
             return CoinGecko().get_coins_list()
-
-    @staticmethod
-    def get_cg_fiat_list():
-        if APICache.cg_fiat_list:
-            return APICache.cg_fiat_list
-        else:
-            return CoinGecko().get_fiat_list()
 
     @staticmethod
     def get_cp_coin_list():

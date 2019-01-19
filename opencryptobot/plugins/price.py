@@ -100,9 +100,8 @@ class Price(OpenCryptoPlugin):
                 return
 
             if result:
-                fiat_list = APICache.get_cg_fiat_list()
                 for symbol, price in next(iter(result.values())).items():
-                    if symbol in fiat_list:
+                    if symbol in utl.get_fiat_list():
                         if decimal.Decimal(str(price)).as_tuple().exponent > -3:
                             price = utl.format(price, decimals=2, force_length=True)
                         else:

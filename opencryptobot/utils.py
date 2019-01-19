@@ -16,8 +16,28 @@ def is_number(string):
     return False
 
 
-def format(value, decimals=None, force_length=False, template=None, on_zero=0, on_none=None):
+def get_fiat_list():
+    return ['usd', 'aed', 'ars', 'aud', 'bdt', 'bhd', 'bmd', 'brl', 'cad',
+            'chf', 'clp', 'cny', 'czk', 'dkk', 'eur', 'gbp', 'hkd', 'huf',
+            'idr', 'ils', 'inr', 'jpy', 'krw', 'kwd', 'lkr', 'mmk', 'mxn',
+            'myr', 'nok', 'nzd', 'php', 'pkr', 'pln', 'rub', 'sar', 'sek',
+            'sgd', 'thb', 'try', 'twd', 'vef', 'zar', 'xdr']
+
+
+def format(value,
+           decimals=None,
+           force_length=False,
+           template=None,
+           on_zero=0,
+           on_none=None,
+           symbol=None):
     """Format a crypto coin value so that it isn't unnecessarily long"""
+
+    fiat = False
+    if symbol and isinstance(symbol, str):
+        if symbol.lower() in get_fiat_list():
+            fiat = True
+
     if value is None:
         return on_none
 
@@ -64,9 +84,18 @@ def format(value, decimals=None, force_length=False, template=None, on_zero=0, o
     else:
         v = "{0:,.0f}".format(v)
 
-    if not force_length and not t < 1:
-        while "." in v and v.endswith(("0", ".")):
-            v = v[:-1]
+    if not force_length:
+        cut_zeros = False
+
+        if t >= 1:
+            cut_zeros = True
+        else:
+            if fiat:
+                cut_zeros = True
+
+        if cut_zeros:
+            while "." in v and v.endswith(("0", ".")):
+                v = v[:-1]
 
     return v
 
