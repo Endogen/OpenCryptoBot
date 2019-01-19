@@ -2,14 +2,13 @@
 layout: about
 title: About
 description: >
-  Details about Telegra-TradeOgre-Bot and it's author.
+  Details about the Telegram bot and it's author
 hide_description: true
-image: /assets/img/blog/hydejack-8.png
 menu: true
 order: 4
 ---
 
-## Hydejack
+## About OpenCryptoBot
 
 The "Best Jekyll Theme by a Mile".
 {:.lead}
