@@ -5,7 +5,7 @@ description: >
   Details about the Telegram bot and it's author
 hide_description: true
 menu: true
-order: 4
+order: 5
 ---
 
 ## About OpenCryptoBot

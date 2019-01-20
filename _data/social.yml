@@ -175,7 +175,7 @@ stumbleupon:
 stackoverflow:
   name: Stack Overflow
   icon: icon-stackoverflow
-  prepend: "http://stackoverflow.com/users/"
+  prepend: "http://monero.stackexchange.com/users/"
 pinterest:
   name: Pinterest
   icon: icon-pinterest2

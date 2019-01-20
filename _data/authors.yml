@@ -4,7 +4,7 @@
 author1:
   # Replace <...> with your own (remove the < >)
   name:              David Strohmayer
-  email:             strohmayer.david@gmail.com
+  email:             endogen@protonmail.com
 
   # Used at the bottom of each page and at the top of the `about` layout
   # Markdown enabled, can use multiple paragraphs (enabled by `|`)
@@ -54,7 +54,7 @@ author1:
     # pinterest:       <username>
     # foursquare:      <number>
     # yelp:            <string>
-    stackoverflow:   3088465/endogen
+    stackoverflow:   5102/endogen
     # npm:             <username>
     # hackernews:      <username>
     # trello:          <firstnamelastname>
