@@ -8,11 +8,6 @@ menu: true
 order: 4
 ---
 
-# Available commands
-
-[TODO] Explain what exactely the syntax means  
-Following commands are available
-
 [/about](#about) - About the bot  
 [/ath](#ath) - All Time High  
 [/best](#best) - Best movers  
