@@ -27,11 +27,14 @@ class Alltimehigh(OpenCryptoPlugin):
         if RateLimit.limit_reached(update):
             return
 
-        coin = args[0].upper()
-
         vs_cur = "usd"
-        if len(args) > 1:
-            vs_cur = args[1]
+
+        if "-" in args[0]:
+            pair = args[0].split("-", 1)
+            vs_cur = pair[0].lower()
+            coin = pair[1].upper()
+        else:
+            coin = args[0].upper()
 
         ath_date = str()
         ath_price = str()
@@ -78,13 +81,13 @@ class Alltimehigh(OpenCryptoPlugin):
                 now = datetime.date.today()
 
                 ath_p_str = f"Price ATH: {ath_p} {c.upper()}\n"
-                cur_p_str = f"Price now: {cur_p.rjust(len(ath_p))} {c.upper()}\n\n"
+                cur_p_str = f"Price now: {cur_p.rjust(len(ath_p))} {c.upper()}\n"
 
                 msg += f"`" \
-                       f"{date_ath} ({(now - ath).days} days ago)\n\n" \
+                       f"{date_ath} ({(now - ath).days} days ago)\n" \
                        f"{ath_p_str}" \
                        f"{cur_p_str}" \
-                       f"Change: {change}%\n" \
+                       f"Change: {change}%\n\n" \
                        f"`"
 
         if msg:
@@ -97,7 +100,7 @@ class Alltimehigh(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin> (<target currency>)`"
+        return f"`/{self.get_cmd()} <symbol> (<target symbol>)`"
 
     def get_description(self):
         return "All time high price for coin"
