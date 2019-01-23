@@ -2,7 +2,7 @@
 layout: page
 title: Commands
 description: >
-  Description of every available command and argument
+  Description of every command in OpenCryptoBot
 hide_description: true
 menu: true
 order: 4
@@ -12,10 +12,10 @@ order: 4
 [/ath](#ath) - All Time High  
 [/best](#best) - Best movers  
 [/bpmn](#bpmn) - Command diagrams  
-[/cs](#cs) - Candlestick chart  
 [/ch](#ch) - Price Change  
-[/c](#c) - Price and Volume chart  
 [/comp](#comp) - Compare currencies  
+[/cs](#cs) - Candlestick chart  
+[/c](#c) - Price and Volume chart  
 [/des](#des) - Currency description  
 [/dev](#dev) - Development info  
 [/donate](#donate) - Donate to bot development  
@@ -24,7 +24,7 @@ order: 4
 [/g](#g) - Global stats  
 [/help](#help) - List available commands  
 [/ico](#ico) - Initial Coin Offering  
-[/i](#i) - General coin info  
+[/i](#i) - Technical coin info  
 [/m](#m) - List coin markets  
 [/n](#n) - Crypto news  
 [/pe](#pe) - People in crypto  
@@ -35,12 +35,12 @@ order: 4
 [/shutdown](#shutdown) - Shutdown bot  
 [/soc](#soc) - Social links and stats  
 [/s](#s) - Currency stats  
-[/t](#t) - Team details  
 [/tr](#tr) - Google Trends  
+[/t](#t) - Team details  
 [/update](#update) - Update bot  
 [/v](#v) - Value of coin quantity  
-[/wp](#wp) - Whitepaper download  
 [/worst](#worst) - Worst movers  
+[/wp](#wp) - Whitepaper download  
 
 ## `/about`
 
@@ -50,7 +50,7 @@ order: 4
 None
 
 **Description**  
-Shows information about the author / developer  of this Telegram bot and about the bot itself.
+Show informations about the author / developer of this Telegram bot and about the bot itself.
 
 **Syntax**  
 `/about`
@@ -66,14 +66,18 @@ Shows information about the author / developer  of this Telegram bot and about t
 None  
 
 **Description**  
-Shows information about the highest price ever reached. Including the date, the price (in a specifiable currency) and pasted days since ATH.
+Show informations about the highest price ever reached. Including the date, the price (in a specifiable currency) and past days since ATH.
 
 **Syntax**  
-`/ath <symbol> (<target symbol>)`  
+`/ath (<target symbol>,<target symbol>,[...]-)<symbol>`  
 
 **Examples**  
+Get All Time High price for ETH  
 `/ath eth`  
-`/ath eth btc`  
+Get All Time High price for ETH in BTC  
+`/ath btc-eth`  
+Get All Time High price for ETH in BTC and XRP  
+`/ath btc,xrp-eth`  
 
 ## `/best`
 
@@ -83,12 +87,14 @@ Shows information about the highest price ever reached. Including the date, the 
 None
 
 **Description**  
-Shows the best movers for hour or day by change of price.
+Show the best movers for hour or day by change of price in %.
 
 **Syntax**  
-`/best hour | day (<# of entries>) (<min. volume>)`
+`/best hour [or] day (<# of entries>) (<min. volume>)`
 
 **Examples**  
+Show best performing coins (default is 10 coins for last hour)
+`/best`  
 Show 10 best performing coins for last hour  
 `/best hour`  
 Show 20 best performing coins for last 24 hours  
@@ -104,7 +110,7 @@ Show 30 best performing coins in the last hour that had a volume of at least 1 m
 None
 
 **Description**  
-Shows a BPMN diagram for the given command.
+Show a BPMN diagram for the given command. This will give you an understanding which APIs the command is calling and how the command words internally.
 
 **Syntax**  
 `/bpmn <command>`
@@ -112,6 +118,52 @@ Shows a BPMN diagram for the given command.
 **Examples**  
 Show BPMN diagram for `/p` command  
 `/bpmn p`  
+
+## `/ch`
+
+![Screenshot](assets/cmds/ch.png)
+
+**Alternative commands**  
+`/change`  
+
+**Description**  
+Show the price change of a coin over time (day, week, month and year) in target currency. Target currency can be:
+
+- BTC
+- ETH
+- LTC
+- BCH
+- BNB
+- EOS
+- XRP
+- XLM
+- And most fiat currencies
+
+**Syntax**  
+`/ch (<target symbol>-)<symbol>`
+
+**Examples**  
+Show price change over time for XMR (default target symbol is USD)  
+`/ch xmr`  
+Show price change over time for XMR in BTC  
+`/ch btc-xmr`  
+
+## `/comp`
+
+![Screenshot](assets/cmds/comp.png)
+
+**Alternative commands**  
+`/compare`  
+
+**Description**  
+Show link to [Coinlib](https://coinlib.io) to compare the given coins.
+
+**Syntax**  
+`/comp <symbol> <symbol> [...]`
+
+**Examples**  
+Show link to compare XMR, DASH and DERO  
+`/comp xmr dash dero`  
 
 ## `/cs`
 
@@ -122,35 +174,20 @@ Show BPMN diagram for `/p` command
 `/candlestick`  
 
 **Description**  
-Shows a candlestick diagram for a given coin and a given timeframe.
+Show a candlestick diagram for a given coin and a given timeframe.
 
 **Syntax**  
-`/cs (<target symbol>-)<symbol> (<timeframe>m|h|d)`
+`/cs (<target symbol>-)<symbol> (<timeframe>m[or]h[or]d)`
 
 **Examples**  
-Show candlestick chart for `XMR`  
+Show candlestick chart for XMR (default timeframe is 3 days)  
 `/cs xmr`  
-Show candlestick chart for `XMR` in `XRP`  
+Show candlestick chart for XMR in XRP  
 `/cs xrp-xmr`  
-Show candlestick chart for `XMR` in `XRP` for last 90 days  
+Show candlestick chart for XMR in XRP for last 90 days  
 `/cs xrp-xmr 90d`  
-
-## `/ch`
-
-![Screenshot](assets/cmds/ch.png)
-
-**Alternative commands**  
-`/change`  
-
-**Description**  
-Show the price change of a coin over time (day, week, month and year).
-
-**Syntax**  
-`/ch <symbol>`
-
-**Examples**  
-Show all time high price for `XMR`  
-`/ch xmr`  
+Show candlestick chart for XMR for last 60 minutes  
+`/cs xmr 60m`  
 
 ## `/c`
 
@@ -166,29 +203,12 @@ Show a price and volume chart for the given timeframe.
 `/c (<vs symbol>-)<symbol> (<# of days>)`
 
 **Examples**  
-Show chart for `XMR`  
+Show chart for XMR  
 `/c xmr`  
-Show chart for `XMR` in `XRP`  
+Show chart for XMR in XRP  
 `/c xrp-xmr`  
-Show chart for `XMR` in `XRP` for last 90 days  
+Show chart for XMR in XRP for last 90 days  
 `/c xrp-xmr 90`  
-
-## `/comp`
-
-![Screenshot](assets/cmds/comp.png)
-
-**Alternative commands**  
-`/compare`  
-
-**Description**  
-Show link to Coinlib to compare the given coins.
-
-**Syntax**  
-`/comp <symbol> <symbol> ...`
-
-**Examples**  
-Show link to Coinlib website to compare `XMR`, `DASH` and `DERO`  
-`/comp xmr dash dero`  
 
 ## `/des`
 
@@ -198,13 +218,13 @@ Show link to Coinlib website to compare `XMR`, `DASH` and `DERO`
 `/description`  
 
 **Description**  
-Show short overview / description for a given coin.
+Show description for a given coin.
 
 **Syntax**  
 `/des <symbol>`
 
 **Examples**  
-Show description for given coin  
+Show description for LOKI 
 `/des loki`  
 
 ## `/dev`
@@ -215,13 +235,13 @@ Show description for given coin
 `/developer`  
 
 **Description**  
-Show development and source code related info for given coin
+Show development and source code related GitHub info for given coin.  
 
 **Syntax**  
 `/dev <symbol>`
 
 **Examples**  
-Show development related info for given coin  
+Show development related info for LOKI  
 `/dev loki`  
 
 ## `/donate`
@@ -232,7 +252,7 @@ Show development related info for given coin
 None  
 
 **Description**  
-Shows other commands that allow the user to see QR-Code of donation address wallets.
+Shows other commands that allow the user to see QR-Codes for donation wallets (donations to the developer of this bot).
 
 **Syntax**  
 `/donate`
@@ -257,17 +277,10 @@ Show QR-Code for Monero donation address
 `/exchange`  
 
 **Description**  
-Show description for given exchange along with:  
-
-- Link
-- Country
-- Year of creation
-- Volume (24h)
-
-This command can also be used to show a toplist based on volume for all available exchanges.
+Show the description for a given exchange or show a toplist for exchanges based on trading volume per day.
 
 **Syntax**  
-`/ex <exchange> | top=<# of exchanges>`
+`/ex <exchange> [or] top=<# of exchanges>`
 
 **Examples**  
 Show info about Binance  
@@ -281,7 +294,7 @@ Show top 10 exchanges by 24h volume
 None
 
 **Description**  
-Provide your feedback, bugreports, feature-requests for this bot.
+Provide your feedback, bug reports, feature requests or anything else you want to tell me, for this bot.
 
 **Syntax**  
 `/feedback <some text>`
@@ -292,27 +305,23 @@ Send me some positive feedback :-)
 
 ## `/g`
 
-![Screenshot](assets/cmds/dom.png)
+![Screenshot](assets/cmds/g-dom.png)
 
 **Alternative commands**  
 `/global`  
 
 **Description**  
-Get info about global dominance, global volume and global market capitalization and also global volume and global market capitalization for a specific coin.
+Get info about global dominance, global and coin specific volume and market capitalization.
 
 **Syntax**  
-`/g mcap (<coin>) | vol (<coin>) | dom`
+`/g mcap [or] vol [or] dom`
 
 **Examples**  
 Show global crypto market capitalization  
 `/g mcap`  
-Show market capitalization for a coin  
-`/g mcap btc`  
 Show global crypto market volume  
 `/g vol`  
-Show volume for a coin  
-`/g vol btc`  
-Show global crypto market dominance (percentage)  
+Show global crypto market dominance
 `/g dom`  
 
 ## `/help`
@@ -457,10 +466,10 @@ Show current price for given coin. Per default, the price of the given coin will
 - And most fiat currencies
 
 **Syntax**  
-Regular chat with bot  
-`/p (<target symbol>,<target symbol>, ...)-<symbol>`  
-Experimental inline mode  
-`@opencryptobot /p (<target symbol>,<target symbol>, ...)-<symbol>.`  
+Regular  
+`/p (<target symbol>,<target symbol>,[...]-)<symbol>`  
+Inline mode  
+`@opencryptobot /p (<target symbol>,<target symbol>,[...]-)<symbol>.`  
 
 **Examples**  
 Show price for a coin  
@@ -584,23 +593,6 @@ Show summary for a coin. Including:
 Show summary for a coin  
 `/s loki`  
 
-## `/t`
-
-![Screenshot](assets/cmds/t.png)
-
-**Alternative commands**  
-`/team`  
-
-**Description**  
-List people that are working on a project with their role and a link to the `/pe` command to get details about a team member.
-
-**Syntax**  
-`/t <symbol>`  
-
-**Examples**  
-Show summary for a coin  
-`/t btc`  
-
 ## `/tr`
 
 ![Screenshot](assets/cmds/tr.png)
@@ -623,6 +615,23 @@ Show interest over time for a given keyword  for the last 30 days
 `/tr blockchain t=30d`  
 Show comparison of interest over time for the provided keywords for 5 years  
 `/tr blockchain bitcoin litecoin t=5y`  
+
+## `/t`
+
+![Screenshot](assets/cmds/t.png)
+
+**Alternative commands**  
+`/team`  
+
+**Description**  
+List people that are working on a project with their role and a link to the `/pe` command to get details about a team member.
+
+**Syntax**  
+`/t <symbol>`  
+
+**Examples**  
+Show summary for a coin  
+`/t btc`  
 
 ## `/update`
 
@@ -670,25 +679,6 @@ Show value of 971 LOKI coins in default currencies
 Show value of 1500 XRP coins in XLM  
 `/v xrp 1500 xlm`  
 
-## `/wp`
-
-![Screenshot](assets/cmds/wp.png)
-
-**Alternative commands**  
-`/whitepaper`  
-
-**Description**  
-Download the whitepaper of a given coin. If no whitepaper can be found then there is the possibility to add a keyword to search an additional source.  
-
-**Syntax**  
-`/wp <symbol> (all)`  
-
-**Examples**  
-Download whitepaper for XMR  
-`/wp xmr`  
-Download whitepaper for BCH and search an additional source  
-`/wp bch all`  
-
 ## `/worst`
 
 ![Screenshot](assets/cmds/worst.png)
@@ -709,3 +699,22 @@ Show 20 worst performing coins for last 24 hours
 `/worst day 20`  
 Show 30 worst performing coins in the last hour that had a volume of at least 1 million  
 `/worst hour 30 1000000`  
+
+## `/wp`
+
+![Screenshot](assets/cmds/wp.png)
+
+**Alternative commands**  
+`/whitepaper`  
+
+**Description**  
+Download the whitepaper of a given coin. If no whitepaper can be found then there is the possibility to add a keyword to search an additional source.  
+
+**Syntax**  
+`/wp <symbol> (all)`  
+
+**Examples**  
+Download whitepaper for XMR  
+`/wp xmr`  
+Download whitepaper for BCH and search an additional source  
+`/wp bch all`  

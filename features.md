@@ -2,7 +2,7 @@
 layout: page
 title: Features
 description: >
-  Features of this Telegram bot
+  Features of OpenCryptoBot
 hide_description: true
 menu: true
 order: 2
@@ -11,8 +11,8 @@ order: 2
 ### **General bot features**
 
 * Written in Python and fully open source
-* Update notification for new releases on GitHub
-* One-Click updates (to releases or branches)
+* Update notifications for new releases on GitHub
+* Update bot to any release or branch
 * Admin specific commands like `restart` and `shutdown`
 * Every command is a plugin that can be enabled / disabled
 * Custom rate limit per user or per user and command
@@ -24,10 +24,10 @@ order: 2
 * Bot can be administered by more then one user
 * Data provided by seven different API providers
 * BPMN diagrams for commands to understand the data flow
-* Users can provide feedback for the bot
+* Users can provide feedback about the bot
 * Experimental inline-mode (only `price` command for now)
 
-### **Commands can provide following data**
+### **Command features**
 
 * Current price
 * Price change over time
@@ -36,7 +36,7 @@ order: 2
 * Candlestick charts
 * Price and volume charts
 * All Time High details
-* Calculated value of coin qty
+* Calculated value of coin quantity
 * Find out where to buy a coin
 * Sort trading pairs by volume
 * Details about the team behind a coin
@@ -48,7 +48,7 @@ order: 2
 * Best and worst movers
 * Compare different coins
 * Google Trends chart for keywords
-* Description of a coin
+* Description for a coin
 * Details about exchanges and toplist
 * Details about coin development
 * Social media links and stats
