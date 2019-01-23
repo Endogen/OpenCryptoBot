@@ -194,10 +194,7 @@ class Chart(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`" \
-               f"/{self.get_cmd()} <coin> (<# of days>)\n" \
-               f"/{self.get_cmd()} <vs coin>-<coin> (<# of days>)" \
-               f"`"
+        return f"`/{self.get_cmd()} (<vs symbol>-)<symbol> (<# of days>)`"
 
     def get_description(self):
         return "Chart with price and volume"

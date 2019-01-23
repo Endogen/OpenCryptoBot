@@ -128,10 +128,10 @@ class Price(OpenCryptoPlugin):
 
     def get_usage(self, bot_name):
         return f"`" \
-               f"/{self.get_cmd()} <coin>\n" \
-               f"/{self.get_cmd()} <vs coin>-<coin>\n" \
-               f"{bot_name} /{self.get_cmd()} <coin>.\n" \
-               f"{bot_name} /{self.get_cmd()} <vs coin>-<coin>." \
+               f"/{self.get_cmd()} <symbol>\n" \
+               f"/{self.get_cmd()} <target symbol>-<symbol>\n" \
+               f"{bot_name} /{self.get_cmd()} <symbol>.\n" \
+               f"{bot_name} /{self.get_cmd()} <target symbol>-<symbol>." \
                f"`"
 
     def get_description(self):

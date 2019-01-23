@@ -63,7 +63,7 @@ class Whitepaper(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin> ('all')`"
+        return f"`/{self.get_cmd()} <symbol> (all)`"
 
     def get_description(self):
         return "Find whitepaper for a coin"

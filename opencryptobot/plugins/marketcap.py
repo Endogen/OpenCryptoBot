@@ -127,7 +127,7 @@ class Marketcap(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} mc (<symbol>) | top=<# or currencies>\n`"
+        return f"`/{self.get_cmd()} (<symbol>) | top=<# or currencies>\n`"
 
     def get_description(self):
         return "Market capitalization"

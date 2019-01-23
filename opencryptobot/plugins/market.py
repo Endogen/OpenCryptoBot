@@ -94,7 +94,7 @@ class Market(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin> (vol)`"
+        return f"`/{self.get_cmd()} <symbol> (vol)`"
 
     def get_description(self):
         return "Find exchanges to trade a coin"

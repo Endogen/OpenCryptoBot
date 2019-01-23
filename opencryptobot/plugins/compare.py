@@ -62,7 +62,7 @@ class Compare(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin> <coin> ...`"
+        return f"`/{self.get_cmd()} <symbol> <symbol> ...`"
 
     def get_description(self):
         return "Compare coins"

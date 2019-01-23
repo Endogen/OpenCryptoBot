@@ -153,7 +153,7 @@ class Stats(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin>`"
+        return f"`/{self.get_cmd()} <symbol>`"
 
     def get_description(self):
         return "Price, market cap and volume"

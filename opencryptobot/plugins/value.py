@@ -82,7 +82,7 @@ class Value(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin> <quantity> (<target_currency>)`"
+        return f"`/{self.get_cmd()} <symbol> <quantity> (<target symbol>)`"
 
     def get_description(self):
         return "Value of coin quantity"

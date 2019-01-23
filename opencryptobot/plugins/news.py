@@ -122,7 +122,7 @@ class News(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin> (filter=<filter>)`"
+        return f"`/{self.get_cmd()} <symbol> (filter=<filter>)`"
 
     def get_description(self):
         return "News about a coin"

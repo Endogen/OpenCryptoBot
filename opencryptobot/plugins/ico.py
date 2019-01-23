@@ -102,7 +102,7 @@ class Ico(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin>`"
+        return f"`/{self.get_cmd()} <symbol>`"
 
     def get_description(self):
         return "ICO info for coin"

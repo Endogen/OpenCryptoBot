@@ -51,7 +51,8 @@ class Global(OpenCryptoPlugin):
             self.handle_api_error(e, update)
             return
 
-        # Total Market Capital
+        # ---------- Total Market Capital ----------
+
         if sub_cmd.lower() == "mcap":
             m_cap_usd = utl.format(res["total_market_cap"]["usd"])
             m_cap_eur = utl.format(res["total_market_cap"]["eur"])
@@ -65,7 +66,8 @@ class Global(OpenCryptoPlugin):
                       f"`USD: {m_cap_usd}`\n" \
                       f"`EUR: {m_cap_eur}`"
 
-        # Total Volume
+        # ---------- Total Volume ----------
+
         elif sub_cmd.lower() == "vol":
             vol_usd = utl.format(res["total_volume"]["usd"])
             vol_eur = utl.format(res["total_volume"]["eur"])
@@ -78,6 +80,8 @@ class Global(OpenCryptoPlugin):
                 msg = f"`Total Volume (24h)`\n" \
                       f"`USD: {vol_usd}`\n" \
                       f"`EUR: {vol_eur}`"
+
+        # ---------- Dominance ----------
 
         elif sub_cmd.lower() == "dom":
             m_cap_per = res["market_cap_percentage"]
@@ -129,11 +133,7 @@ class Global(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`" \
-               f"/{self.get_cmd()} mcap (<coin>)\n" \
-               f"/{self.get_cmd()} vol (<coin>)\n" \
-               f"/{self.get_cmd()} dom" \
-               f"`"
+        return f"`/{self.get_cmd()} mcap | vol | dom\n`"
 
     def get_description(self):
         return "Global crypto data"

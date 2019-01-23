@@ -272,10 +272,7 @@ class Candlestick(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`" \
-               f"/{self.get_cmd()} <coin> (<# of hours>)\n" \
-               f"/{self.get_cmd()} <vs coin>-<coin> (<# of hours>)" \
-               f"`"
+        return f"`/{self.get_cmd()} (<target symbol>-)<symbol> (<timeframe>m|h|d)`"
 
     def get_description(self):
         return "Candlestick chart for coin"
