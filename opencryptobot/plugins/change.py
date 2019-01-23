@@ -28,7 +28,15 @@ class Change(OpenCryptoPlugin):
         if RateLimit.limit_reached(update):
             return
 
-        coin = args[0].upper()
+        vs_cur = "usd"
+
+        if "-" in args[0]:
+            pair = args[0].split("-", 1)
+            vs_cur = pair[0].lower()
+            coin = pair[1].upper()
+        else:
+            coin = args[0].upper()
+
         data = None
 
         try:
@@ -57,28 +65,28 @@ class Change(OpenCryptoPlugin):
         symbol = data["symbol"].upper()
 
         if data["market_data"]["price_change_percentage_1h_in_currency"]:
-            c_1h = data["market_data"]["price_change_percentage_1h_in_currency"]["usd"]
+            c_1h = data["market_data"]["price_change_percentage_1h_in_currency"][vs_cur]
             c1h = utl.format(float(c_1h), decimals=2, force_length=True)
             h1 = "{:>10}".format(f"{c1h}%")
         else:
             h1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_24h_in_currency"]:
-            c_1d = data["market_data"]["price_change_percentage_24h_in_currency"]["usd"]
+            c_1d = data["market_data"]["price_change_percentage_24h_in_currency"][vs_cur]
             c1d = utl.format(float(c_1d), decimals=2, force_length=True)
             d1 = "{:>10}".format(f"{c1d}%")
         else:
             d1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_7d_in_currency"]:
-            c_1w = data["market_data"]["price_change_percentage_7d_in_currency"]["usd"]
+            c_1w = data["market_data"]["price_change_percentage_7d_in_currency"][vs_cur]
             c1w = utl.format(float(c_1w), decimals=2, force_length=True)
             w1 = "{:>10}".format(f"{c1w}%")
         else:
             w1 = "{:>10}".format("N/A")
 
         if data["market_data"]["price_change_percentage_30d_in_currency"]:
-            c_1m = data["market_data"]["price_change_percentage_30d_in_currency"]["usd"]
+            c_1m = data["market_data"]["price_change_percentage_30d_in_currency"][vs_cur]
             c1m = utl.format(float(c_1m), decimals=2, force_length=True)
             m1 = "{:>10}".format(f"{c1m}%")
         else:
@@ -93,7 +101,7 @@ class Change(OpenCryptoPlugin):
 
         update.message.reply_text(
             text=f"`"
-                 f"{name} ({symbol})\n\n"
+                 f"{name} ({symbol}) in {vs_cur.upper()}\n\n"
                  f"Hour  {h1}\n"
                  f"Day   {d1}\n"
                  f"Week  {w1}\n"
@@ -104,7 +112,7 @@ class Change(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin>`"
+        return f"`/{self.get_cmd()} (<target currency>-)<symbol>`"
 
     def get_description(self):
         return "Price change over time"
