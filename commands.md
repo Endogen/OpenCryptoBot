@@ -25,6 +25,7 @@ order: 4
 [/help](#help) - List available commands  
 [/ico](#ico) - Initial Coin Offering  
 [/i](#i) - Technical coin info  
+[/mc](#mc) - Market Capitalization  
 [/m](#m) - List coin markets  
 [/n](#n) - Crypto news  
 [/pe](#pe) - People in crypto  
@@ -374,6 +375,25 @@ Show general coin specs.
 **Examples**  
 Show info about a coin  
 `/i xmr`  
+
+## `/mc`
+
+![Screenshot](assets/cmds/mc.png)
+
+**Alternative commands**  
+`/mcap`  
+
+**Description**  
+Show market capitalization of specific coin or a toplist (max 100 currencies).
+
+**Syntax**  
+`/mc <symbol> [or] top=<# of currencies>`
+
+**Examples**  
+Show market cap for XMR  
+`/mc xmr`  
+Show top 10 currencies by market cap  
+`/mc top=10`  
 
 ## `/m`
 
