@@ -32,7 +32,7 @@ tagline:               >
   Swiss Army knife for crypto
 
 # A list of keywords for your blog.
-keywords:              [crypto, telegram, python, bot, currency, chart, price, volume]
+keywords:              [crypto, telegram, python, bot, cryptocurrency]
 
 # Used by jekyll-seo-tag.
 logo:                  /assets/icons/icon.png
@@ -41,7 +41,7 @@ logo:                  /assets/icons/icon.png
 author:
   # Used by `jekyll-feed`:
   name:                David Strohmayer
-  email:               strohmayer.david@gmail.com
+  email:               endogen@protonmail.com
   # Used by `jekyll-seo-tag`:
   twitter:             endogen
 

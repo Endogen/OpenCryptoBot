@@ -39,6 +39,7 @@ order: 4
 [/tr](#tr) - Google Trends  
 [/t](#t) - Team details  
 [/update](#update) - Update bot  
+[/vol](#vol) - Volume for a coin  
 [/v](#v) - Value of coin quantity  
 [/worst](#worst) - Worst movers  
 [/wp](#wp) - Whitepaper download  
@@ -70,7 +71,7 @@ None
 Show informations about the highest price ever reached. Including the date, the price (in a specifiable currency) and past days since ATH.
 
 **Syntax**  
-`/ath (<target symbol>,<target symbol>,[...]-)<symbol>`  
+`/ath (<target symbol>,[...]-)<symbol>`  
 
 **Examples**  
 Get All Time High price for ETH  
@@ -88,7 +89,7 @@ Get All Time High price for ETH in BTC and XRP
 None
 
 **Description**  
-Show the best movers for hour or day by change of price in %.
+Show best movers for hour or day by change of price in %.
 
 **Syntax**  
 `/best hour [or] day (<# of entries>) (<min. volume>)`
@@ -128,7 +129,7 @@ Show BPMN diagram for `/p` command
 `/change`  
 
 **Description**  
-Show the price change of a coin over time (day, week, month and year) in target currency. Target currency can be:
+Show the price change of a cryptocurrency over time (day, week, month and year) in target currency. Target currency can be:
 
 - BTC
 - ETH
@@ -157,7 +158,7 @@ Show price change over time for XMR in BTC
 `/compare`  
 
 **Description**  
-Show link to [Coinlib](https://coinlib.io) to compare the given coins.
+Show link to [Coinlib](https://coinlib.io) to compare the given cryptocurrencies.
 
 **Syntax**  
 `/comp <symbol> <symbol> [...]`
@@ -175,7 +176,7 @@ Show link to compare XMR, DASH and DERO
 `/candlestick`  
 
 **Description**  
-Show a candlestick diagram for a given coin and a given timeframe.
+Show a candlestick diagram for a given cryptocurrency and a given timeframe.
 
 **Syntax**  
 `/cs (<target symbol>-)<symbol> (<timeframe>m[or]h[or]d)`
@@ -219,7 +220,7 @@ Show chart for XMR in XRP for last 90 days
 `/description`  
 
 **Description**  
-Show description for a given coin.
+Show description for a given cryptocurrency.
 
 **Syntax**  
 `/des <symbol>`
@@ -236,7 +237,7 @@ Show description for LOKI
 `/developer`  
 
 **Description**  
-Show development and source code related GitHub info for given coin.  
+Show development and source code related GitHub info for given cryptocurrency.  
 
 **Syntax**  
 `/dev <symbol>`
@@ -312,7 +313,7 @@ Send me some positive feedback :-)
 `/global`  
 
 **Description**  
-Get info about global dominance, global and coin specific volume and market capitalization.
+Get info about global dominance, volume and market capitalization.
 
 **Syntax**  
 `/g mcap [or] vol [or] dom`
@@ -350,7 +351,7 @@ Show all available commands
 None  
 
 **Description**  
-Show info about the ICO of a coin if there was one.
+Show info about the ICO of a cryptocurrency.
 
 **Syntax**  
 `/ico`
@@ -367,13 +368,13 @@ Show ICO info
 `/info`  
 
 **Description**  
-Show general coin specs.
+Show general cryptocurrency specs.
 
 **Syntax**  
 `/i <symbol>`
 
 **Examples**  
-Show info about a coin  
+Show info about XMR  
 `/i xmr`  
 
 ## `/mc`
@@ -384,35 +385,36 @@ Show info about a coin
 `/mcap`  
 
 **Description**  
-Show market capitalization of specific coin or a toplist (max 100 currencies).
+Show market capitalization of specific cryptocurrency or a toplist (max 100 currencies).
 
 **Syntax**  
-`/mc <symbol> [or] top=<# of currencies>`
+`/mc (<target symbol>-)<symbol> [or] top=<# of currencies>`
 
 **Examples**  
 Show market cap for XMR  
 `/mc xmr`  
+Show market cap for XMR in BTC  
+`/mc btc-xmr`  
 Show top 10 currencies by market cap  
 `/mc top=10`  
 
 ## `/m`
 
 ![Screenshot](assets/cmds/m-vol.png)
-![Screenshot](assets/cmds/m.png)
 
 **Alternative commands**  
 `/market`  
 
 **Description**  
-Show exchanges that trade specified coin or show top 10 exchanges by volume that trade the coin.
+Show exchanges that trade specified cryptocurrency or show top 10 trading pairs (with exchange) by volume for the cryptocurrency.
 
 **Syntax**  
 `/m <symbol> (vol)`
 
 **Examples**  
-Show where to trade a coin  
+Show where to trade XMR  
 `/m xmr`  
-Show top 10 trading pairs (and corresponding exchanges) sorted by volume  
+Show top 10 trading pairs for XMR
 `/m xmr vol`  
 
 ## `/n`
@@ -423,7 +425,7 @@ Show top 10 trading pairs (and corresponding exchanges) sorted by volume
 `/news`  
 
 **Description**  
-Show latest crypto news or show news filtered by coin and / or by one of these filters:
+Show latest crypto news or show news filtered by cryptocurrency and / or by one of these filters:
 
 - rising
 - hot
@@ -437,13 +439,13 @@ Show latest crypto news or show news filtered by coin and / or by one of these f
 `/n (<symbol>) (filter=<filter>)`
 
 **Examples**  
-Show current news  
+Show current news (default is no filter and no currency)  
 `/n`  
-Show news for coin  
+Show news for XMR  
 `/n xmr`  
-Show news for coin and add a filter  
+Show news for XMR and add filter 'hot'  
 `/n xmr filter=hot`  
-Show news for a given filter  
+Show news for filter 'lol' (not currency specific)  
 `/n filter=lol`  
 
 ## `/pe`
@@ -454,7 +456,7 @@ Show news for a given filter
 `/people`  
 
 **Description**  
-Show info about people in the crypto business
+Show info about people in the crypto business. To get to know the names, use the `/t` command. There you will also have direct links to team members.
 
 **Syntax**  
 `/pe <forename>-<surname>`
@@ -473,7 +475,7 @@ Show info about Wladimir J. van der Laan
 `/price`  
 
 **Description**  
-Show current price for given coin. Per default, the price of the given coin will be shown in `BTC`, `ETH`, `USD` and `EUR` but it's also possible to show the price in one of the supported currencies:
+Show current price for given cryptocurrency. Per default, the price will be shown in `BTC`, `ETH`, `USD` and `EUR` but it's also possible to show the price in one of the supported currencies:
 
 - BTC
 - ETH
@@ -485,24 +487,26 @@ Show current price for given coin. Per default, the price of the given coin will
 - XLM
 - And most fiat currencies
 
+This command can also be used in [inline mode](https://core.telegram.org/bots/inline).
+
 **Syntax**  
 Regular  
-`/p (<target symbol>,<target symbol>,[...]-)<symbol>`  
+`/p (<target symbol>,[...]-)<symbol>`  
 Inline mode  
-`@opencryptobot /p (<target symbol>,<target symbol>,[...]-)<symbol>.`  
+`@opencryptobot /p (<target symbol>,[...]-)<symbol>.`  
 
 **Examples**  
-Show price for a coin  
+Show price for XMR  
 `/p xmr`  
-Show price for a coin in specified currency  
+Show price for XMR in EOS  
 `/p eos-xmr`  
-Show price for a coin in list of specified currencies  
+Show price for XMR in XRP, XLM and LTC  
 `/p xrp,xlm,ltc-xmr`  
-Show price for a coin (inline mode)  
+Show price for XMR (inline mode)  
 `@opencryptobot /p xmr.`  
-Show price for a coin in specified currency (inline mode)  
+Show price for XMR in EOS (inline mode)  
 `@opencryptobot /p eos-xmr.`  
-Show price for a coin in list of specified currencies (inline mode)  
+Show price for XMR in XRP, XLM and LTC (inline mode)  
 `@opencryptobot /p xrp,xlm,ltc-xmr.`  
 
 ## `/restart`
@@ -530,13 +534,13 @@ Restart the bot
 None  
 
 **Description**  
-Show Return on Investment for given coin. Will only work if the coin had an ICO.  
+Show Return on Investment for a cryptocurrency. Will only work if the cryptocurrency had an ICO.  
 
 **Syntax**  
 `/roi <symbol>`  
 
 **Examples**  
-Show Return on Investment for a coin  
+Show Return on Investment for LOKI  
 `/roi loki`  
 
 ## `/se`
@@ -547,13 +551,13 @@ Show Return on Investment for a coin
 `/search`  
 
 **Description**  
-Find all coins (with symbol) for the given search-string  
+Find all cryptocurrencies (with symbol) for the given search-string  
 
 **Syntax**  
 `/se <coin name>`  
 
 **Examples**  
-Search for the symbol of a coin  
+Search for the symbol of Monero  
 `/se monero`  
 
 ## `/shutdown`
@@ -587,7 +591,7 @@ Show all available social media platforms with links and followers / likes if av
 `/soc <symbol>`  
 
 **Examples**  
-Show social media for a coin  
+Show social media for XMR  
 `/soc xmr`  
 
 ## `/s`
@@ -598,19 +602,13 @@ Show social media for a coin
 `/stats`  
 
 **Description**  
-Show summary for a coin. Including:
-
-- Price in `USD`, `EUR`, `BTC` and `ETH`
-- Price change for hour, day, week, month and year
-- Ranks on different websites
-- Volume (24h)
-- Market capitalization
+Show summary for a cryptocurrency to get a general idea about it.
 
 **Syntax**  
 `/s <symbol>`  
 
 **Examples**  
-Show summary for a coin  
+Show summary LOKI  
 `/s loki`  
 
 ## `/tr`
@@ -621,20 +619,22 @@ Show summary for a coin
 `/trend`  
 
 **Description**  
-List people that are working on a project with their role and a link to the `/pe` command to get details about a team member.
+Get *Interest Over Time* chart from Google Trends for a set of given keywords and a timeframe.
 
 **Syntax**  
-`/tr <keyword> (<keyword> ... t=<# of>d|m|y)`  
+`/tr <keyword> (<keyword> [...] t=<# of days/months/years>d[or]m[or]y[or]all)`  
 
 **Examples**  
-Show interest over time for a given keyword  
+Show interest over time for keyword 'blockchain'  
 `/tr blockchain`  
-Show comparison of interest over time for the provided keywords  
+Show comparison of interest over time for a list of keywords  
 `/tr blockchain bitcoin litecoin`  
-Show interest over time for a given keyword  for the last 30 days  
+Show interest over time for keyword 'blockchain' for the last 30 days  
 `/tr blockchain t=30d`  
-Show comparison of interest over time for the provided keywords for 5 years  
+Show comparison of interest over time for a list of keywords for last 5 years  
 `/tr blockchain bitcoin litecoin t=5y`  
+Show interest over time for keyword 'blockchain' and whole available timeframe  
+`/tr blockchain t=all`  
 
 ## `/t`
 
@@ -650,7 +650,7 @@ List people that are working on a project with their role and a link to the `/pe
 `/t <symbol>`  
 
 **Examples**  
-Show summary for a coin  
+Show people that are working on BTC  
 `/t btc`  
 
 ## `/update`
@@ -661,17 +661,17 @@ Show summary for a coin
 None  
 
 **Description**  
-Update the bot to the latest release version, to a specific release, to a specific branch name or just check if a new version is available.
+Update the bot to the latest release version, to a specific release, to a specific branch name or just check if a new version (latest release) is available.
 
 **Syntax**  
-`/update (relase=<release tag> | branch=<branch name> | check)`  
+`/update (relase=<release tag> [or] branch=<branch name> [or] check)`  
 
 **Examples**  
 Update bot to latest release  
 `/update`  
-Update bot to specific release  
+Update bot to release 0.1.0  
 `/update release=0.1.0`  
-Update bot to latest version of specific branch  
+Update bot to latest version of branch 'master'  
 `/update branch=master`  
 Check if an update is available  
 `/update check`  
@@ -688,16 +688,39 @@ Check if a new branch update is available
 `/value`  
 
 **Description**  
-Show the value of specific coin quantity in `BTC`, `ETH`, `USD` and `EUR` or the specified coin.
+Show the value of specific cryptocurrency quantity in `BTC`, `ETH`, `USD` and `EUR` or the specified currency.
 
 **Syntax**  
-`/v <symbol> <quantity> (<target symbol>)`  
+`/v (<target symbol>,[...]-)<symbol> <quantity>`  
 
 **Examples**  
 Show value of 971 LOKI coins in default currencies  
 `/v loki 971`  
 Show value of 1500 XRP coins in XLM  
-`/v xrp 1500 xlm`  
+`/v xlm-xrp 1500`  
+Show value of 1500 XRP coins in XLM and EUR  
+`/v xlm,eur-xrp 1500`  
+
+## `/vol`
+
+![Screenshot](assets/cmds/vol.png)
+
+**Alternative commands**  
+`/volume`  
+
+**Description**  
+Show total volume for a cryptocurrency or volume toplist (max 100 currencies).
+
+**Syntax**  
+`/vol (<target symbol>-)<symbol> [or] top=<# of currencies>`  
+
+**Examples**  
+Show volume for LOKI  
+`/vol loki`  
+Show volume for LOKI in BTC  
+`/vol btc-loki`  
+Show top 10 currencies by total volume  
+`/vol top=10`  
 
 ## `/worst`
 
@@ -707,12 +730,14 @@ Show value of 1500 XRP coins in XLM
 None  
 
 **Description**  
-Shows the worst movers for hour or day by change of price.  
+Show worst movers for hour or day by change of price.  
 
 **Syntax**  
-`/worst hour|day (<# of entries> <min. volume>)`  
+`/worst (hour[or]day <# of entries> <min. volume>)`  
 
 **Examples**  
+Show worst performing coins (default is 10 coins for last hour)  
+`/worst`  
 Show 10 worst performing coins for last hour  
 `/worst hour`  
 Show 20 worst performing coins for last 24 hours  
@@ -728,7 +753,7 @@ Show 30 worst performing coins in the last hour that had a volume of at least 1 
 `/whitepaper`  
 
 **Description**  
-Download the whitepaper of a given coin. If no whitepaper can be found then there is the possibility to add a keyword to search an additional source.  
+Download the whitepaper of a given cryptocurrency. If no whitepaper can be found then there is the possibility to add a keyword to search an additional source.  
 
 **Syntax**  
 `/wp <symbol> (all)`  
@@ -736,5 +761,5 @@ Download the whitepaper of a given coin. If no whitepaper can be found then ther
 **Examples**  
 Download whitepaper for XMR  
 `/wp xmr`  
-Download whitepaper for BCH and search an additional source  
+Download whitepaper for BCH and search in additional source  
 `/wp bch all`  
