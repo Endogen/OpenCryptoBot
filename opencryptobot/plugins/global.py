@@ -30,10 +30,6 @@ class Global(OpenCryptoPlugin):
 
         sub_cmd = args[0]
 
-        coin = str()
-        if len(args) > 1:
-            coin = args[1]
-
         if not sub_cmd:
             update.message.reply_text(
                 text=f"Usage:\n{self.get_usage()}",
@@ -57,14 +53,9 @@ class Global(OpenCryptoPlugin):
             m_cap_usd = utl.format(res["total_market_cap"]["usd"])
             m_cap_eur = utl.format(res["total_market_cap"]["eur"])
 
-            if coin:
-                if coin in res["total_market_cap"]:
-                    mcap = utl.format(res["total_market_cap"][coin])
-                    msg = f"`Total Market Capital\n{coin.upper()}: {mcap}`"
-            else:
-                msg = f"`Total Market Capital`\n" \
-                      f"`USD: {m_cap_usd}`\n" \
-                      f"`EUR: {m_cap_eur}`"
+            msg = f"`Total Market Capital`\n" \
+                  f"`USD: {m_cap_usd}`\n" \
+                  f"`EUR: {m_cap_eur}`"
 
         # ---------- Total Volume ----------
 
@@ -72,14 +63,9 @@ class Global(OpenCryptoPlugin):
             vol_usd = utl.format(res["total_volume"]["usd"])
             vol_eur = utl.format(res["total_volume"]["eur"])
 
-            if coin:
-                if coin in res["total_volume"]:
-                    vol = utl.format(res["total_volume"][coin])
-                    msg = f"`Total Volume\n{coin.upper()}: {vol}`"
-            else:
-                msg = f"`Total Volume (24h)`\n" \
-                      f"`USD: {vol_usd}`\n" \
-                      f"`EUR: {vol_eur}`"
+            msg = f"`Total Volume (24h)`\n" \
+                  f"`USD: {vol_usd}`\n" \
+                  f"`EUR: {vol_eur}`"
 
         # ---------- Dominance ----------
 
@@ -126,7 +112,7 @@ class Global(OpenCryptoPlugin):
             return
 
         if not msg:
-            msg = f"{emo.ERROR} Can't retrieve data for *{coin.upper()}*"
+            msg = f"{emo.ERROR} Can't retrieve global data*"
 
         update.message.reply_text(
             text=msg,
