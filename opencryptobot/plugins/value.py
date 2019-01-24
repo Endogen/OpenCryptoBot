@@ -25,7 +25,14 @@ class Value(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        coin = args[0].upper()
+        vs_cur = "btc,eth,usd,eur"
+
+        if "-" in args[0]:
+            pair = args[0].split("-", 1)
+            vs_cur = pair[0].lower()
+            coin = pair[1].upper()
+        else:
+            coin = args[0].upper()
 
         if len(args) > 1 and utl.is_number(args[1]):
             qty = args[1]
@@ -38,10 +45,6 @@ class Value(OpenCryptoPlugin):
         if RateLimit.limit_reached(update):
             return
 
-        vs_cur = str("btc,eth,usd,eur")
-        if len(args) > 2:
-            vs_cur = args[2]
-
         prices = dict()
 
         try:
@@ -53,7 +56,12 @@ class Value(OpenCryptoPlugin):
         # Get coin ID
         for entry in response:
             if entry["symbol"].upper() == coin:
-                data = CoinGecko().get_coin_by_id(entry["id"])
+                try:
+                    data = CoinGecko().get_coin_by_id(entry["id"])
+                except Exception as e:
+                    self.handle_api_error(e, update)
+                    return
+
                 prices = data["market_data"]["current_price"]
                 break
 
@@ -82,7 +90,7 @@ class Value(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <symbol> <quantity> (<target symbol>)`"
+        return f"`/{self.get_cmd()} (<target symbol>,[...]-)<symbol> <quantity>`"
 
     def get_description(self):
         return "Value of coin quantity"
