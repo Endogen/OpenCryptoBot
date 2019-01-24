@@ -8,7 +8,6 @@ from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
-# TODO: Add documentation
 class Marketcap(OpenCryptoPlugin):
 
     def get_cmd(self):
@@ -127,7 +126,7 @@ class Marketcap(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} (<symbol>) | top=<# or currencies>\n`"
+        return f"`/{self.get_cmd()} (<target symbol>-)<symbol> | top=<# or currencies>\n`"
 
     def get_description(self):
         return "Market capitalization"
