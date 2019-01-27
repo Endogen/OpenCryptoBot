@@ -213,15 +213,19 @@ class Candlestick(OpenCryptoPlugin):
             ticksuffix=f"  ")
 
         fig['layout'].update(
-            title=coin,
-            titlefont=dict(
-                size=26
+            title=dict(
+                text=coin,
+                font=dict(
+                    size=26
+                )
             ),
             yaxis=dict(
-                title=base_coin,
-                titlefont=dict(
-                    size=18
-                )
+                title=dict(
+                    text=base_coin,
+                    font=dict(
+                        size=18
+                    )
+                ),
             )
         )
 

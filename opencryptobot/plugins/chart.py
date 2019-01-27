@@ -151,17 +151,20 @@ class Chart(OpenCryptoPlugin):
                 domain=[0, 0.20]
             ),
             yaxis2=dict(
-                title=base_coin,
-                titlefont=dict(
-                    size=18
-                ),
-                domain=[0.25, 1],
+                title=dict(
+                    text=base_coin,
+                    font=dict(
+                        size=18
+                    )
+                ),                domain=[0.25, 1],
                 tickprefix="   ",
                 ticksuffix=f"  "
             ),
-            title=coin,
-            titlefont=dict(
-                size=26
+            title=dict(
+                text=coin,
+                font=dict(
+                    size=26
+                )
             ),
             legend=dict(
                 orientation="h",
