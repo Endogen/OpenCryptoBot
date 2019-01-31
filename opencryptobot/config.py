@@ -76,6 +76,13 @@ class ConfigManager:
         ConfigManager.ignore = True
         ConfigManager._write_cfg()
 
+    @staticmethod
+    def remove(*keys):
+        for key in keys:
+            if key in ConfigManager._cfg:
+                del ConfigManager._cfg[key]
+                ConfigManager._write_cfg()
+
 
 class ChangeHandler(FileSystemEventHandler):
     file = None
