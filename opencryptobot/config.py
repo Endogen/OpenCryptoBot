@@ -3,8 +3,6 @@ import json
 import logging
 import opencryptobot.constants as con
 
-from functools import reduce
-from operator import getitem
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
