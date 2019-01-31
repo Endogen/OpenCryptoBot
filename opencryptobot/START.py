@@ -1,6 +1,5 @@
 import os
 import logging
-import opencryptobot.emoji as emo
 import opencryptobot.constants as con
 
 from argparse import ArgumentParser
@@ -35,23 +34,6 @@ class OpenCryptoBot:
         # Create bot
         bot_token = self._get_bot_token()
         self.tg = TelegramBot(bot_token, self.db)
-
-        # TODO: Do this in telegrambot class?
-        # Inform about restart if bot restarted
-        if Cfg.get("restart"):
-            usr_id, msg_id = Cfg.get("restart").split("-")
-
-            if usr_id and msg_id:
-                try:
-                    self.tg.updater.bot.edit_message_text(
-                        chat_id=usr_id,
-                        message_id=msg_id,
-                        text=f"{emo.CHECK} Restarting bot...")
-                except Exception as e:
-                    msg = "Not possible to update restart message"
-                    logging.error(f"{msg}: {e}")
-
-            Cfg.remove("restart")
 
     # Parse arguments
     def _parse_args(self):
