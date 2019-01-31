@@ -46,6 +46,14 @@ class Roi(OpenCryptoPlugin):
         roi_eth_x = utl.format(data["roix_eth"], decimals=2, force_length=True, on_none="-")
         roi_eth_x = "{:>10}".format(roi_eth_x)
 
+        # If all values are the same then this means
+        # that there was no ICO and thus no ROI available
+        if roi_usd_x == roi_btc_x == roi_eth_x:
+            update.message.reply_text(
+                text=f"{emo.ERROR} No ROI data for {coin}",
+                parse_mode=ParseMode.MARKDOWN)
+            return
+
         if data["roix_usd"]:
             msg += f"`ROI USD: {roi_usd_x}x`\n"
         else:
