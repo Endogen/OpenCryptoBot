@@ -4,9 +4,9 @@ import time
 import opencryptobot.emoji as emo
 
 from opencryptobot.plugin import OpenCryptoPlugin
+from opencryptobot.config import ConfigManager as Cfg
 
 
-# TODO: Show notification after bot is available again
 class Restart(OpenCryptoPlugin):
 
     def get_cmd(self):
@@ -16,7 +16,10 @@ class Restart(OpenCryptoPlugin):
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         msg = f"{emo.WAIT} Restarting bot..."
-        update.message.reply_text(msg)
+        m = update.message.reply_text(msg)
+        usr_id = update.effective_user.id
+
+        Cfg.set(f"{usr_id}-{m.message_id}", "restart")
 
         time.sleep(0.2)
         os.execl(sys.executable, sys.executable, *sys.argv)
