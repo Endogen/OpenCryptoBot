@@ -65,13 +65,18 @@ class ConfigManager:
             except KeyError as e:
                 err = f"Couldn't read '{key}' from Config"
                 logging.error(f"{repr(e)} - {err}")
-                value = None
+                return None
 
         return value if value is not None else None
 
     @staticmethod
     def set(value, *keys):
-        reduce(getitem, keys[:-1], ConfigManager._cfg)[keys[-1]] = value
+        tmp_cfg = ConfigManager._cfg
+
+        for key in keys[:-1]:
+            tmp_cfg = tmp_cfg.setdefault(key, {})
+
+        tmp_cfg[keys[-1]] = value
 
         ConfigManager.ignore = True
         ConfigManager._write_cfg()
@@ -102,6 +107,7 @@ class ChangeHandler(FileSystemEventHandler):
             new = statbuf.st_mtime
 
             # FIXME: Workaround for watchdog bug
+            # https://github.com/gorakhargosh/watchdog/issues/93
             if (new - ChangeHandler.old) > 0.5:
                 if ConfigManager.ignore:
                     ConfigManager.ignore = False
