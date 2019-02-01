@@ -62,7 +62,7 @@ class ConfigManager:
                 value = value[key]
             except KeyError as e:
                 err = f"Couldn't read '{key}' from Config"
-                logging.error(f"{repr(e)} - {err}")
+                logging.debug(f"{repr(e)} - {err}")
                 return None
 
         return value if value is not None else None
