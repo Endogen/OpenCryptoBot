@@ -41,7 +41,10 @@ class TelegramBot:
         self.job_queue = self.updater.job_queue
         self.dispatcher = self.updater.dispatcher
 
+        # Handler for command-links
         self._add_link_handler()
+
+        # Load classes in folder 'plugins'
         self._load_plugins()
 
         # Handler for inline-mode
@@ -102,7 +105,7 @@ class TelegramBot:
                 try:
                     module = importlib.import_module(module_path)
                     plugin_class = getattr(module, module_name.capitalize())
-                    instance = plugin_class(self.updater, self.db)
+                    instance = plugin_class(self)
 
                     if isinstance(instance, OpenCryptoPlugin):
                         cmd = instance.get_cmd()
@@ -123,7 +126,7 @@ class TelegramBot:
                                     act,
                                     pass_args=True))
 
-                        TelegramBot.plugins.append(instance)
+                        self.plugins.append(instance)
                         logging.info(f"Plugin '{module_name}' added")
 
                 except Exception as ex:

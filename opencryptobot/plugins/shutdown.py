@@ -27,5 +27,5 @@ class Shutdown(OpenCryptoPlugin):
         return None
 
     def _shutdown_thread(self):
-        self.updater.stop()
-        self.updater.is_idle = False
+        self.tgb.updater.stop()
+        self.tgb.updater.is_idle = False

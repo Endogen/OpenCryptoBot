@@ -24,7 +24,7 @@ class Bpmn(OpenCryptoPlugin):
         cmd = args[0].replace("/", "").lower()
 
         cmd_found = False
-        for plgn in TelegramBot.plugins:
+        for plgn in self.tgb.plugins:
             if plgn.get_cmd() == cmd or cmd in plgn.get_cmd_alt():
                 cmd = plgn.get_cmd()
                 cmd_found = True

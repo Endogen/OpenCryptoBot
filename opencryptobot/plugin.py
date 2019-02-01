@@ -8,9 +8,8 @@ from opencryptobot.config import ConfigManager as Cfg
 
 class OpenCryptoPlugin:
 
-    def __init__(self, updater, db):
-        self.updater = updater
-        self.db = db
+    def __init__(self, telegram_bot):
+        self.tgb = telegram_bot
 
     @classmethod
     def send_typing(cls, func):
@@ -45,12 +44,12 @@ class OpenCryptoPlugin:
                     usr = update.message.from_user
                     cmd = update.message.text
                     cht = update.message.chat
-                    self.db.save(usr, cht, cmd)
+                    self.tgb.db.save(usr, cht, cmd)
                 elif update.inline_query:
                     usr = update.effective_user
                     cmd = update.inline_query.query[:-1]
                     cht = update.effective_chat
-                    self.db.save(usr, cht, cmd)
+                    self.tgb.db.save(usr, cht, cmd)
 
             return func(self, bot, update, **kwargs)
         return _save_data

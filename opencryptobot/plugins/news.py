@@ -16,8 +16,8 @@ class News(OpenCryptoPlugin):
 
     filters = ["rising", "hot", "bullish", "bearish", "important", "saved", "lol"]
 
-    def __init__(self, updater, db):
-        super().__init__(updater, db)
+    def __init__(self, telegram_bot):
+        super().__init__(telegram_bot)
 
         token_path = os.path.join(con.CFG_DIR, con.CRYPAN_TKN_FILE)
 

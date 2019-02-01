@@ -1,5 +1,4 @@
 from telegram import ParseMode
-from opencryptobot.telegrambot import TelegramBot
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
@@ -15,7 +14,7 @@ class Help(OpenCryptoPlugin):
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         cat_dict = dict()
-        for p in TelegramBot.plugins:
+        for p in self.tgb.plugins:
             if p.get_category() and p.get_description() and p.get_cmd:
                 des = f"/{p.get_cmd()} - {p.get_description()}\n"
 

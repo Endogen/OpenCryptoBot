@@ -10,8 +10,8 @@ from opencryptobot.config import ConfigManager as Cfg
 
 class Restart(OpenCryptoPlugin):
 
-    def __init__(self, updater, db):
-        super().__init__(updater, db)
+    def __init__(self, telegram_bot):
+        super().__init__(telegram_bot)
         self._restart_notification()
 
     def get_cmd(self):
@@ -51,7 +51,7 @@ class Restart(OpenCryptoPlugin):
             return
 
         try:
-            self.updater.bot.edit_message_text(
+            self.tgb.updater.bot.edit_message_text(
                 chat_id=user_id,
                 message_id=message,
                 text=f"{emo.CHECK} Restarting bot...")
