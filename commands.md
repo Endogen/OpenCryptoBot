@@ -323,7 +323,7 @@ Show global crypto market capitalization
 `/g mcap`  
 Show global crypto market volume  
 `/g vol`  
-Show global crypto market dominance
+Show global crypto market dominance  
 `/g dom`  
 
 ## `/help`
@@ -414,7 +414,7 @@ Show exchanges that trade specified cryptocurrency or show top 10 trading pairs 
 **Examples**  
 Show where to trade XMR  
 `/m xmr`  
-Show top 10 trading pairs for XMR
+Show top 10 trading pairs for XMR  
 `/m xmr vol`  
 
 ## `/n`

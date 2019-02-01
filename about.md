@@ -1,6 +1,6 @@
 ---
 layout: about
-title: About the Bot
+title: About
 description: >
   Details about the Telegram bot and it's author
 hide_description: true
