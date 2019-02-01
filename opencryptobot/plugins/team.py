@@ -58,7 +58,7 @@ class Team(OpenCryptoPlugin):
 
         if not msg:
             update.message.reply_text(
-                text=f"{emo.ERROR} No team data for *{coin}*",
+                text=f"{emo.INFO} No team data for *{coin}*",
                 parse_mode=ParseMode.MARKDOWN)
             return
 

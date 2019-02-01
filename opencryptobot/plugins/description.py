@@ -48,7 +48,7 @@ class Description(OpenCryptoPlugin):
 
         if not data or not data["description"]["en"]:
             update.message.reply_text(
-                text=f"{emo.ERROR} No data for *{coin}*",
+                text=f"{emo.INFO} No data for *{coin}*",
                 parse_mode=ParseMode.MARKDOWN)
             return
 

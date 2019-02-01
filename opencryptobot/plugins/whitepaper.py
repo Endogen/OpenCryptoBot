@@ -59,7 +59,7 @@ class Whitepaper(OpenCryptoPlugin):
                 update.message.reply_text(text=msg)
         else:
             update.message.reply_text(
-                text=f"{emo.ERROR} No whitepaper for *{coin}* found",
+                text=f"{emo.INFO} No whitepaper for *{coin}* found",
                 parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):

@@ -95,7 +95,7 @@ class Ico(OpenCryptoPlugin):
         if msg:
             msg = f"`ICO data for {coin}`\n\n" + msg
         else:
-            msg = f"{emo.ERROR} No ICO data for *{coin}*"
+            msg = f"{emo.INFO} No ICO data for *{coin}*"
 
         update.message.reply_text(
             text=msg,

@@ -1,3 +1,4 @@
+INFO = "ℹ"  # Info
 ERROR = "‼"  # Error
 WAIT = "⏳"  # Waiting
 NOTIFY = "🔔"  # Notification

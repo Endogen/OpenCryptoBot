@@ -65,7 +65,7 @@ class Developer(OpenCryptoPlugin):
         if msg:
             msg = f"`GitHub info for {coin}`\n\n" + msg
         else:
-            msg = f"{emo.ERROR} No developer data found for *{coin}*"
+            msg = f"{emo.INFO} No developer data found for *{coin}*"
 
         update.message.reply_text(
             text=msg.replace("Pull Request", "PR"),

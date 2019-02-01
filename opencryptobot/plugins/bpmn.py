@@ -37,7 +37,7 @@ class Bpmn(OpenCryptoPlugin):
         try:
             bpmn = open(os.path.join(con.BPMN_DIR, f"{cmd}.png"), "rb")
         except Exception:
-            msg = f"{emo.ERROR} No BPMN diagram found for `/{cmd}`"
+            msg = f"{emo.INFO} No BPMN diagram found for `/{cmd}`"
             update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
             return
 

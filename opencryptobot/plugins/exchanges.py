@@ -102,7 +102,7 @@ class Exchanges(OpenCryptoPlugin):
 
         if not msg:
             update.message.reply_text(
-                text=f"{emo.ERROR} No exchange '{exchange}' found",
+                text=f"{emo.INFO} No exchange '{exchange}' found",
                 parse_mode=ParseMode.MARKDOWN)
             return
 

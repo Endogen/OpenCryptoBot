@@ -45,7 +45,7 @@ class Search(OpenCryptoPlugin):
         if msg:
             msg = f"`Coin-search for '{search}'`\n\n" + msg
         else:
-            msg = f"{emo.ERROR} No coin with '*{search}*' found"
+            msg = f"{emo.INFO} No coin with '*{search}*' found"
 
         update.message.reply_text(
             text=msg,

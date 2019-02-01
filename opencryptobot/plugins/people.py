@@ -60,7 +60,7 @@ class People(OpenCryptoPlugin):
 
         if not msg:
             update.message.reply_text(
-                text=f"{emo.ERROR} No person with name *'{name_clean}'* found",
+                text=f"{emo.INFO} No person with name *'{name_clean}'* found",
                 parse_mode=ParseMode.MARKDOWN)
             return
 

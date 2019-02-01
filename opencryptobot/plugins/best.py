@@ -79,7 +79,7 @@ class Best(OpenCryptoPlugin):
 
         if not best:
             update.message.reply_text(
-                text=f"{emo.ERROR} No matching data found",
+                text=f"{emo.INFO} No matching data found",
                 parse_mode=ParseMode.MARKDOWN)
             return
 

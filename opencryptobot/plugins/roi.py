@@ -31,7 +31,7 @@ class Roi(OpenCryptoPlugin):
 
         if not data:
             update.message.reply_text(
-                text=f"{emo.ERROR} No data found for {coin}",
+                text=f"{emo.INFO} No data found for {coin}",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
