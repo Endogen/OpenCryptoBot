@@ -11,6 +11,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Price(OpenCryptoPlugin):
 
+    bot_name = None
+
     def get_cmd(self):
         return "p"
 
@@ -24,12 +26,12 @@ class Price(OpenCryptoPlugin):
 
         if not args:
             if update.message:
+                self.bot_name = bot.name
                 update.message.reply_text(
-                    text=f"Usage:\n{self.get_usage(bot.name)}",
+                    text=f"Usage:\n{self.get_usage()}",
                     parse_mode=ParseMode.MARKDOWN)
             return
 
-        # Coin name
         if "-" in args[0]:
             pair = args[0].split("-", 1)
             vs_cur = pair[0].upper()
@@ -37,7 +39,6 @@ class Price(OpenCryptoPlugin):
         else:
             coin = args[0].upper()
 
-        # Exchange name
         exchange = str()
         if len(args) > 1:
             exchange = args[1]
@@ -48,7 +49,6 @@ class Price(OpenCryptoPlugin):
             self.handle_api_error(e, update)
             return
 
-        # Get coin ID and name
         coin_id = str()
         for entry in response:
             if entry["symbol"].upper() == coin:
@@ -126,12 +126,12 @@ class Price(OpenCryptoPlugin):
         else:
             return msg
 
-    def get_usage(self, bot_name):
+    def get_usage(self):
         return f"`" \
-               f"/{self.get_cmd()} <symbol>\n" \
-               f"/{self.get_cmd()} <target symbol>-<symbol>\n" \
-               f"{bot_name} /{self.get_cmd()} <symbol>.\n" \
-               f"{bot_name} /{self.get_cmd()} <target symbol>-<symbol>." \
+               f"/{self.get_cmd()} <symbol>\n\n" \
+               f"/{self.get_cmd()} <target symbol>-<symbol>\n\n" \
+               f"{self.bot_name} /{self.get_cmd()} <symbol>.\n\n" \
+               f"{self.bot_name} /{self.get_cmd()} <target symbol>-<symbol>." \
                f"`"
 
     def get_description(self):
