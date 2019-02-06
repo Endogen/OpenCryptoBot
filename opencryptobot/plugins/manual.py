@@ -31,7 +31,7 @@ class Manual(OpenCryptoPlugin):
 
         if not msg:
             update.message.reply_text(
-                text=f"{emo.INFO} No usage details for command `{cmd}` available",
+                text=f"{emo.INFO} No details for command `{cmd}` available",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
@@ -44,7 +44,7 @@ class Manual(OpenCryptoPlugin):
         return f"`/{self.get_cmd()} <command>`"
 
     def get_description(self):
-        return "Show manual & usage for command"
+        return "Show how to use a command"
 
     def get_category(self):
         return Category.BOT
