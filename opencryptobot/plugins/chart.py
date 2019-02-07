@@ -188,7 +188,11 @@ class Chart(OpenCryptoPlugin):
             }],
         )
 
-        fig = go.Figure(data=[price, volume], layout=layout)
+        try:
+            fig = go.Figure(data=[price, volume], layout=layout)
+        except Exception as e:
+            self.handle_error(e, update)
+
         fig["layout"]["yaxis2"].update(tickformat=tickformat)
 
         update.message.reply_photo(
