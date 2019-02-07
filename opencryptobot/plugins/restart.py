@@ -30,7 +30,9 @@ class Restart(OpenCryptoPlugin):
         Cfg.set(m.message_id, "plugins", cls_name, "message")
 
         time.sleep(0.2)
-        os.execl(sys.executable, sys.executable, *sys.argv)
+
+        # TODO: Don't hardcore the modulename
+        os.execl(sys.executable, sys.executable, '-m', "opencryptobot.START", *sys.argv[1:])
 
     def get_usage(self):
         return None
