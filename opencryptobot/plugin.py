@@ -107,7 +107,3 @@ class Category:
                 categories.append({k: v})
 
         return categories
-
-
-class HaltException(Exception):
-    pass
