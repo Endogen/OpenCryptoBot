@@ -180,7 +180,3 @@ class OpenCryptoBot:
             self.tg.bot_start_polling()
 
         self.tg.bot_idle()
-
-
-if __name__ == '__main__':
-    OpenCryptoBot().start()
