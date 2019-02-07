@@ -35,8 +35,7 @@ class Stats(OpenCryptoPlugin):
         try:
             response = APICache.get_cg_coins_list()
         except Exception as e:
-            self.handle_api_error(e, update)
-            return
+            self.handle_error(e, update)
 
         # Get coin ID and data
         for entry in response:
@@ -44,8 +43,7 @@ class Stats(OpenCryptoPlugin):
                 try:
                     data = CoinGecko().get_coin_by_id(entry["id"])
                 except Exception as e:
-                    self.handle_api_error(e, update)
-                    return
+                    self.handle_error(e, update)
 
                 cgid = entry["id"]
                 break

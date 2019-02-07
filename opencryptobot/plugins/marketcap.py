@@ -65,8 +65,7 @@ class Marketcap(OpenCryptoPlugin):
                     order="market_cap_desc",
                     sparkline=False)
             except Exception as e:
-                self.handle_api_error(e, update)
-                return
+                self.handle_error(e, update)
 
             for entry in data:
                 name = entry["name"]
@@ -87,8 +86,7 @@ class Marketcap(OpenCryptoPlugin):
             try:
                 response = APICache.get_cg_coins_list()
             except Exception as e:
-                self.handle_api_error(e, update)
-                return
+                self.handle_error(e, update)
 
             # Get coin ID and data
             for entry in response:
@@ -99,8 +97,7 @@ class Marketcap(OpenCryptoPlugin):
                             ids=entry["id"],
                             order="market_cap_desc")
                     except Exception as e:
-                        self.handle_api_error(e, update)
-                        return
+                        self.handle_error(e, update)
                     break
 
             if not data:

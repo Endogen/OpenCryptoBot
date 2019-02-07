@@ -39,8 +39,7 @@ class Market(OpenCryptoPlugin):
         try:
             response = APICache.get_cg_coins_list()
         except Exception as e:
-            self.handle_api_error(e, update)
-            return
+            self.handle_error(e, update)
 
         # Get coin ID and data
         for entry in response:
@@ -48,8 +47,7 @@ class Market(OpenCryptoPlugin):
                 try:
                     coin_info = CoinGecko().get_coin_by_id(entry["id"])
                 except Exception as e:
-                    self.handle_api_error(e, update)
-                    return
+                    self.handle_error(e, update)
                 break
 
         if not coin_info or not coin_info["tickers"]:

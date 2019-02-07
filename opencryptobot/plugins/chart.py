@@ -80,8 +80,7 @@ class Chart(OpenCryptoPlugin):
                 base_coin.lower(),
                 time_frame)
         except Exception as e:
-            self.handle_api_error(e, update)
-            return
+            self.handle_error(e, update)
 
         # Volume
         df_volume = DataFrame(market["total_volumes"], columns=["DateTime", "Volume"])

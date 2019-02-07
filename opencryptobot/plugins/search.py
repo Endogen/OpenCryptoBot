@@ -32,8 +32,7 @@ class Search(OpenCryptoPlugin):
         try:
             response = APICache.get_cg_coins_list()
         except Exception as e:
-            self.handle_api_error(e, update)
-            return
+            self.handle_error(e, update)
 
         for entry in response:
             if search.lower() in entry["name"].lower():

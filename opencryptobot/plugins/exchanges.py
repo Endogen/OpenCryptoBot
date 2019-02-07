@@ -53,8 +53,7 @@ class Exchanges(OpenCryptoPlugin):
             try:
                 response = APICache.get_cg_exchanges_list()
             except Exception as e:
-                self.handle_api_error(e, update)
-                return
+                self.handle_error(e, update)
 
             exchanges = sorted(
                 response,
@@ -80,8 +79,7 @@ class Exchanges(OpenCryptoPlugin):
             try:
                 response = APICache.get_cg_exchanges_list()
             except Exception as e:
-                self.handle_api_error(e, update)
-                return
+                self.handle_error(e, update)
 
             for ex in response:
                 clean_ex = ex["name"].replace(" ", "")

@@ -26,8 +26,7 @@ class Roi(OpenCryptoPlugin):
         try:
             data = TokenStats().get_roi_for_symbol(coin)
         except Exception as e:
-            self.handle_api_error(e, update)
-            return
+            self.handle_error(e, update)
 
         if not data:
             update.message.reply_text(

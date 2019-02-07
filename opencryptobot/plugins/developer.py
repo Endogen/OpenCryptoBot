@@ -33,16 +33,14 @@ class Developer(OpenCryptoPlugin):
         try:
             response = APICache.get_cg_coins_list()
         except Exception as e:
-            self.handle_api_error(e, update)
-            return
+            self.handle_error(e, update)
 
         for entry in response:
             if entry["symbol"].lower() == coin.lower():
                 try:
                     data = CoinGecko().get_coin_by_id(entry["id"])
                 except Exception as e:
-                    self.handle_api_error(e, update)
-                    return
+                    self.handle_error(e, update)
 
                 dev_data = data["developer_data"]
 

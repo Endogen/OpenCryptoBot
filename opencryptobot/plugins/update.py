@@ -75,8 +75,7 @@ class Update(OpenCryptoPlugin):
                 # Get latest commit info for branch
                 response = gh.get_latest_branch(branch)
             except Exception as e:
-                self.handle_api_error(e, update)
-                return
+                self.handle_error(e, update)
 
             cfg_hash = Cfg.get("update", "update_hash")
             new_hash = response["commit"]["sha"]
@@ -107,8 +106,7 @@ class Update(OpenCryptoPlugin):
                     # Get latest release
                     response = gh.get_latest_release()
             except Exception as e:
-                self.handle_api_error(e, update)
-                return
+                self.handle_error(e, update)
 
             if release:
                 tag = response[0]["tag_name"]
@@ -120,8 +118,7 @@ class Update(OpenCryptoPlugin):
             try:
                 response = gh.get_tags()
             except Exception as e:
-                self.handle_api_error(e, update)
-                return
+                self.handle_error(e, update)
 
             new_hash = str()
             for t in response:
@@ -160,8 +157,7 @@ class Update(OpenCryptoPlugin):
             response = requests.get(download_url)
             response.raise_for_status()
         except Exception as e:
-            self.handle_api_error(e, update)
-            return
+            self.handle_error(e, update)
 
         msg = f"{emo.CHECK} Downloading update..."
         bot.edit_message_text(msg, chat_id=uid, message_id=m.message_id)

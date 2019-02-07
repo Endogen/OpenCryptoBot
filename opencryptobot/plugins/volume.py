@@ -65,8 +65,7 @@ class Volume(OpenCryptoPlugin):
                     order="volume_desc",
                     sparkline=False)
             except Exception as e:
-                self.handle_api_error(e, update)
-                return
+                self.handle_error(e, update)
 
             count = 0
             for entry in data:
@@ -89,8 +88,7 @@ class Volume(OpenCryptoPlugin):
             try:
                 response = APICache.get_cg_coins_list()
             except Exception as e:
-                self.handle_api_error(e, update)
-                return
+                self.handle_error(e, update)
 
             # Get coin ID and data
             for entry in response:
@@ -101,8 +99,7 @@ class Volume(OpenCryptoPlugin):
                             ids=entry["id"],
                             order="volume_desc")
                     except Exception as e:
-                        self.handle_api_error(e, update)
-                        return
+                        self.handle_error(e, update)
                     break
 
             if not data:

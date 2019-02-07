@@ -44,8 +44,7 @@ class Global(OpenCryptoPlugin):
         try:
             res = CoinGecko().get_global()
         except Exception as e:
-            self.handle_api_error(e, update)
-            return
+            self.handle_error(e, update)
 
         # ---------- Total Market Capital ----------
 

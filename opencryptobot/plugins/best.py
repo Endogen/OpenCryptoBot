@@ -74,8 +74,7 @@ class Best(OpenCryptoPlugin):
                 entries=entries,
                 volume=volume)
         except Exception as e:
-            self.handle_api_error(e, update)
-            return
+            self.handle_error(e, update)
 
         if not best:
             update.message.reply_text(
