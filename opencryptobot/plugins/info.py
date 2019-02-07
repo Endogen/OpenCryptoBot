@@ -99,6 +99,9 @@ class Info(OpenCryptoPlugin):
                 if res["type"] == "coin":
                     self.coin_type = "Coin"
                     self.based_on = None
+                elif res["type"] == "none":
+                    self.coin_type = "Token"
+                    self.based_on = None
                 else:
                     self.coin_type = "Token"
                     self.based_on = res["type"].capitalize()
