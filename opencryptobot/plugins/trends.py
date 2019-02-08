@@ -90,7 +90,8 @@ class Trends(OpenCryptoPlugin):
             plot_bgcolor='rgb(233,233,233)',
             yaxis=dict(
                 title="Queries",
-                showticklabels=False))
+                showticklabels=False),
+            showlegend=True)
 
         try:
             fig = go.Figure(data=tr_data, layout=layout)
