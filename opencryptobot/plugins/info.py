@@ -67,19 +67,27 @@ class Info(OpenCryptoPlugin):
             if self.based_on:
                 type += f" ({self.based_on})"
 
+                msg = f"`" \
+                      f"Name:         {name}\n" \
+                      f"Ticker:       {coin}\n" \
+                      f"Type:         {type}\n" \
+                      f"`"
+            else:
+                msg = f"`" \
+                      f"Name:         {name}\n" \
+                      f"Ticker:       {coin}\n" \
+                      f"Type:         {type}\n" \
+                      f"Algorithm:    {algo}\n" \
+                      f"Proof type:   {proof}\n" \
+                      f"Hashes (sec): {utl.format(int(h_per_s))}\n" \
+                      f"Block:        {block}\n" \
+                      f"Block time:   {block_time}\n" \
+                      f"Block reward: {block_reward}" \
+                      f"`"
+
         update.message.reply_photo(
             photo=image,
-            caption=f"`"
-                    f"Name:         {name}\n"
-                    f"Ticker:       {coin}\n"
-                    f"Type:         {type}\n"
-                    f"Algorithm:    {algo}\n"
-                    f"Proof type:   {proof}\n"
-                    f"Hashes (sec): {utl.format(int(h_per_s))}\n"
-                    f"Block:        {block}\n"
-                    f"Block time:   {block_time}\n"
-                    f"Block reward: {block_reward}"
-                    f"`",
+            caption=msg,
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
