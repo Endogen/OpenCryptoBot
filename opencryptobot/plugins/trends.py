@@ -92,7 +92,10 @@ class Trends(OpenCryptoPlugin):
                 title="Queries",
                 showticklabels=False))
 
-        fig = go.Figure(data=tr_data, layout=layout)
+        try:
+            fig = go.Figure(data=tr_data, layout=layout)
+        except Exception as e:
+            self.handle_error(e, update)
 
         update.message.reply_photo(
             photo=io.BufferedReader(BytesIO(pio.to_image(fig, format="jpeg"))),
