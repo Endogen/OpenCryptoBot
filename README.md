@@ -4,13 +4,13 @@ Welcome to the Swiss Army knife for crypto! *OpenCryptoBot* is an open source Te
 If you are interested in news regarding this bot or want more indept explanations for all available commands, please visit the [homepage](https://endogen.github.io/OpenCryptoBot).
 
 <p align="center">
-  <img src="https://endogen.github.io/OpenCryptoBot/assets/screenshots/shot1.png">
-  <img src="https://endogen.github.io/OpenCryptoBot/assets/screenshots/shot2.png">
+  <img src="https://endogen.github.io/OpenCryptoBot/assets/screenshots/1.png">
+  <img src="https://endogen.github.io/OpenCryptoBot/assets/screenshots/2.png">
 </p>
 
 <p align="center">
-  <img src="https://endogen.github.io/OpenCryptoBot/assets/screenshots/shot3.png">
-  <img src="https://endogen.github.io/OpenCryptoBot/assets/screenshots/shot4.png">
+  <img src="https://endogen.github.io/OpenCryptoBot/assets/screenshots/3.png">
+  <img src="https://endogen.github.io/OpenCryptoBot/assets/screenshots/4.png">
 </p>
 
 ## Overview
