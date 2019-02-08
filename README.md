@@ -255,13 +255,15 @@ I am actively developing this bot and will do so also in the near future. If you
 
 ### Todo
 ##### Priority 1
-- [x] Add command `/history` that shows executed trades
+- [ ] Ban users if rate limit exceeded to often
+- [ ] Add alerts for price
 
 ##### Priority 2
-- [x] Optimize code to call Kraken API less often
+- [ ] Maintainance Mode
+- [ ] Provide all BPMN diagrams
 
 ##### Priority 3
-- [ ] Internationalisation
+- [ ] Periodic messages with stats for admins
 
 ## Disclaimer
 I use this bot personally to check the current state of some coins but since all the data is relying on external APIs, i can't guarantee that all informations are correct. Please use with caution. **I can't be held responsible for anything!**
