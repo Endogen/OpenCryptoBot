@@ -10,7 +10,7 @@ class Manual(OpenCryptoPlugin):
         return "man"
 
     def get_cmd_alt(self):
-        return list("manual")
+        return ["manual"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
