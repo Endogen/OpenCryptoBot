@@ -8,11 +8,10 @@ import opencryptobot.utils as utl
 
 from opencryptobot.api.github import GitHub
 from opencryptobot.api.apicache import APICache
-from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.config import ConfigManager as Cfg
 
 from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
-from telegram.ext import Updater, CommandHandler, InlineQueryHandler, RegexHandler
+from telegram.ext import Updater, InlineQueryHandler, RegexHandler
 from telegram.error import InvalidToken
 
 
@@ -105,30 +104,7 @@ class TelegramBot:
                 try:
                     module = importlib.import_module(module_path)
                     plugin_class = getattr(module, module_name.capitalize())
-                    instance = plugin_class(self)
-
-                    if isinstance(instance, OpenCryptoPlugin):
-                        cmd = instance.get_cmd()
-                        act = instance.get_action
-
-                        # Add regular command
-                        self.dispatcher.add_handler(
-                            CommandHandler(
-                                cmd,
-                                act,
-                                pass_args=True))
-
-                        # Add alternative commands
-                        for cmd_alt in instance.get_cmd_alt():
-                            self.dispatcher.add_handler(
-                                CommandHandler(
-                                    cmd_alt,
-                                    act,
-                                    pass_args=True))
-
-                        self.plugins.append(instance)
-                        logging.info(f"Plugin '{module_name}' added")
-
+                    plugin_class(self)
                 except Exception as ex:
                     msg = f"File '{file}' can't be loaded as a plugin: {ex}"
                     logging.warning(msg)

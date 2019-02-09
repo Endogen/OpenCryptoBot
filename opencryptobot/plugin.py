@@ -3,6 +3,7 @@ import logging
 import opencryptobot.emoji as emo
 
 from telegram import ChatAction
+from telegram.ext import CommandHandler
 from opencryptobot.config import ConfigManager as Cfg
 
 
@@ -10,6 +11,27 @@ class OpenCryptoPlugin:
 
     def __init__(self, telegram_bot):
         self.tgb = telegram_bot
+
+        cmd = self.get_cmd()
+        act = self.get_action
+
+        # Add regular command
+        self.tgb.dispatcher.add_handler(
+            CommandHandler(
+                cmd,
+                act,
+                pass_args=True))
+
+        # Add alternative commands
+        for cmd_alt in self.get_cmd_alt():
+            self.tgb.dispatcher.add_handler(
+                CommandHandler(
+                    cmd_alt,
+                    act,
+                    pass_args=True))
+
+        self.tgb.plugins.append(self)
+        logging.info(f"Plugin '{type(self).__name__}' added")
 
     @classmethod
     def send_typing(cls, func):
@@ -86,6 +108,16 @@ class OpenCryptoPlugin:
 
     def inline_mode(self):
         return False
+
+    def build_menu(cls, buttons, n_cols=1, header_buttons=None, footer_buttons=None):
+        menu = [buttons[i:i + n_cols] for i in range(0, len(buttons), n_cols)]
+
+        if header_buttons:
+            menu.insert(0, header_buttons)
+        if footer_buttons:
+            menu.append(footer_buttons)
+
+        return menu
 
 
 class Category:
