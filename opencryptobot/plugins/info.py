@@ -12,6 +12,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 class Info(OpenCryptoPlugin):
 
     LOGO_URL_PARTIAL = "https://www.cryptocompare.com"
+    TOKEN = "Token"
+    COIN = "Coin"
 
     coin_type = None
     based_on = None
@@ -61,29 +63,33 @@ class Info(OpenCryptoPlugin):
 
         type_thread.join()
 
-        type = str("-")
         if self.coin_type:
             type = f"{self.coin_type}"
+
             if self.based_on:
                 type += f" ({self.based_on})"
 
-                msg = f"`" \
-                      f"Name:         {name}\n" \
-                      f"Ticker:       {coin}\n" \
-                      f"Type:         {type}\n" \
-                      f"`"
-            else:
-                msg = f"`" \
-                      f"Name:         {name}\n" \
-                      f"Ticker:       {coin}\n" \
-                      f"Type:         {type}\n" \
-                      f"Algorithm:    {algo}\n" \
-                      f"Proof type:   {proof}\n" \
-                      f"Hashes (sec): {utl.format(int(h_per_s))}\n" \
-                      f"Block:        {block}\n" \
-                      f"Block time:   {block_time}\n" \
-                      f"Block reward: {block_reward}" \
-                      f"`"
+        else:
+            type = str("-")
+
+        if self.coin_type == self.TOKEN:
+            msg = f"`" \
+                  f"Name:         {name}\n" \
+                  f"Ticker:       {coin}\n" \
+                  f"Type:         {type}\n" \
+                  f"`"
+        else:
+            msg = f"`" \
+                  f"Name:         {name}\n" \
+                  f"Ticker:       {coin}\n" \
+                  f"Type:         {type}\n" \
+                  f"Algorithm:    {algo}\n" \
+                  f"Proof type:   {proof}\n" \
+                  f"Hashes (sec): {utl.format(int(h_per_s))}\n" \
+                  f"Block:        {block}\n" \
+                  f"Block time:   {block_time}\n" \
+                  f"Block reward: {block_reward}" \
+                  f"`"
 
         update.message.reply_photo(
             photo=image,
@@ -104,11 +110,11 @@ class Info(OpenCryptoPlugin):
         if res:
             if res["type"]:
                 if res["type"] == "coin":
-                    self.coin_type = "Coin"
+                    self.coin_type = self.COIN
                     self.based_on = None
                 elif res["type"] == "none":
-                    self.coin_type = "Token"
+                    self.coin_type = self.TOKEN
                     self.based_on = None
                 else:
-                    self.coin_type = "Token"
+                    self.coin_type = self.TOKEN
                     self.based_on = res["type"].capitalize()
