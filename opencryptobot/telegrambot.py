@@ -34,7 +34,9 @@ class TelegramBot:
 
         try:
             self.updater = Updater(bot_token, request_kwargs=kwargs)
-        except InvalidToken:
+        except InvalidToken as e:
+            cls_name = f"Class: {type(self).__name__}"
+            logging.error(f"{repr(e)} - {cls_name}")
             exit("ERROR: Bot token not valid")
 
         self.job_queue = self.updater.job_queue

@@ -1,4 +1,5 @@
 import os
+import json
 import logging
 import opencryptobot.emoji as emo
 import opencryptobot.constants as con
@@ -19,13 +20,17 @@ class News(OpenCryptoPlugin):
     def __init__(self, telegram_bot):
         super().__init__(telegram_bot)
 
-        token_path = os.path.join(con.CFG_DIR, con.CRYPAN_TKN_FILE)
+        token_path = os.path.join(con.CFG_DIR, con.TKN_FILE)
 
-        if os.path.isfile(token_path):
-            with open(token_path, 'r') as file:
-                self._token = file.read()
-        else:
-            logging.error(f"No token file found at '{token_path}'")
+        try:
+            if os.path.isfile(token_path):
+                with open(token_path, 'r') as file:
+                    self._token = json.load(file)["cryptopanic"]
+            else:
+                logging.error(f"No token file '{con.TKN_FILE}' found at '{token_path}'")
+        except KeyError as e:
+            cls_name = f"Class: {type(self).__name__}"
+            logging.error(f"{repr(e)} - {cls_name}")
 
     def get_cmd(self):
         return "n"

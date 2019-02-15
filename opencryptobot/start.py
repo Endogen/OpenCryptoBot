@@ -1,4 +1,5 @@
 import os
+import json
 import logging
 import opencryptobot.constants as con
 
@@ -165,13 +166,18 @@ class OpenCryptoBot:
         if self.args.token:
             return self.args.token
 
-        token_path = os.path.join(con.CFG_DIR, con.BOT_TKN_FILE)
+        token_path = os.path.join(con.CFG_DIR, con.TKN_FILE)
 
-        if os.path.isfile(token_path):
-            with open(token_path, 'r') as file:
-                return file.read().splitlines()[0]
-        else:
-            exit(f"ERROR: No token file found at '{token_path}'")
+        try:
+            if os.path.isfile(token_path):
+                with open(token_path, 'r') as file:
+                    return json.load(file)["telegram"]
+            else:
+                exit(f"ERROR: No token file '{con.TKN_FILE}' found at '{token_path}'")
+        except KeyError as e:
+            cls_name = f"Class: {type(self).__name__}"
+            logging.error(f"{repr(e)} - {cls_name}")
+            exit("ERROR: Can't read bot token")
 
     def start(self):
         if self.args.webhook:

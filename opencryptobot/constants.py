@@ -5,8 +5,7 @@ CMC_LOGO_URL_PARTIAL = "https://s2.coinmarketcap.com/static/img/coins/128x128/"
 
 CFG_DIR = "conf"
 CFG_FILE = "config.json"
-BOT_TKN_FILE = "bot.token"
-CRYPAN_TKN_FILE = "cryptopanic.token"
+TKN_FILE = "token.json"
 
 LOG_DIR = "log"
 LOG_FILE = "opencryptobot.log"
