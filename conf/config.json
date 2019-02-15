@@ -13,7 +13,10 @@
         "cert_path": "/path/to/cert.pem",
         "url": "https://somedomain.com"
     },
-    "use_db": true,
+    "database": {
+        "use_db": true,
+        "track_admins": false
+    },
     "rate_limit": {
         "enabled": true,
         "requests": 5,
