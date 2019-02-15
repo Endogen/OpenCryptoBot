@@ -24,13 +24,10 @@ class OpenCryptoBot:
         log_level = self.args.loglevel
         self._init_logger(log_path, log_level)
 
-        if Cfg.get("database", "use_db"):
-            # Create database
-            sql_dir = con.SQL_DIR
-            db_path = self.args.database
-            self.db = Database(db_path, sql_dir)
-        else:
-            self.db = None
+        # Create database
+        sql_dir = con.SQL_DIR
+        db_path = self.args.database
+        self.db = Database(db_path, sql_dir)
 
         # Create bot
         bot_token = self._get_bot_token()
