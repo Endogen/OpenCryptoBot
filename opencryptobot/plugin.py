@@ -7,9 +7,37 @@ from telegram.ext import CommandHandler
 from opencryptobot.config import ConfigManager as Cfg
 
 
-class OpenCryptoPlugin:
+class PluginInterface:
+
+    def get_cmd(self):
+        method = inspect.currentframe().f_code.co_name
+        raise NotImplementedError(f"Interface method '{method}' not implemented")
+
+    def get_cmd_alt(self):
+        return list()
+
+    def get_action(self, bot, update, args):
+        method = inspect.currentframe().f_code.co_name
+        raise NotImplementedError(f"Interface method '{method}' not implemented")
+
+    def get_usage(self):
+        return None
+
+    def get_description(self):
+        return None
+
+    def get_category(self):
+        return None
+
+    def inline_mode(self):
+        return False
+
+
+class OpenCryptoPlugin(PluginInterface):
 
     def __init__(self, telegram_bot):
+        super().__init__()
+
         self.tgb = telegram_bot
 
         cmd = self.get_cmd()
@@ -92,29 +120,6 @@ class OpenCryptoPlugin:
             update.message.reply_text(msg)
 
         raise exception
-
-    def get_cmd(self):
-        method = inspect.currentframe().f_code.co_name
-        raise NotImplementedError(f"Interface method '{method}' not implemented")
-
-    def get_cmd_alt(self):
-        return list()
-
-    def get_action(self, bot, update, args):
-        method = inspect.currentframe().f_code.co_name
-        raise NotImplementedError(f"Interface method '{method}' not implemented")
-
-    def get_usage(self):
-        return None
-
-    def get_description(self):
-        return None
-
-    def get_category(self):
-        return None
-
-    def inline_mode(self):
-        return False
 
     def build_menu(cls, buttons, n_cols=1, header_buttons=None, footer_buttons=None):
         menu = [buttons[i:i + n_cols] for i in range(0, len(buttons), n_cols)]
