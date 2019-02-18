@@ -54,7 +54,7 @@ class TelegramBot:
         # Handle all Telegram related errors
         self.dispatcher.add_error_handler(self._handle_tg_errors)
 
-        # Refresh cache periodically if enabled
+        # Refresh cache periodically
         self._refresh_cache()
 
         # Check for updates periodically
