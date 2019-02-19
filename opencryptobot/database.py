@@ -103,3 +103,15 @@ class Database:
 
         con.commit()
         con.close()
+
+    def execute(self, sql, *args):
+        con = sqlite3.connect(self._db_path)
+        cur = con.cursor()
+
+        cur.execute(sql, args)
+        con.commit()
+
+        result = cur.fetchall()
+
+        con.close()
+        return result
