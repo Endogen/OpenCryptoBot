@@ -1,6 +1,8 @@
 import os
 import sqlite3
 
+from opencryptobot.config import ConfigManager as Cfg
+
 
 class Database:
 
@@ -105,13 +107,14 @@ class Database:
         con.close()
 
     def execute(self, sql, *args):
-        con = sqlite3.connect(self._db_path)
-        cur = con.cursor()
+        if Cfg.get("database", "use_db"):
+            con = sqlite3.connect(self._db_path)
+            cur = con.cursor()
 
-        cur.execute(sql, args)
-        con.commit()
+            cur.execute(sql, args)
+            con.commit()
 
-        result = cur.fetchall()
+            result = cur.fetchall()
 
-        con.close()
-        return result
+            con.close()
+            return result
