@@ -1,6 +1,7 @@
 import opencryptobot.utils as utl
 
 from opencryptobot.plugin import OpenCryptoPlugin
+from opencryptobot.config import ConfigManager as Cfg
 from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackQueryHandler
 
@@ -21,17 +22,58 @@ class Admin(OpenCryptoPlugin):
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         if args:
-            if args[0].lower() == "sql":
+            command = args[0].lower()
+
+            # Execute SQL statements
+            if command == "sql":
                 args.pop(0)
                 sql = " ".join(args)
 
                 update.message.reply_text(repr(self.tgb.db.execute(sql)))
+
+            # Change configuration
+            elif command == "cfg":
+                args.pop(0)
+                v = args[-1]
+                args.pop(-1)
+
+                try:
+                    Cfg.set(v, *args)
+                except Exception as e:
+                    self.handle_error(e, update)
+
+            # Send global message
+            elif command == "msg":
+                args.pop(0)
+
+                sql = "SELECT user_id FROM users"
+                data = self.tgb.db.execute(sql)
+
+                title = "This is a global message to " \
+                        "every user of OpenCryptoBot:\n\n"
+
+                msg = " ".join(args)
+
+                if args:
+                    for user_id in data:
+                        try:
+                            bot.send_message(
+                                chat_id=user_id[0],
+                                text=f"{title}{msg}")
+                        except Exception as e:
+                            self.handle_error(e, update, send_error=False)
+
+            # Manage plugins
+            elif command == "plg":
+                # start, stop, restart
+                pass
+
         else:
             usr = update.effective_user.first_name
 
             update.message.reply_text(
-                text=f"Welcome {usr}.\nChoose an option",
-                reply_markup=self._keyboard_options())
+                text=f"Welcome {usr}.\nChoose a statistic",
+                reply_markup=self._keyboard_stats())
 
     def get_usage(self):
         return None
@@ -42,25 +84,12 @@ class Admin(OpenCryptoPlugin):
     def get_category(self):
         return None
 
-    def _change_cfg(self, key, value):
-        pass
-
-    def _keyboard_options(self):
-        buttons = [
-            InlineKeyboardButton("Statistics", callback_data="admin_stats"),
-            InlineKeyboardButton("Global Message", callback_data="admin_msg"),
-            InlineKeyboardButton("Manage Plugins", callback_data="admin_plugins")]
-
-        menu = self.build_menu(buttons)
-        return InlineKeyboardMarkup(menu, resize_keyboard=True)
-
     def _keyboard_stats(self):
         buttons = [
-            InlineKeyboardButton("Number of Commands", callback_data="admin_stats_cmds"),
-            InlineKeyboardButton("Number of Users", callback_data="admin_stats_usrs"),
-            InlineKeyboardButton("Command Toplist", callback_data="admin_stats_cmdtop"),
-            InlineKeyboardButton("Language Toplist", callback_data="admin_stats_langtop"),
-            InlineKeyboardButton("<< BACK", callback_data="admin_back")]
+            InlineKeyboardButton("Number of Commands", callback_data="admin_cmds"),
+            InlineKeyboardButton("Number of Users", callback_data="admin_usrs"),
+            InlineKeyboardButton("Command Toplist", callback_data="admin_cmdtop"),
+            InlineKeyboardButton("Language Toplist", callback_data="admin_langtop")]
 
         menu = self.build_menu(buttons)
         return InlineKeyboardMarkup(menu, resize_keyboard=True)
@@ -68,26 +97,8 @@ class Admin(OpenCryptoPlugin):
     def _callback(self, bot, update):
         query = update.callback_query
 
-        # Statistics
-        if query.data == "admin_stats":
-            bot.edit_message_text(
-                text=f"Choose from available statistics",
-                chat_id=query.message.chat_id,
-                message_id=query.message.message_id,
-                reply_markup=self._keyboard_stats())
-
-        # Statistics - << BACK
-        elif query.data == "admin_back":
-            usr = update.effective_user.first_name
-
-            bot.edit_message_text(
-                text=f"Welcome {usr}.\nChoose an option",
-                chat_id=query.message.chat_id,
-                message_id=query.message.message_id,
-                reply_markup=self._keyboard_options())
-
         # Statistics - Number of Commands
-        elif query.data == "admin_stats_cmds":
+        if query.data == "admin_cmds":
             sql = "SELECT COUNT(command) FROM cmd_data"
             data = self.tgb.db.execute(sql)
             bot.send_message(
@@ -96,7 +107,7 @@ class Admin(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
 
         # Statistics - Number of Users
-        elif query.data == "admin_stats_usrs":
+        elif query.data == "admin_usrs":
             sql = "SELECT COUNT(user_id) FROM users"
             data = self.tgb.db.execute(sql)
             bot.send_message(
@@ -105,7 +116,7 @@ class Admin(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
 
         # Statistics - Command Toplist
-        elif query.data == "admin_stats_cmdtop":
+        elif query.data == "admin_cmdtop":
             sql = "SELECT command, COUNT(command) AS number " \
                   "FROM cmd_data " \
                   "GROUP BY command " \
@@ -123,7 +134,7 @@ class Admin(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
 
         # Statistics - Language Toplist
-        elif query.data == "admin_stats_langtop":
+        elif query.data == "admin_langtop":
             sql = "SELECT language, COUNT(language) AS lang " \
                   "FROM users " \
                   "GROUP BY language " \
