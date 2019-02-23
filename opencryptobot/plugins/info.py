@@ -44,7 +44,7 @@ class Info(OpenCryptoPlugin):
 
             coin_info = CryptoCompare().get_coin_general_info(coin, "USD")
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         if coin_info["Message"] != "Success" or not coin_info["Data"]:
             update.message.reply_text(

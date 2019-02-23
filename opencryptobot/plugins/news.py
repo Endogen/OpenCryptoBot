@@ -54,7 +54,7 @@ class News(OpenCryptoPlugin):
             try:
                 data = CryptoPanic(token=self._token).get_posts()
             except Exception as e:
-                self.handle_error(e, update)
+                return self.handle_error(e, update)
 
             msg = f"<b>Current news</b>\n\n"
         else:
@@ -95,7 +95,7 @@ class News(OpenCryptoPlugin):
                     data = CryptoPanic(token=self._token).get_filtered_news(filter)
                     msg = f"<b>News for filter '{filter}</b>'\n\n"
             except Exception as e:
-                self.handle_error(e, update)
+                return self.handle_error(e, update)
 
         if not data or not data["results"]:
             update.message.reply_text(

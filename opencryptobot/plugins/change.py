@@ -42,7 +42,7 @@ class Change(OpenCryptoPlugin):
         try:
             response = APICache.get_cg_coins_list()
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         # Get coin ID and data
         for entry in response:
@@ -50,7 +50,7 @@ class Change(OpenCryptoPlugin):
                 try:
                     data = CoinGecko().get_coin_by_id(entry["id"])
                 except Exception as e:
-                    self.handle_error(e, update)
+                    return self.handle_error(e, update)
                 break
 
         if not data:

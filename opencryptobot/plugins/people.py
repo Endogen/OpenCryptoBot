@@ -38,7 +38,7 @@ class People(OpenCryptoPlugin):
         try:
             d = CoinPaprika().get_people_by_id(name)
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         if "description" in d and d["description"]:
             msg = f"`{d['description']}`\n\n"

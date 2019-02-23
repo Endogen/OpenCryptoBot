@@ -46,7 +46,7 @@ class Whitepaper(OpenCryptoPlugin):
             if not link and search == "all":
                 link = self._from_coinpaprika(coin)
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         if link:
             try:

@@ -119,8 +119,6 @@ class OpenCryptoPlugin(PluginInterface):
             msg = f"{emo.ERROR} {exception}"
             update.message.reply_text(msg)
 
-        raise exception
-
     def build_menu(cls, buttons, n_cols=1, header_buttons=None, footer_buttons=None):
         menu = [buttons[i:i + n_cols] for i in range(0, len(buttons), n_cols)]
 

@@ -45,7 +45,7 @@ class Price(OpenCryptoPlugin):
         try:
             response = APICache.get_cg_coins_list()
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         coin_id = str()
         for entry in response:
@@ -63,7 +63,7 @@ class Price(OpenCryptoPlugin):
             try:
                 result = cg.get_coin_by_id(coin_id)
             except Exception as e:
-                self.handle_error(e, update)
+                return self.handle_error(e, update)
 
             if result:
                 vs_list = list()
@@ -93,7 +93,7 @@ class Price(OpenCryptoPlugin):
             try:
                 result = cg.get_simple_price(coin_id, vs_cur)
             except Exception as e:
-                self.handle_error(e, update)
+                return self.handle_error(e, update)
 
             if result:
                 for symbol, price in next(iter(result.values())).items():

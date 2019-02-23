@@ -44,7 +44,7 @@ class Global(OpenCryptoPlugin):
         try:
             res = CoinGecko().get_global()
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         # ---------- Total Market Capital ----------
 
@@ -104,7 +104,7 @@ class Global(OpenCryptoPlugin):
                 trace = go.Pie(labels=labels, values=values)
                 fig = go.Figure(data=[trace], layout=layout)
             except Exception as e:
-                self.handle_error(e, update)
+                return self.handle_error(e, update)
 
             update.message.reply_photo(
                 photo=io.BufferedReader(BytesIO(pio.to_image(fig, format="jpeg"))),

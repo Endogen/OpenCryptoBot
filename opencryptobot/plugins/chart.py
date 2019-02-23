@@ -80,7 +80,7 @@ class Chart(OpenCryptoPlugin):
                 base_coin.lower(),
                 time_frame)
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         # Volume
         df_volume = DataFrame(market["total_volumes"], columns=["DateTime", "Volume"])
@@ -191,7 +191,7 @@ class Chart(OpenCryptoPlugin):
         try:
             fig = go.Figure(data=[price, volume], layout=layout)
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         fig["layout"]["yaxis2"].update(tickformat=tickformat)
 
@@ -214,7 +214,7 @@ class Chart(OpenCryptoPlugin):
                 if entry["symbol"].lower() == coin.lower():
                     self.cg_coin_id = entry["id"]
                     break
-        except Exception:
+        except:
             self.cg_coin_id = None
 
     def _get_cmc_coin_id(self, coin):

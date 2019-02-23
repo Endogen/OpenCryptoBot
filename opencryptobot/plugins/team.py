@@ -40,14 +40,14 @@ class Team(OpenCryptoPlugin):
         try:
             response = APICache.get_cp_coin_list()
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         for c in response:
             if c["symbol"] == coin:
                 try:
                     cp_coin_detail = CoinPaprika().get_coin_by_id(c["id"])["team"]
                 except Exception as e:
-                    self.handle_error(e, update)
+                    return self.handle_error(e, update)
 
                 for p in cp_coin_detail:
                     details = utl.esc_md(f"/_people__{p['id'].replace('-', '_')}")

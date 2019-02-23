@@ -104,7 +104,7 @@ class Candlestick(OpenCryptoPlugin):
                     base_coin,
                     time_frame)
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         if ohlcv["Response"] == "Error":
             if ohlcv["Message"] == "limit is larger than max value.":
@@ -149,7 +149,7 @@ class Candlestick(OpenCryptoPlugin):
             try:
                 cp_ohlc = APICache.get_cp_coin_list()
             except Exception as e:
-                self.handle_error(e, update)
+                return self.handle_error(e, update)
 
             for c in cp_ohlc:
                 if c["symbol"] == coin:
@@ -168,7 +168,7 @@ class Candlestick(OpenCryptoPlugin):
                             quote=base_coin.lower(),
                             limit=366)
                     except Exception as e:
-                        self.handle_error(e, update)
+                        return self.handle_error(e, update)
 
                     cp_api = True
                     break
@@ -205,7 +205,7 @@ class Candlestick(OpenCryptoPlugin):
         try:
             fig = fif.create_candlestick(o, h, l, c, pd.to_datetime(t, unit='s'))
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         fig['layout']['yaxis'].update(
             tickformat=tickformat,

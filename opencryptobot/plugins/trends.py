@@ -68,7 +68,7 @@ class Trends(OpenCryptoPlugin):
 
             data = pytrends.interest_over_time()
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         some_data = None
         tr_data = list()
@@ -96,7 +96,7 @@ class Trends(OpenCryptoPlugin):
         try:
             fig = go.Figure(data=tr_data, layout=layout)
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         update.message.reply_photo(
             photo=io.BufferedReader(BytesIO(pio.to_image(fig, format="jpeg"))),

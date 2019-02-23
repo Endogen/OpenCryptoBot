@@ -39,14 +39,14 @@ class Social(OpenCryptoPlugin):
         try:
             response = APICache.get_cg_coins_list()
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         for entry in response:
             if entry["symbol"].lower() == coin.lower():
                 try:
                     data = CoinGecko().get_coin_by_id(entry["id"])
                 except Exception as e:
-                    self.handle_error(e, update)
+                    return self.handle_error(e, update)
 
                 home_lst = list(filter(None, data["links"]["homepage"]))
                 block_lst = list(filter(None, data["links"]["blockchain_site"]))

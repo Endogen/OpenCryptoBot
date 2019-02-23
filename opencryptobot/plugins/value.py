@@ -50,7 +50,7 @@ class Value(OpenCryptoPlugin):
         try:
             response = APICache.get_cg_coins_list()
         except Exception as e:
-            self.handle_error(e, update)
+            return self.handle_error(e, update)
 
         # Get coin ID
         for entry in response:
@@ -58,7 +58,7 @@ class Value(OpenCryptoPlugin):
                 try:
                     data = CoinGecko().get_coin_by_id(entry["id"])
                 except Exception as e:
-                    self.handle_error(e, update)
+                    return self.handle_error(e, update)
 
                 prices = data["market_data"]["current_price"]
                 break
