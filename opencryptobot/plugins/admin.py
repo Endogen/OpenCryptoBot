@@ -1,3 +1,5 @@
+import opencryptobot.utils as utl
+
 from opencryptobot.plugin import OpenCryptoPlugin
 from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackQueryHandler
@@ -47,10 +49,10 @@ class Admin(OpenCryptoPlugin):
 
     def _keyboard_stats(self):
         buttons = [
-            InlineKeyboardButton("Commands count", callback_data="admin_stats_cmds"),
-            InlineKeyboardButton("User count", callback_data="admin_stats_usrs"),
-            InlineKeyboardButton("Commands Today", callback_data="admin_stats_cmdstd"),
-            InlineKeyboardButton("New Users Today", callback_data="admin_stats_newusrs"),
+            InlineKeyboardButton("Number of Commands", callback_data="admin_stats_cmds"),
+            InlineKeyboardButton("Number of Users", callback_data="admin_stats_usrs"),
+            InlineKeyboardButton("Command Toplist", callback_data="admin_stats_cmdtop"),
+            InlineKeyboardButton("Language Toplist", callback_data="admin_stats_langtop"),
             InlineKeyboardButton("<< BACK", callback_data="admin_back")]
 
         menu = self.build_menu(buttons)
@@ -60,6 +62,7 @@ class Admin(OpenCryptoPlugin):
         usr = update.effective_user.first_name
         query = update.callback_query
 
+        # Statistics
         if query.data == "admin_stats":
             bot.edit_message_text(
                 text=f"Choose from available statistics",
@@ -67,23 +70,64 @@ class Admin(OpenCryptoPlugin):
                 message_id=query.message.message_id,
                 reply_markup=self._keyboard_stats())
 
+        # Statistics - << BACK
         elif query.data == "admin_back":
             bot.edit_message_text(
-                text=f"Welcome {usr}. Choose an option",
+                text=f"Welcome {usr}.\nChoose an option",
                 chat_id=query.message.chat_id,
                 message_id=query.message.message_id,
                 reply_markup=self._keyboard_options())
 
+        # Statistics - Number of Commands
         elif query.data == "admin_stats_cmds":
             sql = "SELECT COUNT(command) FROM cmd_data"
             data = self.tgb.db.execute(sql)
             bot.send_message(
                 chat_id=update.effective_user.id,
-                text=f"Commands: {data[0][0]}")
+                text=f"`Commands: {data[0][0]}`",
+                parse_mode=ParseMode.MARKDOWN)
 
+        # Statistics - Number of Users
         elif query.data == "admin_stats_usrs":
             sql = "SELECT COUNT(user_id) FROM users"
             data = self.tgb.db.execute(sql)
             bot.send_message(
                 chat_id=update.effective_user.id,
-                text=f"Users: {data[0][0]}")
+                text=f"`Users: {data[0][0]}`",
+                parse_mode=ParseMode.MARKDOWN)
+
+        # Statistics - Command Toplist
+        elif query.data == "admin_stats_cmdtop":
+            sql = "SELECT command, COUNT(command) AS number " \
+                  "FROM cmd_data " \
+                  "GROUP BY command " \
+                  "ORDER BY 2 DESC " \
+                  "LIMIT 10"
+            data = self.tgb.db.execute(sql)
+
+            msg = str()
+            for row in data:
+                msg += utl.esc_md(f"{row[1]} {row[0]}\n")
+
+            bot.send_message(
+                chat_id=update.effective_user.id,
+                text=f"`Command Toplist:\n\n{msg}`",
+                parse_mode=ParseMode.MARKDOWN)
+
+        # Statistics - Language Toplist
+        elif query.data == "admin_stats_langtop":
+            sql = "SELECT language, COUNT(language) AS lang " \
+                  "FROM users " \
+                  "GROUP BY language " \
+                  "ORDER BY 2 DESC " \
+                  "LIMIT 10"
+            data = self.tgb.db.execute(sql)
+
+            msg = str()
+            for row in data:
+                msg += utl.esc_md(f"{row[1]} {row[0]}\n")
+
+            bot.send_message(
+                chat_id=update.effective_user.id,
+                text=f"`Language Toplist:\n\n{msg}`",
+                parse_mode=ParseMode.MARKDOWN)
