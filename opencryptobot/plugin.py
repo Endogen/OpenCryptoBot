@@ -111,12 +111,12 @@ class OpenCryptoPlugin(PluginInterface):
             return func(self, bot, update, **kwargs)
         return _save_data
 
-    def handle_error(self, exception, update):
+    def handle_error(self, error, update, send_error=True):
         cls_name = f"Class: {type(self).__name__}"
-        logging.error(f"{repr(exception)} - {cls_name} - {update}")
+        logging.error(f"{repr(error)} - {error} - {cls_name} - {update}")
 
-        if update and update.message:
-            msg = f"{emo.ERROR} {exception}"
+        if send_error and update and update.message:
+            msg = f"{emo.ERROR} {error}"
             update.message.reply_text(msg)
 
     def build_menu(cls, buttons, n_cols=1, header_buttons=None, footer_buttons=None):
