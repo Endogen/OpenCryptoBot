@@ -20,11 +20,18 @@ class Admin(OpenCryptoPlugin):
     @OpenCryptoPlugin.only_owner
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
-        usr = update.effective_user.first_name
+        if args:
+            if args[0].lower() == "sql":
+                args.pop(0)
+                sql = " ".join(args)
 
-        update.message.reply_text(
-            text=f"Welcome {usr}.\nChoose an option",
-            reply_markup=self._keyboard_options())
+                update.message.reply_text(repr(self.tgb.db.execute(sql)))
+        else:
+            usr = update.effective_user.first_name
+
+            update.message.reply_text(
+                text=f"Welcome {usr}.\nChoose an option",
+                reply_markup=self._keyboard_options())
 
     def get_usage(self):
         return None
