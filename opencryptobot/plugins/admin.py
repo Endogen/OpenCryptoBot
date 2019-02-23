@@ -66,7 +66,6 @@ class Admin(OpenCryptoPlugin):
         return InlineKeyboardMarkup(menu, resize_keyboard=True)
 
     def _callback(self, bot, update):
-        usr = update.effective_user.first_name
         query = update.callback_query
 
         # Statistics
@@ -79,6 +78,8 @@ class Admin(OpenCryptoPlugin):
 
         # Statistics - << BACK
         elif query.data == "admin_back":
+            usr = update.effective_user.first_name
+
             bot.edit_message_text(
                 text=f"Welcome {usr}.\nChoose an option",
                 chat_id=query.message.chat_id,
