@@ -151,9 +151,8 @@ class TelegramBot:
 
     # Handle all telegram and telegram.ext related errors
     def _handle_tg_errors(self, bot, update, error):
-        logging.error(error)
-        logging.debug(f"'bot' = {bot}")
-        logging.debug(f"'update' = {update}")
+        cls_name = f"Class: {type(self).__name__}"
+        logging.error(f"{error} - {cls_name} - {update}")
 
         if not update:
             return
