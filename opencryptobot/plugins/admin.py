@@ -125,7 +125,7 @@ class Admin(OpenCryptoPlugin):
 
             msg = str()
             for row in data:
-                msg += utl.esc_md(f"{row[1]} {row[0]}\n")
+                msg += f"{row[1]} {row[0]}\n"
 
             bot.send_message(
                 chat_id=update.effective_user.id,
