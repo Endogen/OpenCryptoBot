@@ -49,7 +49,7 @@ class Roi(OpenCryptoPlugin):
         # that there was no ICO and thus no ROI available
         if roi_usd_x == roi_btc_x == roi_eth_x:
             update.message.reply_text(
-                text=f"{emo.ERROR} No ROI data for {coin}",
+                text=f"{emo.INFO} No ROI data for {coin}",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
