@@ -48,9 +48,11 @@ class Price(OpenCryptoPlugin):
             return self.handle_error(e, update)
 
         coin_id = str()
+        coin_name = str()
         for entry in response:
             if entry["symbol"].upper() == coin:
                 coin_id = entry["id"]
+                coin_name = entry["name"]
                 break
 
         if RateLimit.limit_reached(update):
@@ -73,7 +75,11 @@ class Price(OpenCryptoPlugin):
 
                 for ticker in result["tickers"]:
                     if ticker["market"]["name"].upper() == exchange.upper():
-                        base_coin = ticker["target"]
+                        if ticker["base"] != coin:
+                            base_coin = ticker["base"]
+                        else:
+                            base_coin = ticker["target"]
+
                         if vs_list:
                             if base_coin in vs_list:
                                 price = utl.format(ticker["last"], force_length=True)
@@ -109,9 +115,9 @@ class Price(OpenCryptoPlugin):
 
         if msg:
             if exchange:
-                msg = f"`Price of {coin} on {exchange.capitalize()}`\n\n" + msg
+                msg = f"`{coin} ({coin_name}) on {exchange.capitalize()}`\n\n" + msg
             else:
-                msg = f"`Price of {coin}`\n\n" + msg
+                msg = f"`{coin} ({coin_name})`\n\n" + msg
         else:
             msg = f"{emo.ERROR} Can't retrieve data for *{coin}*"
 
@@ -127,8 +133,9 @@ class Price(OpenCryptoPlugin):
 
         return f"`" \
                f"/{self.get_cmd()} <symbol>\n\n" \
+               f"/{self.get_cmd()} <symbol> <exchange>\n\n" \
                f"/{self.get_cmd()} <target symbol>-<symbol>\n\n" \
-               f"{bot_name} /{self.get_cmd()} <symbol>.\n\n" \
+            f"{bot_name} /{self.get_cmd()} <symbol>.\n\n" \
                f"{bot_name} /{self.get_cmd()} <target symbol>-<symbol>." \
                f"`"
 
