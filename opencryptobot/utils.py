@@ -211,3 +211,7 @@ def esc_md(text):
 def comp(pattern):
     import re
     return re.compile(pattern, re.IGNORECASE)
+
+
+def str2bool(v):
+    return v.lower() in ("yes", "true", "t", "1")

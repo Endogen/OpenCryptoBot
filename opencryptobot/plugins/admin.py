@@ -35,7 +35,20 @@ class Admin(OpenCryptoPlugin):
             elif command == "cfg":
                 args.pop(0)
                 v = args[-1]
+                v = v.lower()
                 args.pop(-1)
+
+                # Convert to boolean
+                if v == "true" or v == "false":
+                    v = utl.str2bool(v)
+
+                # Convert to integer
+                elif v.isnumeric():
+                    v = int(v)
+
+                # Convert to null
+                elif v == "null" or v == "none":
+                    v = None
 
                 try:
                     Cfg.set(v, *args)
