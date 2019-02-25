@@ -6,6 +6,7 @@ import opencryptobot.emoji as emo
 import opencryptobot.constants as con
 import opencryptobot.utils as utl
 
+from importlib import reload
 from opencryptobot.api.github import GitHub
 from opencryptobot.api.apicache import APICache
 from opencryptobot.config import ConfigManager as Cfg
@@ -100,16 +101,34 @@ class TelegramBot:
                 if file.startswith("_"):
                     continue
 
-                module_name = file[:-3]
-                module_path = f"opencryptobot.plugins.{module_name}"
-
                 try:
+                    module_name = file[:-3]
+                    module_path = f"opencryptobot.plugins.{module_name}"
                     module = importlib.import_module(module_path)
+
                     plugin_class = getattr(module, module_name.capitalize())
                     plugin_class(self)
                 except Exception as ex:
                     msg = f"File '{file}' can't be loaded as a plugin: {ex}"
                     logging.warning(msg)
+
+    def reload_plugin(self, module_name):
+        for plugin in self.plugins:
+            if type(plugin).__name__.lower() == module_name.lower():
+                plugin.remove_plugin()
+                break
+
+        try:
+            module_path = f"opencryptobot.plugins.{module_name}"
+            module = importlib.import_module(module_path)
+
+            reload(module)
+
+            plugin_class = getattr(module, module_name.capitalize())
+            plugin_class(self)
+        except Exception as ex:
+            msg = f"Plugin '{module_name.capitalize()}' can't be reloaded: {ex}"
+            logging.warning(msg)
 
     def _inline(self, bot, update):
         query = update.inline_query.query

@@ -9,11 +9,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Exchanges(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "ex"
-
-    def get_cmd_alt(self):
-        return ["exchange"]
+    def get_cmds(self):
+        return ["ex", "exchange"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -110,7 +107,7 @@ class Exchanges(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <exchange> | top=<# of exchanges>`"
+        return f"`/{self.get_cmds()[0]} <exchange> | top=<# of exchanges>`"
 
     def get_description(self):
         return "Exchange details and toplist"

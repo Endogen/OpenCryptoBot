@@ -22,11 +22,8 @@ class Candlestick(OpenCryptoPlugin):
 
     cmc_coin_id = None
 
-    def get_cmd(self):
-        return "cs"
-
-    def get_cmd_alt(self):
-        return ["candle", "candlestick"]
+    def get_cmds(self):
+        return ["cs", "candle", "candlestick"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -276,7 +273,7 @@ class Candlestick(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} (<target symbol>-)<symbol> (<timeframe>m|h|d)`"
+        return f"`/{self.get_cmds()[0]} (<target symbol>-)<symbol> (<timeframe>m|h|d)`"
 
     def get_description(self):
         return "Candlestick chart for coin"

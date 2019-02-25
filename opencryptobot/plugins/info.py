@@ -18,11 +18,8 @@ class Info(OpenCryptoPlugin):
     coin_type = None
     based_on = None
 
-    def get_cmd(self):
-        return "i"
-
-    def get_cmd_alt(self):
-        return ["info"]
+    def get_cmds(self):
+        return ["i", "info"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -97,7 +94,7 @@ class Info(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <symbol>`"
+        return f"`/{self.get_cmds()[0]} <symbol>`"
 
     def get_description(self):
         return "General coin information"

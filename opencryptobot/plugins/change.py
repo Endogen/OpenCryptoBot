@@ -10,11 +10,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Change(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "ch"
-
-    def get_cmd_alt(self):
-        return ["change"]
+    def get_cmds(self):
+        return ["ch", "change"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -110,7 +107,7 @@ class Change(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} (<target currency>-)<symbol>`"
+        return f"`/{self.get_cmds()[0]} (<target currency>-)<symbol>`"
 
     def get_description(self):
         return "Price change over time"

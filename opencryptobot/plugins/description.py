@@ -10,11 +10,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Description(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "des"
-
-    def get_cmd_alt(self):
-        return ["description"]
+    def get_cmds(self):
+        return ["des", "description"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -63,7 +60,7 @@ class Description(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <symbol>`"
+        return f"`/{self.get_cmds()[0]} <symbol>`"
 
     def get_description(self):
         return "Coin description"

@@ -10,11 +10,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Value(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "v"
-
-    def get_cmd_alt(self):
-        return ["value"]
+    def get_cmds(self):
+        return ["v", "value"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -88,7 +85,7 @@ class Value(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} (<target symbol>,[...]-)<symbol> <quantity>`"
+        return f"`/{self.get_cmds()[0]} (<target symbol>,[...]-)<symbol> <quantity>`"
 
     def get_description(self):
         return "Value of coin quantity"

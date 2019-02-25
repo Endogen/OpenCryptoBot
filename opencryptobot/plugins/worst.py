@@ -11,8 +11,8 @@ class Worst(OpenCryptoPlugin):
 
     DESC_LEN = 25
 
-    def get_cmd(self):
-        return "worst"
+    def get_cmds(self):
+        return ["worst"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -110,7 +110,7 @@ class Worst(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} hour|day (<# of entries> <min. volume>)`"
+        return f"`/{self.get_cmds()[0]} hour|day (<# of entries> <min. volume>)`"
 
     def get_description(self):
         return "Worst movers for hour or day"

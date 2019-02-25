@@ -3,14 +3,13 @@ import opencryptobot.emoji as emo
 import opencryptobot.constants as con
 
 from telegram import ParseMode
-from opencryptobot.telegrambot import TelegramBot
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 class Bpmn(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "bpmn"
+    def get_cmds(self):
+        return ["bpmn"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -47,7 +46,7 @@ class Bpmn(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <command>`"
+        return f"`/{self.get_cmds()[0]} <command>`"
 
     def get_description(self):
         return "BPMN diagram for a command"

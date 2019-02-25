@@ -10,11 +10,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Market(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "m"
-
-    def get_cmd_alt(self):
-        return ["market"]
+    def get_cmds(self):
+        return ["m", "market"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -92,7 +89,7 @@ class Market(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <symbol> (vol)`"
+        return f"`/{self.get_cmds()[0]} <symbol> (vol)`"
 
     def get_description(self):
         return "Find exchanges to trade a coin"

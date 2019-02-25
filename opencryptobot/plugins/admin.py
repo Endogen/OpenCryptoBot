@@ -15,8 +15,8 @@ class Admin(OpenCryptoPlugin):
                 self._callback,
                 pattern="^admin"))
 
-    def get_cmd(self):
-        return "admin"
+    def get_cmds(self):
+        return ["admin"]
 
     @OpenCryptoPlugin.only_owner
     @OpenCryptoPlugin.send_typing
@@ -24,7 +24,7 @@ class Admin(OpenCryptoPlugin):
         if args:
             command = args[0].lower()
 
-            # Execute SQL statements
+            # Execute raw SQL statements
             if command == "sql":
                 args.pop(0)
                 sql = " ".join(args)
@@ -65,9 +65,12 @@ class Admin(OpenCryptoPlugin):
 
             # Manage plugins
             elif command == "plg":
-                # start, stop, restart
-                pass
+                args.pop(0)
 
+                if args:
+                    # TODO: start, stop, restart
+                    # TODO: Add logs
+                    self.tgb.reload_plugin(args[0])
         else:
             usr = update.effective_user.first_name
 

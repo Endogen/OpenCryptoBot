@@ -15,11 +15,8 @@ class Social(OpenCryptoPlugin):
     FB_URL = "https://www.facebook.com/"
     BT_URL = "https://bitcointalk.org/index.php?topic="
 
-    def get_cmd(self):
-        return "soc"
-
-    def get_cmd_alt(self):
-        return ["social"]
+    def get_cmds(self):
+        return ["soc", "social"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -115,7 +112,7 @@ class Social(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <symbol>`"
+        return f"`/{self.get_cmds()[0]} <symbol>`"
 
     def get_description(self):
         return "Social media details"

@@ -9,11 +9,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Developer(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "dev"
-
-    def get_cmd_alt(self):
-        return ["developer"]
+    def get_cmds(self):
+        return ["dev", "developer"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -71,7 +68,7 @@ class Developer(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <symbol>`"
+        return f"`/{self.get_cmds()[0]} <symbol>`"
 
     def get_description(self):
         return "Development information"

@@ -7,26 +7,23 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Donate(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "donate"
-
-    def get_cmd_alt(self):
-        return ["donateBTC", "donateBCH", "donateETH", "donateXMR"]
+    def get_cmds(self):
+        return ["donate", "donateBTC", "donateBCH", "donateETH", "donateXMR"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         # Donate
-        if update.message.text == f"/{self.get_cmd()}":
+        if update.message.text == f"/{self.get_cmds()[0]}":
             msg = str()
-            for cmd in self.get_cmd_alt():
+            for cmd in self.get_cmds()[1:]:
                 msg += f"/{cmd}\n"
 
             update.message.reply_text(msg)
             return
 
         # BTC
-        if update.message.text == f"/{self.get_cmd_alt()[0]}":
+        if update.message.text == f"/{self.get_cmds()[1]}":
             qr_code = self._get_qr_code("BTC")
             if qr_code:
                 update.message.reply_photo(
@@ -36,7 +33,7 @@ class Donate(OpenCryptoPlugin):
             return
 
         # BCH
-        if update.message.text == f"/{self.get_cmd_alt()[1]}":
+        if update.message.text == f"/{self.get_cmds()[2]}":
             qr_code = self._get_qr_code("BCH")
             if qr_code:
                 update.message.reply_photo(
@@ -46,7 +43,7 @@ class Donate(OpenCryptoPlugin):
             return
 
         # ETH
-        if update.message.text == f"/{self.get_cmd_alt()[2]}":
+        if update.message.text == f"/{self.get_cmds()[3]}":
             qr_code = self._get_qr_code("ETH")
             if qr_code:
                 update.message.reply_photo(
@@ -56,7 +53,7 @@ class Donate(OpenCryptoPlugin):
             return
 
         # XMR
-        if update.message.text == f"/{self.get_cmd_alt()[3]}":
+        if update.message.text == f"/{self.get_cmds()[4]}":
             qr_code = self._get_qr_code("XMR")
             if qr_code:
                 update.message.reply_photo(

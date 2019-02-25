@@ -9,8 +9,8 @@ class Start(OpenCryptoPlugin):
 
     START_FILENAME = "start.md"
 
-    def get_cmd(self):
-        return "start"
+    def get_cmds(self):
+        return ["start"]
 
     def get_action(self, bot, update, args):
         about_file = os.path.join(con.RES_DIR, self.START_FILENAME)

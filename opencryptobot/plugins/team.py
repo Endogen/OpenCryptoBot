@@ -10,11 +10,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Team(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "t"
-
-    def get_cmd_alt(self):
-        return ["team"]
+    def get_cmds(self):
+        return ["t", "team"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -68,7 +65,7 @@ class Team(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <symbol>`"
+        return f"`/{self.get_cmds()[0]} <symbol>`"
 
     def get_description(self):
         return "Info about team behind a coin"

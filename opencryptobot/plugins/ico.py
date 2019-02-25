@@ -10,8 +10,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Ico(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "ico"
+    def get_cmds(self):
+        return ["ico"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -100,7 +100,7 @@ class Ico(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <symbol>`"
+        return f"`/{self.get_cmds()[0]} <symbol>`"
 
     def get_description(self):
         return "ICO info for coin"

@@ -12,8 +12,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Alltimehigh(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "ath"
+    def get_cmds(self):
+        return ["ath"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -98,7 +98,7 @@ class Alltimehigh(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} (<target symbol>,[...]-)<symbol>`"
+        return f"`/{self.get_cmds()[0]} (<target symbol>,[...]-)<symbol>`"
 
     def get_description(self):
         return "All time high price for coin"

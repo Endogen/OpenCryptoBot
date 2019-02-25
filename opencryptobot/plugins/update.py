@@ -19,8 +19,8 @@ class Update(OpenCryptoPlugin):
 
     UPD_DIR = "update"
 
-    def get_cmd(self):
-        return "update"
+    def get_cmds(self):
+        return ["update"]
 
     @OpenCryptoPlugin.only_owner
     @OpenCryptoPlugin.send_typing

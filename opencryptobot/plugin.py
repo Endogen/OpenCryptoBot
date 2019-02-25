@@ -9,12 +9,9 @@ from opencryptobot.config import ConfigManager as Cfg
 
 class PluginInterface:
 
-    def get_cmd(self):
+    def get_cmds(self):
         method = inspect.currentframe().f_code.co_name
         raise NotImplementedError(f"Interface method '{method}' not implemented")
-
-    def get_cmd_alt(self):
-        return list()
 
     def get_action(self, bot, update, args):
         method = inspect.currentframe().f_code.co_name
@@ -39,27 +36,7 @@ class OpenCryptoPlugin(PluginInterface):
         super().__init__()
 
         self.tgb = telegram_bot
-
-        cmd = self.get_cmd()
-        act = self.get_action
-
-        # Add regular command
-        self.tgb.dispatcher.add_handler(
-            CommandHandler(
-                cmd,
-                act,
-                pass_args=True))
-
-        # Add alternative commands
-        for cmd_alt in self.get_cmd_alt():
-            self.tgb.dispatcher.add_handler(
-                CommandHandler(
-                    cmd_alt,
-                    act,
-                    pass_args=True))
-
-        self.tgb.plugins.append(self)
-        logging.info(f"Plugin '{type(self).__name__}' added")
+        self.add_plugin()
 
     @classmethod
     def send_typing(cls, func):
@@ -110,6 +87,28 @@ class OpenCryptoPlugin(PluginInterface):
 
             return func(self, bot, update, **kwargs)
         return _save_data
+
+    def add_plugin(self):
+        self.tgb.dispatcher.add_handler(
+            CommandHandler(
+                self.get_cmds(),
+                self.get_action,
+                pass_args=True))
+
+        self.tgb.plugins.append(self)
+
+        logging.info(f"Plugin '{type(self).__name__}' added")
+
+    def remove_plugin(self):
+        for handler in self.tgb.dispatcher.handlers[0]:
+            if isinstance(handler, CommandHandler):
+                if set(handler.command) == set(self.get_cmds()):
+                    self.tgb.dispatcher.handlers[0].remove(handler)
+                    break
+
+        self.tgb.plugins.remove(self)
+
+        logging.info(f"Plugin '{type(self).__name__}' removed")
 
     def handle_error(self, error, update, send_error=True):
         cls_name = f"Class: {type(self).__name__}"

@@ -6,11 +6,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Manual(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "man"
-
-    def get_cmd_alt(self):
-        return ["manual"]
+    def get_cmds(self):
+        return ["man", "manual"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -41,7 +38,7 @@ class Manual(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <command>`"
+        return f"`/{self.get_cmds()[0]} <command>`"
 
     def get_description(self):
         return "Show how to use a command"

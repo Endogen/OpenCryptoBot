@@ -15,11 +15,8 @@ class Trends(OpenCryptoPlugin):
 
     DEFAULT_T = "today 5-y"
 
-    def get_cmd(self):
-        return "tr"
-
-    def get_cmd_alt(self):
-        return ["trend"]
+    def get_cmds(self):
+        return ["tr", "trend"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -103,7 +100,7 @@ class Trends(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <keyword> (<keyword> ... t=<# of>d|m|y)`"
+        return f"`/{self.get_cmds()[0]} <keyword> (<keyword> ... t=<# of>d|m|y)`"
 
     def get_description(self):
         return "Google Trends - Interest Over Time"

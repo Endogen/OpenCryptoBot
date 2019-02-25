@@ -13,11 +13,8 @@ class Whitepaper(OpenCryptoPlugin):
 
     name = None
 
-    def get_cmd(self):
-        return "wp"
-
-    def get_cmd_alt(self):
-        return ["whitepaper"]
+    def get_cmds(self):
+        return ["wp", "whitepaper"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -62,7 +59,7 @@ class Whitepaper(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <symbol> (all)`"
+        return f"`/{self.get_cmds()[0]} <symbol> (all)`"
 
     def get_description(self):
         return "Find whitepaper for a coin"

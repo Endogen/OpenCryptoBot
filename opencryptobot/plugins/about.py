@@ -9,8 +9,8 @@ class About(OpenCryptoPlugin):
 
     ABOUT_FILENAME = "about.md"
 
-    def get_cmd(self):
-        return "about"
+    def get_cmds(self):
+        return ["about"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing

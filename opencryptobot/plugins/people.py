@@ -9,11 +9,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class People(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "pe"
-
-    def get_cmd_alt(self):
-        return ["people"]
+    def get_cmds(self):
+        return ["pe", "people"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -71,7 +68,7 @@ class People(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <forename>-<surname>`"
+        return f"`/{self.get_cmds()[0]} <forename>-<surname>`"
 
     def get_description(self):
         return "Info about person from a team"

@@ -10,11 +10,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Marketcap(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "mc"
-
-    def get_cmd_alt(self):
-        return ["mcap"]
+    def get_cmds(self):
+        return ["mc", "mcap"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -123,7 +120,7 @@ class Marketcap(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} (<target symbol>-)<symbol> | top=<# or currencies>\n`"
+        return f"`/{self.get_cmds()[0]} (<target symbol>-)<symbol> | top=<# or currencies>\n`"
 
     def get_description(self):
         return "Market capitalization"

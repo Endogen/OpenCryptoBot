@@ -10,11 +10,8 @@ class Compare(OpenCryptoPlugin):
 
     BASE_URL = "https://coinlib.io/compare/"
 
-    def get_cmd(self):
-        return "comp"
-
-    def get_cmd_alt(self):
-        return ["compare"]
+    def get_cmds(self):
+        return ["comp", "compare"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -62,7 +59,7 @@ class Compare(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <symbol> <symbol> ...`"
+        return f"`/{self.get_cmds()[0]} <symbol> <symbol> ...`"
 
     def get_description(self):
         return "Compare coins"

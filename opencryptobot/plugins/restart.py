@@ -14,8 +14,8 @@ class Restart(OpenCryptoPlugin):
         super().__init__(telegram_bot)
         self._restart_notification()
 
-    def get_cmd(self):
-        return "restart"
+    def get_cmds(self):
+        return ["restart"]
 
     @OpenCryptoPlugin.only_owner
     @OpenCryptoPlugin.send_typing

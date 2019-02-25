@@ -112,11 +112,11 @@ class Roi(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True)
 
-    def get_cmd(self):
-        return "roi"
+    def get_cmds(self):
+        return ["roi", "ior"]
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <symbol>`"
+        return f"`/{self.get_cmds()[0]} <symbol>`"
 
     def get_description(self):
         return "Return on Investment for a coin"

@@ -32,11 +32,8 @@ class News(OpenCryptoPlugin):
             cls_name = f"Class: {type(self).__name__}"
             logging.error(f"{repr(e)} - {cls_name}")
 
-    def get_cmd(self):
-        return "n"
-
-    def get_cmd_alt(self):
-        return ["news"]
+    def get_cmds(self):
+        return ["n", "news"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -125,7 +122,7 @@ class News(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <symbol> (filter=<filter>)`"
+        return f"`/{self.get_cmds()[0]} <symbol> (filter=<filter>)`"
 
     def get_description(self):
         return "News about a coin"

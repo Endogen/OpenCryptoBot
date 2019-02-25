@@ -6,8 +6,8 @@ from opencryptobot.plugin import OpenCryptoPlugin
 
 class Shutdown(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "shutdown"
+    def get_cmds(self):
+        return ["shutdown"]
 
     @OpenCryptoPlugin.only_owner
     @OpenCryptoPlugin.send_typing

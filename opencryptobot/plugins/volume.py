@@ -10,11 +10,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Volume(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "vol"
-
-    def get_cmd_alt(self):
-        return ["volume"]
+    def get_cmds(self):
+        return ["vol", "volume"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -123,7 +120,7 @@ class Volume(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} (<target symbol>-)<symbol> | top=<# of currencies>`"
+        return f"`/{self.get_cmds()[0]} (<target symbol>-)<symbol> | top=<# of currencies>`"
 
     def get_description(self):
         return "Volume for a coin"

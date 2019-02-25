@@ -8,11 +8,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Search(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "se"
-
-    def get_cmd_alt(self):
-        return ["search"]
+    def get_cmds(self):
+        return ["se", "search"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -51,7 +48,7 @@ class Search(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} <coin name>`"
+        return f"`/{self.get_cmds()[0]} <coin name>`"
 
     def get_description(self):
         return "Search for symbol by coin name"

@@ -13,11 +13,8 @@ class Price(OpenCryptoPlugin):
 
     bot_name = None
 
-    def get_cmd(self):
-        return "p"
-
-    def get_cmd_alt(self):
-        return ["price"]
+    def get_cmds(self):
+        return ["p", "price"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -132,11 +129,11 @@ class Price(OpenCryptoPlugin):
         bot_name = self.tgb.updater.bot.name
 
         return f"`" \
-               f"/{self.get_cmd()} <symbol>\n\n" \
-               f"/{self.get_cmd()} <symbol> <exchange>\n\n" \
-               f"/{self.get_cmd()} <target symbol>-<symbol>\n\n" \
-            f"{bot_name} /{self.get_cmd()} <symbol>.\n\n" \
-               f"{bot_name} /{self.get_cmd()} <target symbol>-<symbol>." \
+               f"/{self.get_cmds()[0]} <symbol>\n\n" \
+               f"/{self.get_cmds()[0]} <symbol> <exchange>\n\n" \
+               f"/{self.get_cmds()[0]} <target symbol>-<symbol>\n\n" \
+            f"{bot_name} /{self.get_cmds()[0]} <symbol>.\n\n" \
+               f"{bot_name} /{self.get_cmds()[0]} <target symbol>-<symbol>." \
                f"`"
 
     def get_description(self):

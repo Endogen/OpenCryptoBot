@@ -4,11 +4,8 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Help(OpenCryptoPlugin):
 
-    def get_cmd(self):
-        return "help"
-
-    def get_cmd_alt(self):
-        return list("h")
+    def get_cmds(self):
+        return ["help", "h"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing

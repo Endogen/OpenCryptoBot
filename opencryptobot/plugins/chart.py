@@ -20,11 +20,8 @@ class Chart(OpenCryptoPlugin):
     cg_coin_id = None
     cmc_coin_id = None
 
-    def get_cmd(self):
-        return "c"
-
-    def get_cmd_alt(self):
-        return ["chart"]
+    def get_cmds(self):
+        return ["c", "chart"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -200,7 +197,7 @@ class Chart(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmd()} (<vs symbol>-)<symbol> (<# of days>)`"
+        return f"`/{self.get_cmds()[0]} (<vs symbol>-)<symbol> (<# of days>)`"
 
     def get_description(self):
         return "Chart with price and volume"
