@@ -24,7 +24,7 @@ class Admin(OpenCryptoPlugin):
         if args:
             command = args[0].lower()
 
-            # Execute raw SQL statements
+            # Execute raw SQL
             if command == "sql":
                 args.pop(0)
                 sql = " ".join(args)
@@ -40,7 +40,9 @@ class Admin(OpenCryptoPlugin):
                 try:
                     Cfg.set(v, *args)
                 except Exception as e:
-                    self.handle_error(e, update)
+                    return self.handle_error(e, update)
+
+                update.message.reply_text("Config changed")
 
             # Send global message
             elif command == "msg":
@@ -54,23 +56,30 @@ class Admin(OpenCryptoPlugin):
 
                 msg = " ".join(args)
 
-                if args:
-                    for user_id in data:
-                        try:
-                            bot.send_message(
-                                chat_id=user_id[0],
-                                text=f"{title}{msg}")
-                        except Exception as e:
-                            self.handle_error(e, update, send_error=False)
+                for user_id in data:
+                    try:
+                        bot.send_message(
+                            chat_id=user_id[0],
+                            text=f"{title}{msg}")
+                    except Exception as e:
+                        self.handle_error(e, update, send_error=False)
 
             # Manage plugins
             elif command == "plg":
                 args.pop(0)
 
-                if args:
-                    # TODO: start, stop, restart
-                    # TODO: Add logs
-                    self.tgb.reload_plugin(args[0])
+                # START plugin
+                if args[0].lower() == "start":
+                    self.tgb.reload_plugin(args[1])
+
+                # STOP plugin
+                elif args[0].lower() == "stop":
+                    self.tgb.remove_plugin(args[1])
+
+                # RELOAD plugin
+                elif args[0].lower() == "reload":
+                    self.tgb.reload_plugin(args[1])
+
         else:
             usr = update.effective_user.first_name
 

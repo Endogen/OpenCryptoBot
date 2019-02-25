@@ -112,11 +112,14 @@ class TelegramBot:
                     msg = f"File '{file}' can't be loaded as a plugin: {ex}"
                     logging.warning(msg)
 
-    def reload_plugin(self, module_name):
+    def remove_plugin(self, module_name):
         for plugin in self.plugins:
             if type(plugin).__name__.lower() == module_name.lower():
                 plugin.remove_plugin()
                 break
+
+    def reload_plugin(self, module_name):
+        self.remove_plugin(module_name)
 
         try:
             module_path = f"opencryptobot.plugins.{module_name}"
