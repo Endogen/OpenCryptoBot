@@ -11,6 +11,7 @@ order: 2
 ### **General bot features**
 
 * Written in Python and fully open source
+* Hot-reloading plugins without restarting the bot
 * Update notifications for new releases on GitHub
 * Update your running bot to any release or branch
 * Admin specific commands like `restart` and `shutdown`

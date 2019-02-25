@@ -9,6 +9,7 @@ order: 4
 ---
 
 [/about](#about) - About the bot  
+[/admin](#admin) - Administrate bot  
 [/ath](#ath) - All Time High  
 [/best](#best) - Best movers  
 [/bpmn](#bpmn) - Command diagrams  
@@ -58,7 +59,35 @@ Show informations about the author / developer of this Telegram bot and about th
 `/about`
 
 **Examples**  
+Show infos about bot and his creator  
 `/about`
+
+## `/admin`
+
+**Alternative commands**  
+None
+
+**Description**  
+This command will only work for bot adminstrators and allows to start, stop and reload plugins without restarting the bot itself, view bot stats, send global messages to every previous user of the bot, execute raw SQL statements and change the bot configuration.
+
+**Syntax**  
+`/admin (sql <statement>) [or] (cfg <key> [...] <value>) [or] (msg <message>) [or] (plg (start [or] stop [or] reload) <plugin>)`
+
+**Examples**  
+Show different stats  
+`/admin`  
+Execute raw SQL statement to get # of users  
+`/admin sql select count(user_id) from users`  
+Change config to use a database  
+`/admin cfg database use_db true`  
+Send message "New important update!" to every user  
+`/admin msg New important update!`  
+Stop `/roi` plugin  
+`/admin plg stop roi`  
+Start `/roi` plugin  
+`/admin plg start roi`  
+Reload `/roi` plugin  
+`/admin plg reload roi`  
 
 ## `/ath`
 
@@ -491,15 +520,19 @@ This command can also be used in [inline mode](https://core.telegram.org/bots/in
 
 **Syntax**  
 Regular  
-`/p (<target symbol>,[...]-)<symbol>`  
+`/p (<target symbol>,[...]-)<symbol> (<exchange>)`  
 Inline mode  
 `@opencryptobot /p (<target symbol>,[...]-)<symbol>.`  
 
 **Examples**  
 Show price for XMR  
 `/p xmr`  
+Show price for XMR on Binance exchange  
+`/p xmr binance`  
 Show price for XMR in EOS  
 `/p eos-xmr`  
+Show price for XMR in ETH on Binance  
+`/p eth-xmr binance`  
 Show price for XMR in XRP, XLM and LTC  
 `/p xrp,xlm,ltc-xmr`  
 Show price for XMR (inline mode)  
@@ -509,7 +542,7 @@ Show price for XMR in EOS (inline mode)
 Show price for XMR in XRP, XLM and LTC (inline mode)  
 `@opencryptobot /p xrp,xlm,ltc-xmr.`  
 
-## `/restart`
+## `/restart`  (only for bot admins)
 
 ![Screenshot](assets/cmds/restart.png)
 
@@ -560,7 +593,7 @@ Find all cryptocurrencies (with symbol) for the given search-string
 Search for the symbol of Monero  
 `/se monero`  
 
-## `/shutdown`
+## `/shutdown` (only for bot admins)
 
 ![Screenshot](assets/cmds/shutdown.png)
 
@@ -653,7 +686,7 @@ List people that are working on a project with their role and a link to the `/pe
 Show people that are working on BTC  
 `/t btc`  
 
-## `/update`
+## `/update` (only for bot admins)
 
 ![Screenshot](assets/cmds/update.png)
 
