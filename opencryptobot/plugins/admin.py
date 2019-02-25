@@ -52,7 +52,7 @@ class Admin(OpenCryptoPlugin):
                 data = self.tgb.db.execute(sql)
 
                 title = "This is a global message to " \
-                        "every user of OpenCryptoBot:\n\n"
+                        "every user of @OpenCryptoBot:\n\n"
 
                 msg = " ".join(args)
 
@@ -71,14 +71,17 @@ class Admin(OpenCryptoPlugin):
                 # START plugin
                 if args[0].lower() == "start":
                     self.tgb.reload_plugin(args[1])
+                    update.message.reply_text("Plugin started")
 
                 # STOP plugin
                 elif args[0].lower() == "stop":
                     self.tgb.remove_plugin(args[1])
+                    update.message.reply_text("Plugin stopped")
 
                 # RELOAD plugin
                 elif args[0].lower() == "reload":
                     self.tgb.reload_plugin(args[1])
+                    update.message.reply_text("Plugin reloaded")
 
         else:
             usr = update.effective_user.first_name
