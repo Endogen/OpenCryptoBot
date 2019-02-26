@@ -81,20 +81,15 @@ class Admin(OpenCryptoPlugin):
             elif command == "plg":
                 args.pop(0)
 
-                # START plugin
-                if args[0].lower() == "start":
+                # LOAD plugin
+                if args[0].lower() == "load":
                     self.tgb.reload_plugin(args[1])
-                    update.message.reply_text("Plugin started")
+                    update.message.reply_text("Plugin loaded")
 
-                # STOP plugin
-                elif args[0].lower() == "stop":
+                # UNLOAD plugin
+                elif args[0].lower() == "unload":
                     self.tgb.remove_plugin(args[1])
-                    update.message.reply_text("Plugin stopped")
-
-                # RELOAD plugin
-                elif args[0].lower() == "reload":
-                    self.tgb.reload_plugin(args[1])
-                    update.message.reply_text("Plugin reloaded")
+                    update.message.reply_text("Plugin unloaded")
 
         else:
             usr = update.effective_user.first_name
