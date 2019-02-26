@@ -23,8 +23,8 @@ class Manual(OpenCryptoPlugin):
         cmd = cmd[1:] if cmd.startswith("/") else cmd
 
         for p in self.tgb.plugins:
-            if p.get_cmd().lower() == cmd:
-                msg = p.get_usage() if p.get_usage() else str()
+            if cmd.lower() in p.get_cmds():
+                msg = p.get_usage() if p.get_usage() else None
 
         if not msg:
             update.message.reply_text(
