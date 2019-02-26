@@ -71,7 +71,7 @@ None
 This command will only work for bot adminstrators and allows to start, stop and reload plugins without restarting the bot itself, view bot stats, send global messages to every previous user of the bot, execute raw SQL statements and change the bot configuration.
 
 **Syntax**  
-`/admin (sql <statement>) [or] (cfg <key> [...] <value>) [or] (msg <message>) [or] (plg (start [or] stop [or] reload) <plugin>)`
+`/admin (sql <statement>) [or] (cfg <key> [...] <value>) [or] (msg <message>) [or] (plg load [or] unload <plugin>)`
 
 **Examples**  
 Show different stats  
