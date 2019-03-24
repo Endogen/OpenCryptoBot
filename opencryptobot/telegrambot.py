@@ -247,8 +247,8 @@ class TelegramBot:
 
                     bot.send_message(
                         admin,
-                        f"New release *{tag}* available\n\n"
-                        f"*Release Notes*\n{release_notes}\n\n"
+                        f"New release *{utl.esc_md(tag)}* available\n\n"
+                        f"*Release Notes*\n{utl.esc_md(release_notes)}\n\n"
                         f"{update_cmd}",
                         parse_mode=ParseMode.MARKDOWN)
 
