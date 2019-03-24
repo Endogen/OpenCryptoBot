@@ -85,7 +85,7 @@ class TelegramBot:
         args = update.effective_message.text.split('__')[1].split("_")
 
         for p in self.plugins:
-            if p.get_cmd().lower() == cmd.lower() or cmd.lower() in p.get_cmd_alt():
+            if cmd.lower() in p.get_cmds():
                 p.get_action(bot, update, args=args)
                 break
 
