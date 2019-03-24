@@ -144,7 +144,7 @@ class Admin(OpenCryptoPlugin):
                   "FROM cmd_data " \
                   "GROUP BY command " \
                   "ORDER BY 2 DESC " \
-                  "LIMIT 10"
+                  "LIMIT 25"
             data = self.tgb.db.execute(sql)
 
             msg = str()
@@ -162,7 +162,7 @@ class Admin(OpenCryptoPlugin):
                   "FROM users " \
                   "GROUP BY language " \
                   "ORDER BY 2 DESC " \
-                  "LIMIT 10"
+                  "LIMIT 15"
             data = self.tgb.db.execute(sql)
 
             msg = str()
