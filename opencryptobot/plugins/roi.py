@@ -9,6 +9,9 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Roi(OpenCryptoPlugin):
 
+    def get_cmds(self):
+        return ["roi"]
+
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
@@ -111,9 +114,6 @@ class Roi(OpenCryptoPlugin):
             text=msg,
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True)
-
-    def get_cmds(self):
-        return ["roi", "ior"]
 
     def get_usage(self):
         return f"`/{self.get_cmds()[0]} <symbol>`"
