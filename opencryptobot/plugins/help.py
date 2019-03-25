@@ -5,15 +5,15 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 class Help(OpenCryptoPlugin):
 
     def get_cmds(self):
-        return ["help", "h"]
+        return ["h", "help"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
         cat_dict = dict()
         for p in self.tgb.plugins:
-            if p.get_category() and p.get_description() and p.get_cmd:
-                des = f"/{p.get_cmd()} - {p.get_description()}\n"
+            if p.get_category() and p.get_description():
+                des = f"/{p.get_cmds()[0]} - {p.get_description()}\n"
 
                 if p.get_category() not in cat_dict:
                     cat_dict[p.get_category()] = [des]
