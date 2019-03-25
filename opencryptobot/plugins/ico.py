@@ -43,8 +43,16 @@ class Ico(OpenCryptoPlugin):
                 if "ico_data" not in data:
                     break
 
-                ico_start = data["ico_data"]["ico_start_date"][:10]
-                ico_end = data["ico_data"]["ico_end_date"][:10]
+                if data["ico_data"]["ico_start_date"]:
+                    ico_start = data["ico_data"]["ico_start_date"][:10]
+                else:
+                    ico_start = "None"
+
+                if data["ico_data"]["ico_end_date"]:
+                    ico_end = data["ico_data"]["ico_end_date"][:10]
+                else:
+                    ico_end = "None"
+
                 raised = data["ico_data"]["total_raised"]
                 raised_cur = data["ico_data"]["total_raised_currency"]
 
