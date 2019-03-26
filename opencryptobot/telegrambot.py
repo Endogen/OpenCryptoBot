@@ -146,7 +146,7 @@ class TelegramBot:
         value = str()
         description = str()
         for plugin in self.plugins:
-            if plugin.get_cmd() == cmd:
+            if cmd in plugin.get_cmds():
                 if not plugin.inline_mode():
                     return
 
