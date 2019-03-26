@@ -24,8 +24,7 @@ class Bpmn(OpenCryptoPlugin):
 
         cmd_found = False
         for plgn in self.tgb.plugins:
-            if plgn.get_cmd() == cmd or cmd in plgn.get_cmd_alt():
-                cmd = plgn.get_cmd()
+            if cmd in plgn.get_cmds():
                 cmd_found = True
 
         if not cmd_found:
