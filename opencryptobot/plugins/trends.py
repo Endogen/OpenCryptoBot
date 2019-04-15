@@ -42,7 +42,7 @@ class Trends(OpenCryptoPlugin):
 
                 if not date:
                     update.message.reply_text(
-                        text=f"{emo.ERROR} Timeframe not formated correctly",
+                        text=f"{emo.ERROR} Timeframe not formatted correctly",
                         parse_mode=ParseMode.MARKDOWN)
                     return
                 else:
