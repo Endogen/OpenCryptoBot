@@ -83,7 +83,7 @@ class OpenCryptoPlugin(PluginInterface):
                     if not Cfg.get("database", "track_admins"):
                         return func(self, bot, update, **kwargs)
 
-                self.tgb.db.save(usr, cht, cmd)
+                self.tgb.db.save_cmd(usr, cht, cmd)
 
             return func(self, bot, update, **kwargs)
         return _save_data

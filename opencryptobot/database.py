@@ -26,6 +26,9 @@ class Database:
             with open(os.path.join(sql_path, "chats.sql")) as f:
                 cur.execute(f.read())
                 con.commit()
+            with open(os.path.join(sql_path, "repeaters.sql")) as f:
+                cur.execute(f.read())
+                con.commit()
             with open(os.path.join(sql_path, "cmd_data.sql")) as f:
                 cur.execute(f.read())
                 con.commit()
@@ -52,7 +55,11 @@ class Database:
         with open(os.path.join(sql_path, "cmd_save.sql")) as f:
             self.save_cmd_sql = f.read()
 
-    def save(self, usr_data, cht_data, cmd):
+        # SQL - Save repeating command
+        with open(os.path.join(sql_path, "cmd_rep.sql")) as f:
+            self.save_rep_sql = f.read()
+
+    def save_user_and_chat(self, usr_data, cht_data):
         con = sqlite3.connect(self._db_path)
         cur = con.cursor()
 
@@ -98,10 +105,33 @@ class Database:
 
                 con.commit()
 
+        return {"user_id": usr_data.id, "chat_id": chat_id}
+
+    def save_cmd(self, usr_data, cht_data, cmd):
+        con = sqlite3.connect(self._db_path)
+        cur = con.cursor()
+
+        ids = self.save_user_and_chat(usr_data, cht_data)
+
         # Save issued command
         cur.execute(
             self.save_cmd_sql,
-            [usr_data.id, chat_id, cmd])
+            [ids["user_id"], ids["chat_id"], cmd])
+
+        con.commit()
+        con.close()
+
+    # TODO: https://dba.stackexchange.com/questions/43284/two-nullable-columns-one-required-to-have-value
+    def save_rep(self, usr_data, cht_data, cmd):
+        con = sqlite3.connect(self._db_path)
+        cur = con.cursor()
+
+        ids = self.save_user_and_chat(usr_data, cht_data)
+
+        # Save msg to be repeated
+        cur.execute(
+            self.save_rep_sql,
+            [ids["user_id"], ids["chat_id"], cmd])
 
         con.commit()
         con.close()
