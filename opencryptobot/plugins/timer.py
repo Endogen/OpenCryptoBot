@@ -48,6 +48,14 @@ class Timer(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
+        # Save content of message
+        txt = update.message.text
+
+        # Remove
+        for cmd in self.get_cmds():
+            if txt.lower().startswith(cmd.lower()):
+                txt = txt.replace(cmd.lower(), "", 1)
+
         secs = utl.get_seconds(t)
 
         if not secs:
@@ -59,7 +67,7 @@ class Timer(OpenCryptoPlugin):
         try:
             # TODO: Find out which command to repeat and only send that string to _send_msg
             # TODO: Find instance of plugin and set it in context variable
-            cntx = {"usr": update.effective_user, "cmd": update.message.text}
+            cntx = {"usr": update.effective_user, "cmd": txt}
             self.tgb.job_queue.run_repeating(self._send_msg, secs, first=0, context=cntx)
         except Exception as e:
             logging.error(repr(e))
