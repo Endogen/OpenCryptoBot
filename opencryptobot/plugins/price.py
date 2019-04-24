@@ -19,14 +19,14 @@ class Price(OpenCryptoPlugin):
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
-        vs_cur = str()
-
         if not args:
             if update.message:
                 update.message.reply_text(
                     text=f"Usage:\n{self.get_usage()}",
                     parse_mode=ParseMode.MARKDOWN)
             return
+
+        vs_cur = str()
 
         if "-" in args[0]:
             pair = args[0].split("-", 1)
