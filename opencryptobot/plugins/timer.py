@@ -7,7 +7,7 @@ from opencryptobot.config import ConfigManager as Cfg
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
-# TODO: Better name it '/rep' repeating?
+# TODO: Add reading of repeaters after bot-restart
 class Timer(OpenCryptoPlugin):
 
     def __init__(self, telegram_bot):
@@ -18,7 +18,7 @@ class Timer(OpenCryptoPlugin):
             logging.warning(msg)
 
     def get_cmds(self):
-        return ["timer"]
+        return ["re", "repeat", "timer", "rerun"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
@@ -35,74 +35,85 @@ class Timer(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        t = str()
+        time = str()
         for arg in args:
             if arg.startswith("t="):
-                t = arg.replace("t=", "")
+                time = arg.replace("t=", "")
                 args.remove(arg)
                 break
 
-        if not t:
+        if not time:
             update.message.reply_text(
                 text=f"{emo.ERROR} Time interval has to be provided",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        # Save content of message
-        txt = update.message.text
+        # In seconds
+        interval = utl.get_seconds(time)
 
-        # Remove
-        for cmd in self.get_cmds():
-            if txt.lower().startswith(cmd.lower()):
-                txt = txt.replace(cmd.lower(), "", 1)
-
-        secs = utl.get_seconds(t)
-
-        if not secs:
+        if not interval:
             update.message.reply_text(
                 text=f"{emo.ERROR} Wrong format for time interval",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
+        if not args:
+            update.message.reply_text(
+                text=f"{emo.ERROR} No command to repeat",
+                parse_mode=ParseMode.MARKDOWN)
+            return
+
+        if not update.message:
+            update.message.reply_text(
+                text=f"{emo.ERROR} Message is empty",
+                parse_mode=ParseMode.MARKDOWN)
+            return
+
+        command = args[0].replace("/", "")
+        plugin = None
+
+        for plg in self.tgb.plugins:
+            if command in plg.get_cmds():
+                plugin = plg
+                break
+
+        if not plugin:
+            update.message.reply_text(
+                text=f"{emo.ERROR} Command `/{command}` does not exist",
+                parse_mode=ParseMode.MARKDOWN)
+            return
+
+        # Command string to repeat
+        cmd = " ".join(args)
+        # Remove command from arguments
+        args.pop(0)
+
+        # Set command string to repeat as current message text
+        update.message.text = cmd
+
         try:
-            # TODO: Find out which command to repeat and only send that string to _send_msg
-            # TODO: Find instance of plugin and set it in context variable
-            cntx = {"usr": update.effective_user, "cmd": txt}
-            self.tgb.job_queue.run_repeating(self._send_msg, secs, first=0, context=cntx)
+            cntx = {"upd": update, "arg": args, "plg": plugin}
+            self.tgb.job_queue.run_repeating(self._send_msg, interval, context=cntx)
         except Exception as e:
             logging.error(repr(e))
             return
 
-        update.message.reply_text(
-            text=f"`New timer set {emo.TOP}`",
-            parse_mode=ParseMode.MARKDOWN)
+        chat = update.message.chat
+        user = update.message.from_user
+        self.tgb.db.save_rep(user, chat, cmd, interval)
+
+        update.message.reply_text(text=f"{emo.CHECK} Timer is active")
 
     def _send_msg(self, bot, job):
         if job.context:
-            usr = job.context["usr"]
-            cmd = job.context["cmd"]
+            upd = job.context["upd"]
+            arg = job.context["arg"]
+            plg = job.context["plg"]
 
-            if update.message:
-                usr = update.message.from_user
-                cmd = update.message.text
-                cht = update.message.chat
-            elif update.inline_query:
-                usr = update.effective_user
-                cmd = update.inline_query.query[:-1]
-                cht = update.effective_chat
-            else:
-                logging.warning(f"Can't save usage - {update}")
-
-        self.tgb.db.save_rep()
-
-        bot.send_message(
-            usr,
-            f"Time task for command:\n{cmd}\n\n"
-            f"{update_cmd}",
-            parse_mode=ParseMode.MARKDOWN)
+            plg.get_action(bot, upd, args=arg)
 
     def get_usage(self):
-        return f"`/{self.get_cmds()[0]} t=<send command every t>s|m|h|d <command>`"
+        return f"`/{self.get_cmds()[0]} t=<interval>s|m|h|d <command>`"
 
     def get_description(self):
         return "Send commands repeatedly"

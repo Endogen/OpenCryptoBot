@@ -122,16 +122,16 @@ class Database:
         con.close()
 
     # TODO: https://dba.stackexchange.com/questions/43284/two-nullable-columns-one-required-to-have-value
-    def save_rep(self, usr_data, cht_data, cmd):
+    def save_rep(self, user, chat, cmd, interval):
         con = sqlite3.connect(self._db_path)
         cur = con.cursor()
 
-        ids = self.save_user_and_chat(usr_data, cht_data)
+        ids = self.save_user_and_chat(user, chat)
 
         # Save msg to be repeated
         cur.execute(
             self.save_rep_sql,
-            [ids["user_id"], ids["chat_id"], cmd])
+            [ids["user_id"], ids["chat_id"], cmd, interval])
 
         con.commit()
         con.close()
