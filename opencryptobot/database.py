@@ -18,6 +18,7 @@ class Database:
         con = sqlite3.connect(db_path)
         cur = con.cursor()
 
+        # If tables don't exist, create them
         sql = "SELECT name FROM sqlite_master"
         if not cur.execute(sql).fetchone():
             with open(os.path.join(sql_path, "users.sql")) as f:
@@ -55,8 +56,12 @@ class Database:
         with open(os.path.join(sql_path, "cmd_save.sql")) as f:
             self.save_cmd_sql = f.read()
 
+        # SQL - Read repeating command
+        with open(os.path.join(sql_path, "rep_read.sql")) as f:
+            self.read_rep_sql = f.read()
+
         # SQL - Save repeating command
-        with open(os.path.join(sql_path, "cmd_rep.sql")) as f:
+        with open(os.path.join(sql_path, "rep_save.sql")) as f:
             self.save_rep_sql = f.read()
 
     def save_user_and_chat(self, usr_data, cht_data):
@@ -136,7 +141,20 @@ class Database:
         con.commit()
         con.close()
 
-    def execute(self, sql, *args):
+    def read_rep(self):
+        con = sqlite3.connect(self._db_path)
+        cur = con.cursor()
+
+        # TODO: Do this nicely - look up the code
+        cur.execute(self.read_rep_sql)
+        con.commit()
+
+        result = cur.fetchall()
+
+        con.close()
+        return result
+
+    def execute_sql(self, sql, *args):
         if Cfg.get("database", "use_db"):
             con = sqlite3.connect(self._db_path)
             cur = con.cursor()

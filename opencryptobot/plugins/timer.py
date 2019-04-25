@@ -8,14 +8,21 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
 # TODO: Add reading of repeaters after bot-restart
+# TODO: Create own 'update' object and always set it for 'get_action()'
+# https://github.com/python-telegram-bot/python-telegram-bot/wiki/Code-snippets
 class Timer(OpenCryptoPlugin):
 
     def __init__(self, telegram_bot):
         super().__init__(telegram_bot)
 
+        # Check if database is enabled since this plugin needs it
         if not Cfg.get("database", "use_db"):
             msg = f"Plugin '{type(self).__name__}' can't be used since database is disabled"
             logging.warning(msg)
+            return
+
+        # Read saved repeaters
+        repeaters = self.tgb.db.read_rep()
 
     def get_cmds(self):
         return ["re", "repeat", "timer", "rerun"]
@@ -85,7 +92,7 @@ class Timer(OpenCryptoPlugin):
 
         # Command string to repeat
         cmd = " ".join(args)
-        # Remove command from arguments
+        # Arguments without command
         args.pop(0)
 
         # Set command string to repeat as current message text
@@ -104,13 +111,18 @@ class Timer(OpenCryptoPlugin):
 
         update.message.reply_text(text=f"{emo.CHECK} Timer is active")
 
+    # TODO: Implement
+    def _run_repeater(self):
+        pass
+
     def _send_msg(self, bot, job):
         if job.context:
             upd = job.context["upd"]
             arg = job.context["arg"]
             plg = job.context["plg"]
 
-            plg.get_action(bot, upd, args=arg)
+            if upd and arg and plg:
+                plg.get_action(bot, upd, args=arg)
 
     def get_usage(self):
         return f"`/{self.get_cmds()[0]} t=<interval>s|m|h|d <command>`"

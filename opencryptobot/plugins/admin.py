@@ -29,7 +29,7 @@ class Admin(OpenCryptoPlugin):
                 args.pop(0)
                 sql = " ".join(args)
 
-                update.message.reply_text(repr(self.tgb.db.execute(sql)))
+                update.message.reply_text(repr(self.tgb.db.execute_sql(sql)))
 
             # Change configuration
             elif command == "cfg":
@@ -62,7 +62,7 @@ class Admin(OpenCryptoPlugin):
                 args.pop(0)
 
                 sql = "SELECT user_id FROM users"
-                data = self.tgb.db.execute(sql)
+                data = self.tgb.db.execute_sql(sql)
 
                 title = "This is a global message to " \
                         "every user of @OpenCryptoBot:\n\n"
@@ -123,7 +123,7 @@ class Admin(OpenCryptoPlugin):
         # Statistics - Number of Commands
         if query.data == "admin_cmds":
             sql = "SELECT COUNT(command) FROM cmd_data"
-            data = self.tgb.db.execute(sql)
+            data = self.tgb.db.execute_sql(sql)
             bot.send_message(
                 chat_id=update.effective_user.id,
                 text=f"`Commands: {data[0][0]}`",
@@ -132,7 +132,7 @@ class Admin(OpenCryptoPlugin):
         # Statistics - Number of Users
         elif query.data == "admin_usrs":
             sql = "SELECT COUNT(user_id) FROM users"
-            data = self.tgb.db.execute(sql)
+            data = self.tgb.db.execute_sql(sql)
             bot.send_message(
                 chat_id=update.effective_user.id,
                 text=f"`Users: {data[0][0]}`",
@@ -145,7 +145,7 @@ class Admin(OpenCryptoPlugin):
                   "GROUP BY command " \
                   "ORDER BY 2 DESC " \
                   "LIMIT 25"
-            data = self.tgb.db.execute(sql)
+            data = self.tgb.db.execute_sql(sql)
 
             msg = str()
             for row in data:
@@ -163,7 +163,7 @@ class Admin(OpenCryptoPlugin):
                   "GROUP BY language " \
                   "ORDER BY 2 DESC " \
                   "LIMIT 15"
-            data = self.tgb.db.execute(sql)
+            data = self.tgb.db.execute_sql(sql)
 
             msg = str()
             for row in data:
