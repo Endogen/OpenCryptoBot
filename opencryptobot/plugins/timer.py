@@ -7,7 +7,7 @@ from opencryptobot.config import ConfigManager as Cfg
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
-# TODO: Add reading of repeaters after bot-restart
+# TODO: Initiate job always the same way - no difference between saved instaces and direct jobs
 # TODO: Create own 'update' object and always set it for 'get_action()'
 # https://github.com/python-telegram-bot/python-telegram-bot/wiki/Code-snippets
 class Timer(OpenCryptoPlugin):
@@ -21,8 +21,18 @@ class Timer(OpenCryptoPlugin):
             logging.warning(msg)
             return
 
-        # Read saved repeaters
-        repeaters = self.tgb.db.read_rep()
+        # TODO: This is not working...
+        # Wait until all plugins are loaded
+        while not telegram_bot.plugins_loaded:
+            pass
+
+        # Run saved repeaters
+        for repeater in self.tgb.db.read_rep():
+            update = repeater[4]
+            args = update.message.text.split(" ")
+            interval = repeater[3]
+
+            self._run_repeater(update, args, int(interval))
 
     def get_cmds(self):
         return ["re", "repeat", "timer", "rerun"]
@@ -90,7 +100,7 @@ class Timer(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        # Command string to repeat
+        # Command without arguments
         cmd = " ".join(args)
         # Arguments without command
         args.pop(0)
@@ -105,15 +115,31 @@ class Timer(OpenCryptoPlugin):
             logging.error(repr(e))
             return
 
-        chat = update.message.chat
-        user = update.message.from_user
-        self.tgb.db.save_rep(user, chat, cmd, interval)
+        self.tgb.db.save_rep(update, interval)
 
         update.message.reply_text(text=f"{emo.CHECK} Timer is active")
 
-    # TODO: Implement
-    def _run_repeater(self):
-        pass
+    def _run_repeater(self, update, args, interval):
+        command = args[0].replace("/", "")
+        plugin = None
+
+        for plg in self.tgb.plugins:
+            if command in plg.get_cmds():
+                plugin = plg
+                break
+
+        if not plugin:
+            update.message.reply_text(
+                text=f"{emo.ERROR} Command `/{command}` does not exist. Can not create repeater",
+                parse_mode=ParseMode.MARKDOWN)
+            return
+
+        try:
+            cntx = {"upd": update, "arg": args, "plg": plugin}
+            self.tgb.job_queue.run_repeating(self._send_msg, interval, context=cntx)
+        except Exception as e:
+            logging.error(repr(e))
+            return
 
     def _send_msg(self, bot, job):
         if job.context:

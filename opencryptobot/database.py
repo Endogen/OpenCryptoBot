@@ -1,4 +1,6 @@
 import os
+import pickle
+import logging
 import sqlite3
 
 from opencryptobot.config import ConfigManager as Cfg
@@ -64,14 +66,28 @@ class Database:
         with open(os.path.join(sql_path, "rep_save.sql")) as f:
             self.save_rep_sql = f.read()
 
-    def save_user_and_chat(self, usr_data, cht_data):
+    def save_src(self, update):
         con = sqlite3.connect(self._db_path)
         cur = con.cursor()
+
+        if update.message:
+            user = update.message.from_user
+            chat = update.message.chat
+        elif update.inline_query:
+            user = update.effective_user
+            chat = update.effective_chat
+        else:
+            logging.error(f"Can't save usage. User and chat unknown: {update}")
+            return None
+
+        if user.id in Cfg.get("admin_id"):
+            if not Cfg.get("database", "track_admins"):
+                return None
 
         # Check if user already exists
         cur.execute(
             self.usr_exist_sql,
-            [usr_data.id])
+            [user.id])
 
         con.commit()
 
@@ -79,23 +95,23 @@ class Database:
         if cur.fetchone()[0] != 1:
             cur.execute(
                 self.add_usr_sql,
-                [usr_data.id,
-                 usr_data.first_name,
-                 usr_data.last_name,
-                 usr_data.username,
-                 usr_data.language_code])
+                [user.id,
+                 user.first_name,
+                 user.last_name,
+                 user.username,
+                 user.language_code])
 
             con.commit()
 
         chat_id = None
 
-        if cht_data.id != usr_data.id:
-            chat_id = cht_data.id
+        if chat.id != user.id:
+            chat_id = chat.id
 
             # Check if chat already exists
             cur.execute(
                 self.cht_exist_sql,
-                [cht_data.id])
+                [chat.id])
 
             con.commit()
 
@@ -103,20 +119,31 @@ class Database:
             if cur.fetchone()[0] != 1:
                 cur.execute(
                     self.add_cht_sql,
-                    [cht_data.id,
-                     cht_data.type,
-                     cht_data.title,
-                     cht_data.username])
+                    [chat.id,
+                     chat.type,
+                     chat.title,
+                     chat.username])
 
                 con.commit()
 
-        return {"user_id": usr_data.id, "chat_id": chat_id}
+        return {"user_id": user.id, "chat_id": chat_id}
 
-    def save_cmd(self, usr_data, cht_data, cmd):
+    def save_cmd(self, update):
+        ids = self.save_src(update)
+
+        if not ids:
+            return
+
+        if update.message:
+            cmd = update.message.text
+        elif update.inline_query:
+            cmd = update.inline_query.query[:-1]
+        else:
+            logging.error(f"Can't save usage. Command unknown: {update}")
+            return
+
         con = sqlite3.connect(self._db_path)
         cur = con.cursor()
-
-        ids = self.save_user_and_chat(usr_data, cht_data)
 
         # Save issued command
         cur.execute(
@@ -127,16 +154,19 @@ class Database:
         con.close()
 
     # TODO: https://dba.stackexchange.com/questions/43284/two-nullable-columns-one-required-to-have-value
-    def save_rep(self, user, chat, cmd, interval):
+    # TODO: ZIP data to reach smaller data size for DB
+    def save_rep(self, update, interval):
         con = sqlite3.connect(self._db_path)
         cur = con.cursor()
 
-        ids = self.save_user_and_chat(user, chat)
+        ids = self.save_src(update)
+        cmd = update.message.text
+        ser = pickle.dumps(update)
 
         # Save msg to be repeated
         cur.execute(
             self.save_rep_sql,
-            [ids["user_id"], ids["chat_id"], cmd, interval])
+            [ids["user_id"], ids["chat_id"], cmd, interval, ser])
 
         con.commit()
         con.close()
@@ -145,14 +175,20 @@ class Database:
         con = sqlite3.connect(self._db_path)
         cur = con.cursor()
 
-        # TODO: Do this nicely - look up the code
         cur.execute(self.read_rep_sql)
         con.commit()
 
         result = cur.fetchall()
 
+        results = list()
+        for repeater in result:
+            rep_details = list(repeater)
+            rep_details[4] = pickle.loads(rep_details[4])
+
+            results.append(rep_details)
+
         con.close()
-        return result
+        return results
 
     def execute_sql(self, sql, *args):
         if Cfg.get("database", "use_db"):

@@ -2,6 +2,7 @@ import os
 import uuid
 import logging
 import importlib
+import threading
 import opencryptobot.emoji as emo
 import opencryptobot.constants as con
 import opencryptobot.utils as utl
@@ -16,9 +17,17 @@ from telegram.ext import Updater, InlineQueryHandler, RegexHandler
 from telegram.error import InvalidToken
 
 
+def threaded(fn):
+    def wrapper(*args, **kwargs):
+        threading.Thread(target=fn, args=args, kwargs=kwargs).start()
+
+    return wrapper
+
+
 class TelegramBot:
 
     plugins = list()
+    plugins_loaded = False
 
     def __init__(self, bot_token, bot_db):
         self.db = bot_db
@@ -101,16 +110,22 @@ class TelegramBot:
                 if file.startswith("_"):
                     continue
 
-                try:
-                    module_name = file[:-3]
-                    module_path = f"opencryptobot.plugins.{module_name}"
-                    module = importlib.import_module(module_path)
+                self._load_plugin(file)
 
-                    plugin_class = getattr(module, module_name.capitalize())
-                    plugin_class(self)
-                except Exception as ex:
-                    msg = f"File '{file}' can't be loaded as a plugin: {ex}"
-                    logging.warning(msg)
+        self.plugins_loaded = True
+
+    @threaded
+    def _load_plugin(self, file):
+        try:
+            module_name = file[:-3]
+            module_path = f"opencryptobot.plugins.{module_name}"
+            module = importlib.import_module(module_path)
+
+            plugin_class = getattr(module, module_name.capitalize())
+            plugin_class(self)
+        except Exception as ex:
+            msg = f"File '{file}' can't be loaded as a plugin: {ex}"
+            logging.warning(msg)
 
     def remove_plugin(self, module_name):
         for plugin in self.plugins:
