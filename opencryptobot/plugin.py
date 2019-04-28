@@ -9,26 +9,33 @@ from opencryptobot.config import ConfigManager as Cfg
 
 class PluginInterface:
 
+    # List of command strings that trigger the plugin
     def get_cmds(self):
         method = inspect.currentframe().f_code.co_name
         raise NotImplementedError(f"Interface method '{method}' not implemented")
 
+    # Logic that gets executed if command is triggered
     def get_action(self, bot, update, args):
         method = inspect.currentframe().f_code.co_name
         raise NotImplementedError(f"Interface method '{method}' not implemented")
 
+    # How to use the command
     def get_usage(self):
         return None
 
+    # Short description what the command does
     def get_description(self):
         return None
 
+    # Category for command
     def get_category(self):
         return None
 
+    # Does this command support inline mode
     def inline_mode(self):
         return False
 
+    # Execute logic after all plugins are fully loaded
     def after_plugins_loaded(self):
         return None
 
