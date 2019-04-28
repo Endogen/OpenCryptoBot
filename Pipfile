@@ -16,6 +16,7 @@ requests = "*"
 beautifulsoup4 = "*"
 pytrends = "*"
 html2text = "*"
+python-twitter = "*"
 
 [requires]
 python_version = "3.7"
