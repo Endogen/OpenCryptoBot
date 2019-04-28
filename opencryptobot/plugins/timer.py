@@ -14,7 +14,8 @@ class Timer(OpenCryptoPlugin):
 
         # Check if database is enabled since this plugin needs it
         if not Cfg.get("database", "use_db"):
-            msg = f"Plugin '{type(self).__name__}' can't be used since database is disabled"
+            msg = f"Plugin '{type(self).__name__}' " \
+                  f"can't be used since database is disabled"
             logging.warning(msg)
 
     def get_cmds(self):
@@ -23,7 +24,7 @@ class Timer(OpenCryptoPlugin):
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
-        # Check if database is enabled since this plugin needs it
+        # Check if database is enabled
         if not Cfg.get("database", "use_db"):
             update.message.reply_text(
                 text=f"{emo.ERROR} Plugin '{type(self).__name__}' "
@@ -37,29 +38,22 @@ class Timer(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        # Check if database is enabled
-        if not Cfg.get("database", "use_db"):
-            update.message.reply_text(
-                text=f"{emo.ERROR} Database is disabled. Not possible to use command",
-                parse_mode=ParseMode.MARKDOWN)
-            return
-
         # Extract time interval
-        time = str()
+        interval = str()
         for arg in args:
             if arg.startswith("i="):
-                time = arg.replace("i=", "")
+                interval = arg.replace("i=", "")
                 args.remove(arg)
                 break
 
-        if not time:
+        if not interval:
             update.message.reply_text(
                 text=f"{emo.ERROR} Time interval has to be provided",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
         # In seconds
-        interval = utl.get_seconds(time)
+        interval = utl.get_seconds(interval)
 
         if not interval:
             update.message.reply_text(
@@ -93,7 +87,7 @@ class Timer(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        # Set command string to repeat as current message text
+        # Set command to repeat as current message text
         update.message.text = " ".join(args)
 
         try:
