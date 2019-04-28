@@ -1,4 +1,5 @@
 import opencryptobot.utils as utl
+import opencryptobot.emoji as emo
 
 from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.config import ConfigManager as Cfg
@@ -69,7 +70,7 @@ class Admin(OpenCryptoPlugin):
 
                 msg = " ".join(args)
 
-                for user_id in data:
+                for user_id in data or []:
                     try:
                         bot.send_message(
                             chat_id=user_id[0],
@@ -124,6 +125,14 @@ class Admin(OpenCryptoPlugin):
         if query.data == "admin_cmds":
             sql = "SELECT COUNT(command) FROM cmd_data"
             data = self.tgb.db.execute_sql(sql)
+
+            if not data:
+                bot.send_message(
+                    chat_id=update.effective_user.id,
+                    text=f"`{emo.INFO} No results`",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
+
             bot.send_message(
                 chat_id=update.effective_user.id,
                 text=f"`Commands: {data[0][0]}`",
@@ -133,6 +142,14 @@ class Admin(OpenCryptoPlugin):
         elif query.data == "admin_usrs":
             sql = "SELECT COUNT(user_id) FROM users"
             data = self.tgb.db.execute_sql(sql)
+
+            if not data:
+                bot.send_message(
+                    chat_id=update.effective_user.id,
+                    text=f"`{emo.INFO} No results`",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
+
             bot.send_message(
                 chat_id=update.effective_user.id,
                 text=f"`Users: {data[0][0]}`",
@@ -148,8 +165,15 @@ class Admin(OpenCryptoPlugin):
             data = self.tgb.db.execute_sql(sql)
 
             msg = str()
-            for row in data:
+            for row in data or []:
                 msg += utl.esc_md(f"{row[1]} {row[0]}\n")
+
+            if not msg:
+                bot.send_message(
+                    chat_id=update.effective_user.id,
+                    text=f"`{emo.INFO} No results`",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
 
             bot.send_message(
                 chat_id=update.effective_user.id,
@@ -166,8 +190,15 @@ class Admin(OpenCryptoPlugin):
             data = self.tgb.db.execute_sql(sql)
 
             msg = str()
-            for row in data:
+            for row in data or []:
                 msg += f"{row[1]} {row[0]}\n"
+
+            if not msg:
+                bot.send_message(
+                    chat_id=update.effective_user.id,
+                    text=f"`{emo.INFO} No results`",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
 
             bot.send_message(
                 chat_id=update.effective_user.id,

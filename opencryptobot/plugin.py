@@ -29,6 +29,9 @@ class PluginInterface:
     def inline_mode(self):
         return False
 
+    def after_plugins_loaded(self):
+        return None
+
 
 class OpenCryptoPlugin(PluginInterface):
 
@@ -67,7 +70,23 @@ class OpenCryptoPlugin(PluginInterface):
     def save_data(cls, func):
         def _save_data(self, bot, update, **kwargs):
             if Cfg.get("database", "use_db"):
-                self.tgb.db.save_cmd(update)
+                if update.message:
+                    usr = update.message.from_user
+                    cmd = update.message.text
+                    cht = update.message.chat
+                elif update.inline_query:
+                    usr = update.effective_user
+                    cmd = update.inline_query.query[:-1]
+                    cht = update.effective_chat
+                else:
+                    logging.warning(f"Can't save usage - {update}")
+                    return func(self, bot, update, **kwargs)
+
+                if usr.id in Cfg.get("admin_id"):
+                    if not Cfg.get("database", "track_admins"):
+                        return func(self, bot, update, **kwargs)
+
+                self.tgb.db.save_cmd(usr, cht, cmd)
 
             return func(self, bot, update, **kwargs)
         return _save_data

@@ -19,7 +19,9 @@ from telegram.error import InvalidToken
 
 def threaded(fn):
     def wrapper(*args, **kwargs):
-        threading.Thread(target=fn, args=args, kwargs=kwargs).start()
+        thread = threading.Thread(target=fn, args=args, kwargs=kwargs)
+        thread.start()
+        return thread
 
     return wrapper
 
@@ -27,7 +29,6 @@ def threaded(fn):
 class TelegramBot:
 
     plugins = list()
-    plugins_loaded = False
 
     def __init__(self, bot_token, bot_db):
         self.db = bot_db
@@ -103,6 +104,8 @@ class TelegramBot:
             utl.comp("^/_([a-zA-Z0-9]*)__([\w]*)$"), self._cmd_link_callback))
 
     def _load_plugins(self):
+        threads = list()
+
         for _, _, files in os.walk(os.path.join("opencryptobot", "plugins")):
             for file in files:
                 if not file.lower().endswith(".py"):
@@ -110,9 +113,14 @@ class TelegramBot:
                 if file.startswith("_"):
                     continue
 
-                self._load_plugin(file)
+                threads.append(self._load_plugin(file))
 
-        self.plugins_loaded = True
+        # Make sure that all plugins are loaded
+        for thread in threads:
+            thread.join()
+
+        for plugin in self.plugins:
+            plugin.after_plugins_loaded()
 
     @threaded
     def _load_plugin(self, file):

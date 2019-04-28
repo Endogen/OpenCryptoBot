@@ -7,9 +7,6 @@ from opencryptobot.config import ConfigManager as Cfg
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
-# TODO: Initiate job always the same way - no difference between saved instaces and direct jobs
-# TODO: Create own 'update' object and always set it for 'get_action()'
-# https://github.com/python-telegram-bot/python-telegram-bot/wiki/Code-snippets
 class Timer(OpenCryptoPlugin):
 
     def __init__(self, telegram_bot):
@@ -19,20 +16,6 @@ class Timer(OpenCryptoPlugin):
         if not Cfg.get("database", "use_db"):
             msg = f"Plugin '{type(self).__name__}' can't be used since database is disabled"
             logging.warning(msg)
-            return
-
-        # TODO: This is not working...
-        # Wait until all plugins are loaded
-        while not telegram_bot.plugins_loaded:
-            pass
-
-        # Run saved repeaters
-        for repeater in self.tgb.db.read_rep():
-            update = repeater[4]
-            args = update.message.text.split(" ")
-            interval = repeater[3]
-
-            self._run_repeater(update, args, int(interval))
 
     def get_cmds(self):
         return ["re", "repeat", "timer", "rerun"]
@@ -40,22 +23,32 @@ class Timer(OpenCryptoPlugin):
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
+        # Check if database is enabled since this plugin needs it
+        if not Cfg.get("database", "use_db"):
+            update.message.reply_text(
+                text=f"{emo.ERROR} Plugin '{type(self).__name__}' "
+                     f"can't be used since database is disabled",
+                parse_mode=ParseMode.MARKDOWN)
+            return
+
         if not args:
             update.message.reply_text(
                 text=f"Usage:\n{self.get_usage()}",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
+        # Check if database is enabled
         if not Cfg.get("database", "use_db"):
             update.message.reply_text(
                 text=f"{emo.ERROR} Database is disabled. Not possible to use command",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
+        # Extract time interval
         time = str()
         for arg in args:
-            if arg.startswith("t="):
-                time = arg.replace("t=", "")
+            if arg.startswith("i="):
+                time = arg.replace("i=", "")
                 args.remove(arg)
                 break
 
@@ -100,26 +93,20 @@ class Timer(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        # Command without arguments
-        cmd = " ".join(args)
-        # Arguments without command
-        args.pop(0)
-
         # Set command string to repeat as current message text
-        update.message.text = cmd
+        update.message.text = " ".join(args)
 
         try:
-            cntx = {"upd": update, "arg": args, "plg": plugin}
-            self.tgb.job_queue.run_repeating(self._send_msg, interval, context=cntx)
+            self._run_repeater(update, interval)
+            self.tgb.db.save_rep(update, interval)
         except Exception as e:
-            logging.error(repr(e))
-            return
-
-        self.tgb.db.save_rep(update, interval)
+            update.message.reply_text(text=f"{emo.ERROR} {e}")
+            raise e
 
         update.message.reply_text(text=f"{emo.CHECK} Timer is active")
 
-    def _run_repeater(self, update, args, interval):
+    def _run_repeater(self, update, interval):
+        args = update.message.text.split(" ")
         command = args[0].replace("/", "")
         plugin = None
 
@@ -129,17 +116,13 @@ class Timer(OpenCryptoPlugin):
                 break
 
         if not plugin:
-            update.message.reply_text(
-                text=f"{emo.ERROR} Command `/{command}` does not exist. Can not create repeater",
-                parse_mode=ParseMode.MARKDOWN)
-            return
+            raise Exception(f"Can not create repeater. Command `/{command}` not available.")
 
         try:
-            cntx = {"upd": update, "arg": args, "plg": plugin}
+            cntx = {"upd": update, "arg": args[1:], "plg": plugin}
             self.tgb.job_queue.run_repeating(self._send_msg, interval, context=cntx)
         except Exception as e:
             logging.error(repr(e))
-            return
 
     def _send_msg(self, bot, job):
         if job.context:
@@ -150,8 +133,18 @@ class Timer(OpenCryptoPlugin):
             if upd and arg and plg:
                 plg.get_action(bot, upd, args=arg)
 
+    def after_plugins_loaded(self):
+        for repeater in self.tgb.db.read_rep() or []:
+            update = repeater[4]
+            interval = repeater[3]
+
+            try:
+                self._run_repeater(update, int(interval))
+            except Exception as e:
+                update.message.reply_text(text=f"{emo.ERROR} {e}")
+
     def get_usage(self):
-        return f"`/{self.get_cmds()[0]} t=<interval>s|m|h|d <command>`"
+        return f"`/{self.get_cmds()[0]} i=<interval>s|m|h|d <command>`"
 
     def get_description(self):
         return "Send commands repeatedly"

@@ -1,6 +1,5 @@
 import os
 import pickle
-import logging
 import sqlite3
 
 from opencryptobot.config import ConfigManager as Cfg
@@ -66,23 +65,9 @@ class Database:
         with open(os.path.join(sql_path, "rep_save.sql")) as f:
             self.save_rep_sql = f.read()
 
-    def save_src(self, update):
+    def save_usr_and_cht(self, user, chat):
         con = sqlite3.connect(self._db_path)
         cur = con.cursor()
-
-        if update.message:
-            user = update.message.from_user
-            chat = update.message.chat
-        elif update.inline_query:
-            user = update.effective_user
-            chat = update.effective_chat
-        else:
-            logging.error(f"Can't save usage. User and chat unknown: {update}")
-            return None
-
-        if user.id in Cfg.get("admin_id"):
-            if not Cfg.get("database", "track_admins"):
-                return None
 
         # Check if user already exists
         cur.execute(
@@ -128,19 +113,8 @@ class Database:
 
         return {"user_id": user.id, "chat_id": chat_id}
 
-    def save_cmd(self, update):
-        ids = self.save_src(update)
-
-        if not ids:
-            return
-
-        if update.message:
-            cmd = update.message.text
-        elif update.inline_query:
-            cmd = update.inline_query.query[:-1]
-        else:
-            logging.error(f"Can't save usage. Command unknown: {update}")
-            return
+    def save_cmd(self, usr, cht, cmd):
+        ids = self.save_usr_and_cht(usr, cht)
 
         con = sqlite3.connect(self._db_path)
         cur = con.cursor()
@@ -154,14 +128,24 @@ class Database:
         con.close()
 
     # TODO: https://dba.stackexchange.com/questions/43284/two-nullable-columns-one-required-to-have-value
-    # TODO: ZIP data to reach smaller data size for DB
+    # TODO: ZIP data to reach smaller data size
     def save_rep(self, update, interval):
+        if update.message:
+            usr = update.message.from_user
+            cmd = update.message.text
+            cht = update.message.chat
+        elif update.inline_query:
+            usr = update.effective_user
+            cmd = update.inline_query.query[:-1]
+            cht = update.effective_chat
+        else:
+            raise Exception("Not possible to save repeater")
+
+        ids = self.save_usr_and_cht(usr, cht)
+        ser = pickle.dumps(update)
+
         con = sqlite3.connect(self._db_path)
         cur = con.cursor()
-
-        ids = self.save_src(update)
-        cmd = update.message.text
-        ser = pickle.dumps(update)
 
         # Save msg to be repeated
         cur.execute(
@@ -172,23 +156,24 @@ class Database:
         con.close()
 
     def read_rep(self):
-        con = sqlite3.connect(self._db_path)
-        cur = con.cursor()
+        if Cfg.get("database", "use_db"):
+            con = sqlite3.connect(self._db_path)
+            cur = con.cursor()
 
-        cur.execute(self.read_rep_sql)
-        con.commit()
+            cur.execute(self.read_rep_sql)
+            con.commit()
 
-        result = cur.fetchall()
+            result = cur.fetchall()
 
-        results = list()
-        for repeater in result:
-            rep_details = list(repeater)
-            rep_details[4] = pickle.loads(rep_details[4])
+            results = list()
+            for repeater in result:
+                rep_details = list(repeater)
+                rep_details[4] = pickle.loads(rep_details[4])
 
-            results.append(rep_details)
+                results.append(rep_details)
 
-        con.close()
-        return results
+            con.close()
+            return results
 
     def execute_sql(self, sql, *args):
         if Cfg.get("database", "use_db"):
