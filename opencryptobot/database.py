@@ -65,6 +65,7 @@ class Database:
         with open(os.path.join(sql_path, "rep_save.sql")) as f:
             self.save_rep_sql = f.read()
 
+    # Save user and / or chat to database
     def save_usr_and_cht(self, user, chat):
         con = sqlite3.connect(self._db_path)
         cur = con.cursor()
@@ -113,6 +114,7 @@ class Database:
 
         return {"user_id": user.id, "chat_id": chat_id}
 
+    # Save issued commands to database
     def save_cmd(self, usr, cht, cmd):
         ids = self.save_usr_and_cht(usr, cht)
 
@@ -127,8 +129,8 @@ class Database:
         con.commit()
         con.close()
 
-    # TODO: https://dba.stackexchange.com/questions/43284/two-nullable-columns-one-required-to-have-value
     # TODO: ZIP data to reach smaller data size
+    # Save new repeater to database
     def save_rep(self, update, interval):
         if update.message:
             usr = update.message.from_user
@@ -155,6 +157,7 @@ class Database:
         con.commit()
         con.close()
 
+    # Read repeaters from database
     def read_rep(self):
         if Cfg.get("database", "use_db"):
             con = sqlite3.connect(self._db_path)
@@ -175,6 +178,7 @@ class Database:
             con.close()
             return results
 
+    # Execute raw SQL statements on database
     def execute_sql(self, sql, *args):
         if Cfg.get("database", "use_db"):
             con = sqlite3.connect(self._db_path)
