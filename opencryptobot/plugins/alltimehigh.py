@@ -89,7 +89,7 @@ class Alltimehigh(OpenCryptoPlugin):
                        f"`"
 
         if msg:
-            msg = f"`All-Time High for {coin}`\n\n" + msg
+            msg = f"`All-Time High for {coin}`\n\n {msg}"
         else:
             msg = f"{emo.ERROR} Can't retrieve data for *{coin}*"
 
