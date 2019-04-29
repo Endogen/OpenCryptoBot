@@ -82,7 +82,7 @@ class Twitter(OpenCryptoPlugin):
                 if tw_account:
                     timeline = tw.GetUserTimeline(
                         screen_name=tw_account,
-                        count=1,
+                        count=3,
                         include_rts=False,
                         trim_user=True,
                         exclude_replies=True)
@@ -95,7 +95,7 @@ class Twitter(OpenCryptoPlugin):
                 msg = f"{tweet['text']}\n\n"
 
         if msg:
-            msg = f"`Latest Tweets for {coin}\n\n` {msg}"
+            msg = f"Latest Tweet from {coin}\n\n {msg}"
         else:
             msg = f"{emo.ERROR} Can't retrieve data for *{coin}*"
 
