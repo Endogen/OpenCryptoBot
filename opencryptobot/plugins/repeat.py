@@ -7,7 +7,7 @@ from opencryptobot.config import ConfigManager as Cfg
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
-class Timer(OpenCryptoPlugin):
+class Repeat(OpenCryptoPlugin):
 
     def __init__(self, telegram_bot):
         super().__init__(telegram_bot)
@@ -19,7 +19,7 @@ class Timer(OpenCryptoPlugin):
             logging.warning(msg)
 
     def get_cmds(self):
-        return ["re", "repeat", "timer", "rerun"]
+        return ["re", "repeat", "timer"]
 
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
