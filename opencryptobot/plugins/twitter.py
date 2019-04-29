@@ -27,11 +27,12 @@ class Twitter(OpenCryptoPlugin):
         try:
             if os.path.isfile(token_path):
                 with open(token_path, 'r') as file:
-                    # TODO: Why doesn't that work?
-                    self._consumer_key = json.load(file)["tw-consumer_key"]
-                    self._consumer_secret = json.load(file)["tw-consumer_secret"]
-                    self._access_token_key = json.load(file)["tw-access_token_key"]
-                    self._access_token_secret = json.load(file)["tw-access_token_secret"]
+                    tokens = json.load(file)
+
+                    self._consumer_key = tokens["tw-consumer_key"]
+                    self._consumer_secret = tokens["tw-consumer_secret"]
+                    self._access_token_key = tokens["tw-access_token_key"]
+                    self._access_token_secret = tokens["tw-access_token_secret"]
             else:
                 logging.error(f"No token file '{con.TKN_FILE}' found at '{token_path}'")
         except KeyError as e:
@@ -55,10 +56,10 @@ class Twitter(OpenCryptoPlugin):
 
         # Set tokens for Twitter access
         tw = twitter.Api(
-            consumer_key="QicExy1i6njxf6ZzkFR7FEaJG",
-            consumer_secret="E7nXFy8xZhBkSLzSxJbuomaNagzNt2e3zuYs8conqNHA9mm7ti",
-            access_token_key="1031526641028288513-vCTZsTtQpfAeFcflwnXd1H5H7rUS0G",
-            access_token_secret="cBwLldpRnxA5Ddwpgkw9PgxVYv7sXbV6I69WCdSYrJBUt")
+            consumer_key=self._consumer_key,
+            consumer_secret=self._consumer_secret,
+            access_token_key=self._access_token_key,
+            access_token_secret=self._access_token_secret)
 
         coin = args[0].upper()
 
