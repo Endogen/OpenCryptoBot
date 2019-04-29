@@ -33,6 +33,7 @@ This Python script is a polling based Telegram bot. [Webhook mode](https://githu
 * BPMN diagrams for commands to understand the data flow
 * Users can provide feedback about the bot
 * Experimental inline-mode (only `price` command for now)
+* Repeatedly send commands at specified time interval
 
 ### Command features
 * Current price
@@ -62,6 +63,7 @@ This Python script is a polling based Telegram bot. [Webhook mode](https://githu
 * Global dominance, volume and market cap
 * Coin logo and technical coin details
 * Search for a coin by name
+* Get latest Tweets from Twitter for a coin
 
 ## Configuration
 This part is only relevant if you want to host this bot yourself. If you just want to use the bot, add user *@OpenCryptoBot* to your Telegram contacts.
@@ -195,6 +197,7 @@ If you configured the bot correctly and execute it, the bot will check for updat
 /i - General coin information
 /m - Find exchanges to trade a coin
 /pe - Info about person from a team
+/re - Repeat any command periodically
 /se - Search for symbol by coin name
 /t - Info about team behind a coin
 /tr - Google Trends - Interest Over Time
@@ -205,6 +208,7 @@ If you configured the bot correctly and execute it, the bot will check for updat
 ```
 /n - News about a coin
 /soc - Social media details
+/tw - Latest Tweets from Twitter
 ```
 
 ##### Bot
@@ -238,6 +242,7 @@ i - General coin information
 m - Find exchanges to trade a coin
 mc - Market capitalization
 pe - Info about person from a team
+re - Repeat any command periodically
 se - Search for symbol by coin name
 t - Info about team behind a coin
 tr - Google Trends - Interest Over Time
@@ -245,6 +250,7 @@ vol - Volume for a coin
 wp - Find whitepaper for a coin
 n - News about a coin
 soc - Social media details
+tw - Latest Tweets from Twitter
 about - Information about bot
 bpmn - BPMN diagram for a command
 feedback - Send us your feedback
@@ -255,15 +261,15 @@ I am actively developing this bot and will do so also in the near future. If you
 
 ### Todo
 ##### Priority 1
-- [ ] Ban users if rate limit exceeded to often
-- [ ] Add alerts for price
+- [ ] Add alerts for prices
+- [ ] Add command for events
 
 ##### Priority 2
-- [ ] Maintainance Mode
-- [ ] Provide all BPMN diagrams
+- [ ] Add maintenance mode
+- [ ] Ban user if rate limit exceeded to often
 
 ##### Priority 3
-- [ ] Periodic messages with stats for admins
+- [ ] Provide BPMN diagrams for all commands
 
 ## Disclaimer
 I use this bot personally to check the current state of some coins but since all the data is relying on external APIs, i can't guarantee that all informations are correct. Please use with caution. **I can't be held responsible for anything!**
@@ -288,7 +294,7 @@ qzken7mgslv0w9t4ycj4uganv66ljccsq5ngcepp6h
 
 #### Monero (XMR)
 ```
-42n5AkXZDtEBdPRUxxWbbjR4ozNdDBvzuAKUDk3AmBNMK5zcpYyav9t1e17YqZFjLTLj3UJspHkBLJhJu83tPDSv8hJNNX1
+42eSjjHF63P3LtxcdeC71TT3ZCcGbTtk1aESTvfrz4VqYeKMFP9tbWhjmcUJZE3yVrgDjH8uZhnob9czCtm764cFDWYPe7c
 ```
 
 #### How else can you support me?
