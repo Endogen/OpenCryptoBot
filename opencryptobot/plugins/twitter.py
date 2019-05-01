@@ -77,6 +77,7 @@ class Twitter(OpenCryptoPlugin):
                 except Exception as e:
                     return self.handle_error(e, update)
 
+                coin_name = data["name"]
                 tw_account = data["links"]["twitter_screen_name"]
 
                 if tw_account:
@@ -88,20 +89,17 @@ class Twitter(OpenCryptoPlugin):
                         exclude_replies=True)
                 break
 
-        msg = None
-
         if timeline:
             for tweet in [i.AsDict() for i in reversed(timeline)]:
-                msg = f"{tweet['text']}\n\n"
+                stats = f"{emo.HEART} {tweet['favorite_count']} " \
+                        f"{emo.REPEAT} {tweet['retweet_count']}"
 
-        if msg:
-            msg = f"Latest Tweet from {coin}\n\n {msg}"
-        else:
-            msg = f"{emo.ERROR} Can't retrieve data for *{coin}*"
+                msg = f"*Tweet from {coin_name}*\n" \
+                      f"{tweet['created_at'].split('+')[0]}\n" \
+                      f"{stats}\n\n" \
+                      f"{tweet['text']}"
 
-        update.message.reply_text(
-            text=msg,
-            parse_mode=ParseMode.MARKDOWN)
+                update.message.reply_text(text=msg, parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
         return f"`/{self.get_cmds()[0]} <symbol>`"
