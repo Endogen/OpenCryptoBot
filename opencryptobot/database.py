@@ -57,13 +57,21 @@ class Database:
         with open(os.path.join(sql_path, "cmd_save.sql")) as f:
             self.save_cmd_sql = f.read()
 
-        # SQL - Read repeating command
+        # SQL - Read repeating commands
+        with open(os.path.join(sql_path, "rep_read_all.sql")) as f:
+            self.read_rep_all_sql = f.read()
+
+        # SQL - Read repeating commands for a user or chat
         with open(os.path.join(sql_path, "rep_read.sql")) as f:
             self.read_rep_sql = f.read()
 
         # SQL - Save repeating command
         with open(os.path.join(sql_path, "rep_save.sql")) as f:
             self.save_rep_sql = f.read()
+
+        # SQL - Delete repeating command
+        with open(os.path.join(sql_path, "rep_delete.sql")) as f:
+            self.delete_rep_sql = f.read()
 
     # Save user and / or chat to database
     def save_usr_and_cht(self, user, chat):
@@ -112,6 +120,7 @@ class Database:
 
                 con.commit()
 
+        con.close()
         return {"user_id": user.id, "chat_id": chat_id}
 
     # Save issued commands to database
@@ -158,12 +167,18 @@ class Database:
         con.close()
 
     # Read repeaters from database
-    def read_rep(self):
+    def read_rep(self, user_id=None):
         if Cfg.get("database", "use_db"):
             con = sqlite3.connect(self._db_path)
             cur = con.cursor()
 
-            cur.execute(self.read_rep_sql)
+            if user_id:
+                cur.execute(
+                    self.read_rep_sql,
+                    [user_id])
+            else:
+                cur.execute(self.read_rep_all_sql)
+
             con.commit()
 
             result = cur.fetchall()
@@ -177,6 +192,18 @@ class Database:
 
             con.close()
             return results
+
+    def delete_rep(self, user_id, command):
+        if Cfg.get("database", "use_db"):
+            con = sqlite3.connect(self._db_path)
+            cur = con.cursor()
+
+            cur.execute(
+                self.delete_rep_sql,
+                [int(user_id), command])
+
+            con.commit()
+            con.close()
 
     # Execute raw SQL statements on database
     def execute_sql(self, sql, *args):

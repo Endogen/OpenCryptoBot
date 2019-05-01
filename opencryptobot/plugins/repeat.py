@@ -2,9 +2,10 @@ import logging
 import opencryptobot.emoji as emo
 import opencryptobot.utils as utl
 
-from telegram import ParseMode
 from opencryptobot.config import ConfigManager as Cfg
 from opencryptobot.plugin import OpenCryptoPlugin, Category
+from telegram import ParseMode, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import CallbackQueryHandler
 
 
 class Repeat(OpenCryptoPlugin):
@@ -17,6 +18,12 @@ class Repeat(OpenCryptoPlugin):
             msg = f"Plugin '{type(self).__name__}' " \
                   f"can't be used since database is disabled"
             logging.warning(msg)
+
+        # Add callback handler for removing repeaters
+        self.tgb.dispatcher.add_handler(
+            CallbackQueryHandler(
+                self._callback,
+                pattern="^(re|repeat|timer)"))
 
     def get_cmds(self):
         return ["re", "repeat", "timer"]
@@ -32,20 +39,36 @@ class Repeat(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
+        # Check if any arguments provided
         if not args:
             update.message.reply_text(
                 text=f"Usage:\n{self.get_usage()}",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
+        # 'list' argument - show all repeaters for a user
+        if args[0].lower() == "list":
+            repeaters = self.tgb.db.read_rep(update.effective_user.id)
+
+            if repeaters:
+                for repeater in repeaters:
+                    update.message.reply_text(
+                        text=f"`{repeater[2]}`\n"
+                             f"↺ {repeater[3]} seconds",
+                        parse_mode=ParseMode.MARKDOWN,
+                        reply_markup=self._keyboard_remove_rep())
+                return
+            else:
+                update.message.reply_text(f"{emo.INFO} No repeaters active")
+                return
+
         # Extract time interval
         interval = str()
-        for arg in args:
-            if arg.startswith("i="):
-                interval = arg.replace("i=", "")
-                args.remove(arg)
-                break
+        if args[0].startswith("i="):
+            interval = args[0].replace("i=", "")
+            args.pop(0)
 
+        # Check if time interval is provided
         if not interval:
             update.message.reply_text(
                 text=f"{emo.ERROR} Time interval has to be provided",
@@ -55,35 +78,17 @@ class Repeat(OpenCryptoPlugin):
         # In seconds
         interval = utl.get_seconds(interval)
 
+        # Check if interval was successfully converted to seconds
         if not interval:
             update.message.reply_text(
                 text=f"{emo.ERROR} Wrong format for time interval",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
+        # Check for command to repeat
         if not args:
             update.message.reply_text(
-                text=f"{emo.ERROR} No command to repeat",
-                parse_mode=ParseMode.MARKDOWN)
-            return
-
-        if not update.message:
-            update.message.reply_text(
-                text=f"{emo.ERROR} Message is empty",
-                parse_mode=ParseMode.MARKDOWN)
-            return
-
-        command = args[0].replace("/", "")
-        plugin = None
-
-        for plg in self.tgb.plugins:
-            if command in plg.get_cmds():
-                plugin = plg
-                break
-
-        if not plugin:
-            update.message.reply_text(
-                text=f"{emo.ERROR} Command `/{command}` does not exist",
+                text=f"{emo.ERROR} Provide command to repeat",
                 parse_mode=ParseMode.MARKDOWN)
             return
 
@@ -94,30 +99,35 @@ class Repeat(OpenCryptoPlugin):
             self._run_repeater(update, interval)
             self.tgb.db.save_rep(update, interval)
         except Exception as e:
-            update.message.reply_text(text=f"{emo.ERROR} {e}")
-            raise e
+            update.message.reply_text(
+                text=f"{emo.ERROR} {e}",
+                parse_mode=ParseMode.MARKDOWN)
+            return
 
         update.message.reply_text(text=f"{emo.CHECK} Timer is active")
 
+    # Create job to repeatedly send command
     def _run_repeater(self, update, interval):
         args = update.message.text.split(" ")
-        command = args[0].replace("/", "")
+        cmd = args[0].replace("/", "")
         plugin = None
 
         for plg in self.tgb.plugins:
-            if command in plg.get_cmds():
+            if cmd.lower() in plg.get_cmds():
                 plugin = plg
                 break
 
         if not plugin:
-            raise Exception(f"Can not create repeater. Command `/{command}` not available.")
+            raise Exception(f"Repeater not created. Command `/{cmd}` not found.")
 
         try:
             cntx = {"upd": update, "arg": args[1:], "plg": plugin}
             self.tgb.job_queue.run_repeating(self._send_msg, interval, context=cntx)
         except Exception as e:
             logging.error(repr(e))
+            raise e
 
+    # Execute repeater command
     def _send_msg(self, bot, job):
         if job.context:
             upd = job.context["upd"]
@@ -127,6 +137,7 @@ class Repeat(OpenCryptoPlugin):
             if upd and arg and plg:
                 plg.get_action(bot, upd, args=arg)
 
+    # Run all saved repeaters after all plugins loaded
     def after_plugins_loaded(self):
         for repeater in self.tgb.db.read_rep() or []:
             update = repeater[4]
@@ -135,10 +146,32 @@ class Repeat(OpenCryptoPlugin):
             try:
                 self._run_repeater(update, int(interval))
             except Exception as e:
-                update.message.reply_text(text=f"{emo.ERROR} {e}")
+                update.message.reply_text(
+                    text=f"{emo.ERROR} {e}",
+                    parse_mode=ParseMode.MARKDOWN)
+
+    def _keyboard_remove_rep(self):
+        menu = self.build_menu([InlineKeyboardButton("Remove", callback_data="remove")])
+        return InlineKeyboardMarkup(menu, resize_keyboard=True)
+
+    # Callback to delete repeater
+    def _callback(self, bot, update):
+        query = update.callback_query
+
+        if query.data == "remove":
+            user_id = query.from_user.id
+            command = query.message.text.split('\n', 1)[0]
+            self.tgb.db.delete_rep(user_id, command)
+
+            bot.edit_message_text(
+                text=f"`{command}`\n"
+                     f"{emo.CANCEL} *Repeater removed*",
+                chat_id=query.message.chat_id,
+                message_id=query.message.message_id,
+                parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmds()[0]} i=<interval>s|m|h|d <command>`"
+        return f"`/{self.get_cmds()[0]} list | i=<interval>s|m|h|d <command>`"
 
     def get_description(self):
         return "Send commands repeatedly"
