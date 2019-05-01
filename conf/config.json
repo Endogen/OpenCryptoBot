@@ -15,7 +15,7 @@
     },
     "database": {
         "use_db": true,
-        "track_admins": false
+        "track_admins": true
     },
     "rate_limit": {
         "enabled": true,
