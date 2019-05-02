@@ -123,7 +123,7 @@ class Volume(OpenCryptoPlugin):
         return f"`/{self.get_cmds()[0]} (<target symbol>-)<symbol> | top=<# of currencies>`"
 
     def get_description(self):
-        return "Volume for a coin"
+        return "Volume of a coin"
 
     def get_category(self):
         return Category.GENERAL
