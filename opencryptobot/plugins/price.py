@@ -9,6 +9,8 @@ from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
+# TODO: Show website for usage info?
+# TODO: Change order of currencies from 'eur-xmr' to 'xmr-eur'
 class Price(OpenCryptoPlugin):
 
     bot_name = None
@@ -70,19 +72,19 @@ class Price(OpenCryptoPlugin):
                 if vs_cur:
                     vs_list = vs_cur.split(",")
 
-                for ticker in result["tickers"]:
-                    if ticker["market"]["name"].upper() == exchange.upper():
-                        if ticker["base"] != coin:
-                            base_coin = ticker["base"]
+                for ticker_len in result["tickers"]:
+                    if ticker_len["market"]["name"].upper() == exchange.upper():
+                        if ticker_len["base"] != coin:
+                            base_coin = ticker_len["base"]
                         else:
-                            base_coin = ticker["target"]
+                            base_coin = ticker_len["target"]
 
                         if vs_list:
                             if base_coin in vs_list:
-                                price = utl.format(ticker["last"], force_length=True)
+                                price = utl.format(ticker_len["last"], force_length=True)
                                 msg += f"`{base_coin}: {price}`\n"
                         else:
-                            price = utl.format(ticker["last"], force_length=True)
+                            price = utl.format(ticker_len["last"], force_length=True)
                             msg += f"`{base_coin}: {price}`\n"
         else:
             if not vs_cur:
@@ -112,7 +114,21 @@ class Price(OpenCryptoPlugin):
 
         if msg:
             if exchange:
-                msg = f"`{coin} ({coin_name}) on {exchange.capitalize()}`\n\n" + msg
+                ticker_len = 0
+                for line in msg.split("\n"):
+                    length = len(line[:line.find(":")])
+                    if ticker_len < length:
+                        ticker_len = length
+
+                message = str()
+                for line in msg.split("\n"):
+                    if line:
+                        lst = line.split(" ")
+                        index = ticker_len + 2 + len(lst[1]) - len(lst[0])
+                        price = "{1:>{0}}".format(index, lst[1])
+                        message += f"{lst[0]}{price}\n"
+
+                msg = f"`{coin} ({coin_name}) on {exchange.capitalize()}`\n\n" + message
             else:
                 msg = f"`{coin} ({coin_name})`\n\n" + msg
         else:
