@@ -2,7 +2,7 @@
 Please visit the [homepage](https://endogen.github.io/OpenCryptoBot) to get detailed descriptions and examples for all available commands and to read up on latest news regarding this bot.  
 
 🔹 *Usage*
-You can use this bot directly (DM the bot) or add him to your group by adding user @opencryptobot. If you like to run your own instance of the bot on your own server, that's possible too. Visit the [homepage](https://endogen.github.io/OpenCryptoBot) to see how that works. 
+You can use this bot directly by chatting with him (user @OpenCryptoBot) or add him to your group by clicking [here](https://telegram.me/OpenCryptoBot?startgroup=add). If you like to run your own instance of the bot on your own server, that's possible too. Visit the [homepage](https://endogen.github.io/OpenCryptoBot) to see how that works. 
 
 🔹 *Development*
 This bot ist open source and the source code can be found at [GitHub](https://github.com/Endogen/OpenCryptoBot). The bot is written in Python and was developed by @endogen.
@@ -22,4 +22,4 @@ If you like the bot, please consider a donation to support further development:
 `0x15c3dB6f0f3cC3A187Cfa4b20605293a08b9Be46`
 
 /donateXMR Monero
-`42n5AkXZDtEBdPRUxxWbbjR4ozNdDBvzuAKUDk3AmBNMK5zcpYyav9t1e17YqZFjLTLj3UJspHkBLJhJu83tPDSv8hJNNX1`
+`42eSjjHF63P3LtxcdeC71TT3ZCcGbTtk1aESTvfrz4VqYeKMFP9tbWhjmcUJZE3yVrgDjH8uZhnob9czCtm764cFDWYPe7c`
