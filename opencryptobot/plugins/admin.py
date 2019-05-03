@@ -7,6 +7,8 @@ from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackQueryHandler
 
 
+# TODO: Extract SQL statements to files
+# TODO: Add usage info for 'man' command
 class Admin(OpenCryptoPlugin):
 
     def __init__(self, telegram_bot):
@@ -113,7 +115,8 @@ class Admin(OpenCryptoPlugin):
             InlineKeyboardButton("Number of Commands", callback_data="admin_cmds"),
             InlineKeyboardButton("Number of Users", callback_data="admin_usrs"),
             InlineKeyboardButton("Command Toplist", callback_data="admin_cmdtop"),
-            InlineKeyboardButton("Language Toplist", callback_data="admin_langtop")]
+            InlineKeyboardButton("Language Toplist", callback_data="admin_langtop"),
+            InlineKeyboardButton("User Toplist", callback_data="admin_usertop")]
 
         menu = self.build_menu(buttons)
         return InlineKeyboardMarkup(menu, resize_keyboard=True)
@@ -204,3 +207,31 @@ class Admin(OpenCryptoPlugin):
                 chat_id=update.effective_user.id,
                 text=f"`Language Toplist:\n\n{msg}`",
                 parse_mode=ParseMode.MARKDOWN)
+
+        # Statistics - User Toplist
+        elif query.data == "admin_usertop":
+            sql = "SELECT first_name, COUNT(command) " \
+                  "FROM cmd_data AS cmd JOIN users AS usr " \
+                  "ON cmd.user_id = usr.user_id " \
+                  "GROUP BY usr.user_id " \
+                  "ORDER BY 2 DESC " \
+                  "LIMIT 30"
+            data = self.tgb.db.execute_sql(sql)
+
+            msg = str()
+            for row in data or []:
+                msg += f"{row[1]} {row[0]}\n"
+
+            if not msg:
+                bot.send_message(
+                    chat_id=update.effective_user.id,
+                    text=f"`{emo.INFO} No results`",
+                    parse_mode=ParseMode.MARKDOWN)
+                return
+
+            bot.send_message(
+                chat_id=update.effective_user.id,
+                text=f"`User Toplist:\n\n{msg}`",
+                parse_mode=ParseMode.MARKDOWN)
+
+        bot.answer_callback_query(query.id, text="Query executed")
