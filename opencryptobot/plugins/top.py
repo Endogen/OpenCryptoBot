@@ -50,8 +50,8 @@ class Top(OpenCryptoPlugin):
 
                 if base_cur == "EUR":
                     price = f"{price} {fiat_symbol}"
-                    mcap = f"{utl.format(market[i]['market_cap'])} {fiat_symbol}"
-                    vol = f"{utl.format(market[i]['total_volume'])} {fiat_symbol}"
+                    mcap = f"{utl.format(market[i]['market_cap'])}{fiat_symbol}"
+                    vol = f"{utl.format(market[i]['total_volume'])}{fiat_symbol}"
                 elif base_cur == "USD":
                     price = f"{fiat_symbol}{price}"
                     mcap = f"{fiat_symbol}{utl.format(market[i]['market_cap'])}"
