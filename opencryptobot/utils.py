@@ -164,7 +164,7 @@ def get_keywords(args):
         for arg in args:
             if "=" in arg:
                 kv = arg.split("=")
-                keywords[kv[0].lower()] = kv[1].lower()
+                keywords[kv[0]] = kv[1]
 
     return keywords
 
