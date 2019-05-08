@@ -14,6 +14,7 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 class Price(OpenCryptoPlugin):
 
     bot_name = None
+    cg_url = "https://www.coingecko.com/en/coins/"
 
     def get_cmds(self):
         return ["p", "price"]
@@ -131,13 +132,17 @@ class Price(OpenCryptoPlugin):
                 msg = f"`{coin} ({coin_name}) on {exchange.capitalize()}`\n\n" + message
             else:
                 msg = f"`{coin} ({coin_name})`\n\n" + msg
+
+            # Add link to source of data (CoinGecko)
+            msg += f"\nSource: [CoinGecko]({self.cg_url}{coin_id})"
         else:
             msg = f"{emo.ERROR} Can't retrieve data for *{coin}*"
 
         if update.message:
             update.message.reply_text(
-                text=msg,
-                parse_mode=ParseMode.MARKDOWN)
+                text=f"{msg}",
+                parse_mode=ParseMode.MARKDOWN,
+                disable_web_page_preview=True)
         else:
             return msg
 
