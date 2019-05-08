@@ -134,7 +134,7 @@ class Price(OpenCryptoPlugin):
                 msg = f"`{coin} ({coin_name})`\n\n" + msg
 
             # Add link to source of data (CoinGecko)
-            msg += f"\nSource: [CoinGecko]({self.cg_url}{coin_id})"
+            msg += f"\n[Details on CoinGecko]({self.cg_url}{coin_id})"
         else:
             msg = f"{emo.ERROR} Can't retrieve data for *{coin}*"
 
