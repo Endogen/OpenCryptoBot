@@ -139,6 +139,8 @@ class Database:
         con.commit()
         con.close()
 
+    # TODO: Create table 'repeater' with primary key 'user' & 'command'
+    # TODO: Don't allow to have multiple same repeaters
     # Save new repeater to database
     def save_rep(self, update, interval):
         if update.message:
@@ -167,7 +169,7 @@ class Database:
         con.close()
 
     # Read repeaters from database
-    def read_rep(self, user_id=None):
+    def read_rep(self, user_id=None, chat_id=None):
         if Cfg.get("database", "use_db"):
             con = sqlite3.connect(self._db_path)
             cur = con.cursor()
@@ -175,7 +177,7 @@ class Database:
             if user_id:
                 cur.execute(
                     self.read_rep_sql,
-                    [user_id])
+                    [user_id, chat_id])
             else:
                 cur.execute(self.read_rep_all_sql)
 

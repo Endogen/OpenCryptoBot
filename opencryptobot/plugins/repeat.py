@@ -8,6 +8,7 @@ from telegram import ParseMode, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler
 
 
+# TODO: Is it possible to have inline repeaters?
 class Repeat(OpenCryptoPlugin):
 
     def __init__(self, telegram_bot):
@@ -48,7 +49,9 @@ class Repeat(OpenCryptoPlugin):
 
         # 'list' argument - show all repeaters for a user
         if args[0].lower() == "list":
-            repeaters = self.tgb.db.read_rep(update.effective_user.id)
+            chat_id = update.message.chat.id
+            user_id = update.message.from_user.id
+            repeaters = self.tgb.db.read_rep(user_id, chat_id)
 
             if repeaters:
                 for repeater in repeaters:
@@ -135,7 +138,26 @@ class Repeat(OpenCryptoPlugin):
             plg = job.context["plg"]
 
             if upd and arg and plg:
+                user_id = upd.message.from_user.id
+                chat_id = upd.message.chat.id
+                command = upd.message.text
+
+                active = False
+
+                # Check if repeater still exists in DB
+                for rep in self.tgb.db.read_rep(user_id, chat_id):
+                    if rep[2].lower() == command.lower():
+                        active = True
+                        break
+
+                if not active:
+                    job.schedule_removal()
+
                 plg.get_action(bot, upd, args=arg)
+            else:
+                job.schedule_removal()
+        else:
+            job.schedule_removal()
 
     # Run all saved repeaters after all plugins loaded
     def after_plugins_loaded(self):

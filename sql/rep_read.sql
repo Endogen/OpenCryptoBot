@@ -1,3 +1,3 @@
 SELECT *
 FROM repeaters
-WHERE user_id = ?
+WHERE user_id = ? AND chat_id = ?
