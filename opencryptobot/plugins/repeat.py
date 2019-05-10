@@ -2,6 +2,7 @@ import logging
 import opencryptobot.emoji as emo
 import opencryptobot.utils as utl
 
+from sqlite3 import IntegrityError
 from opencryptobot.config import ConfigManager as Cfg
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 from telegram import ParseMode, InlineKeyboardButton, InlineKeyboardMarkup
@@ -101,11 +102,14 @@ class Repeat(OpenCryptoPlugin):
         try:
             self._run_repeater(update, interval)
             self.tgb.db.save_rep(update, interval)
-        except Exception as e:
-            update.message.reply_text(
-                text=f"{emo.ERROR} {e}",
-                parse_mode=ParseMode.MARKDOWN)
+        except IntegrityError as ie:
+            err = "Repeater already saved"
+            update.message.reply_text(f"{emo.ERROR} {err}")
+            logging.warning(f"{err} {ie}")
             return
+        except Exception as e:
+            update.message.reply_text(f"{emo.ERROR} {e}")
+            raise e
 
         update.message.reply_text(text=f"{emo.CHECK} Timer is active")
 
