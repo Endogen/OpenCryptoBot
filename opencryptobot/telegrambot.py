@@ -60,7 +60,8 @@ class TelegramBot:
         self._load_plugins()
 
         # Handler for inline-mode
-        self.dispatcher.add_handler(InlineQueryHandler(self._inline))
+        inline_handler = InlineQueryHandler(self._inline)
+        self.dispatcher.add_handler(inline_handler)
 
         # Handle all Telegram related errors
         self.dispatcher.add_error_handler(self._handle_tg_errors)
