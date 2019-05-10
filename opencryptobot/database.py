@@ -139,17 +139,15 @@ class Database:
         con.commit()
         con.close()
 
-    # TODO: Create table 'repeater' with primary key 'user' & 'command'
-    # TODO: Don't allow to have multiple same repeaters
     # Save new repeater to database
     def save_rep(self, update, interval):
         if update.message:
             usr = update.message.from_user
-            cmd = update.message.text
+            cmd = update.message.text.lower()
             cht = update.message.chat
         elif update.inline_query:
             usr = update.effective_user
-            cmd = update.inline_query.query[:-1]
+            cmd = update.inline_query.query[:-1].lower()
             cht = update.effective_chat
         else:
             raise Exception("Not possible to save repeater")
