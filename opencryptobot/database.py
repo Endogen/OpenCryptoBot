@@ -1,4 +1,5 @@
 import os
+import zlib
 import pickle
 import sqlite3
 
@@ -138,7 +139,6 @@ class Database:
         con.commit()
         con.close()
 
-    # TODO: ZIP data to reach smaller data size
     # Save new repeater to database
     def save_rep(self, update, interval):
         if update.message:
@@ -153,7 +153,7 @@ class Database:
             raise Exception("Not possible to save repeater")
 
         ids = self.save_usr_and_cht(usr, cht)
-        ser = pickle.dumps(update)
+        upd = zlib.compress(pickle.dumps(update))
 
         con = sqlite3.connect(self._db_path)
         cur = con.cursor()
@@ -161,7 +161,7 @@ class Database:
         # Save msg to be repeated
         cur.execute(
             self.save_rep_sql,
-            [ids["user_id"], ids["chat_id"], cmd, interval, ser])
+            [ids["user_id"], ids["chat_id"], cmd, interval, upd])
 
         con.commit()
         con.close()
@@ -185,10 +185,10 @@ class Database:
 
             results = list()
             for repeater in result:
-                rep_details = list(repeater)
-                rep_details[4] = pickle.loads(rep_details[4])
+                rep = list(repeater)
+                rep[4] = pickle.loads(zlib.decompress(rep[4]))
 
-                results.append(rep_details)
+                results.append(rep)
 
             con.close()
             return results
