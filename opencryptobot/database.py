@@ -173,6 +173,9 @@ class Database:
             cur = con.cursor()
 
             if user_id:
+                if user_id == chat_id:
+                    chat_id = None
+
                 cur.execute(
                     self.read_rep_sql,
                     [user_id, chat_id])

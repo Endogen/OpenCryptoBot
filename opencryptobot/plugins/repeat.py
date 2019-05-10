@@ -52,6 +52,7 @@ class Repeat(OpenCryptoPlugin):
         if args[0].lower() == "list":
             chat_id = update.message.chat.id
             user_id = update.message.from_user.id
+
             repeaters = self.tgb.db.read_rep(user_id, chat_id)
 
             if repeaters:
@@ -100,8 +101,8 @@ class Repeat(OpenCryptoPlugin):
         update.message.text = " ".join(args)
 
         try:
-            self._run_repeater(update, interval)
             self.tgb.db.save_rep(update, interval)
+            self._run_repeater(update, interval)
         except IntegrityError as ie:
             err = "Repeater already saved"
             update.message.reply_text(f"{emo.ERROR} {err}")
