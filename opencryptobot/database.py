@@ -100,7 +100,7 @@ class Database:
 
         chat_id = None
 
-        if chat.id != user.id:
+        if chat and chat.id != user.id:
             chat_id = chat.id
 
             # Check if chat already exists
