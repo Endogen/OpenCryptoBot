@@ -2,6 +2,7 @@ import os
 import zlib
 import pickle
 import sqlite3
+import opencryptobot.constants as con
 
 from opencryptobot.config import ConfigManager as Cfg
 
@@ -39,40 +40,30 @@ class Database:
             con.close()
 
         # SQL - Check if user exists
-        with open(os.path.join(sql_path, "user_exists.sql")) as f:
-            self.usr_exist_sql = f.read()
-
+        self.usr_exist_sql = self._get_sql("user_exists")
         # SQL - Check if chat exists
-        with open(os.path.join(sql_path, "chat_exists.sql")) as f:
-            self.cht_exist_sql = f.read()
-
+        self.cht_exist_sql = self._get_sql("chat_exists")
         # SQL - Add user
-        with open(os.path.join(sql_path, "user_add.sql")) as f:
-            self.add_usr_sql = f.read()
-
+        self.add_usr_sql = self._get_sql("user_add")
         # SQL - Add chat
-        with open(os.path.join(sql_path, "chat_add.sql")) as f:
-            self.add_cht_sql = f.read()
-
+        self.add_cht_sql = self._get_sql("chat_add")
         # SQL - Save command
-        with open(os.path.join(sql_path, "cmd_save.sql")) as f:
-            self.save_cmd_sql = f.read()
-
+        self.save_cmd_sql = self._get_sql("cmd_save")
         # SQL - Read repeating commands
-        with open(os.path.join(sql_path, "rep_read_all.sql")) as f:
-            self.read_rep_all_sql = f.read()
-
+        self.read_rep_all_sql = self._get_sql("rep_read_all")
         # SQL - Read repeating commands for a user or chat
-        with open(os.path.join(sql_path, "rep_read.sql")) as f:
-            self.read_rep_sql = f.read()
-
+        self.read_rep_sql = self._get_sql("rep_read")
         # SQL - Save repeating command
-        with open(os.path.join(sql_path, "rep_save.sql")) as f:
-            self.save_rep_sql = f.read()
-
+        self.save_rep_sql = self._get_sql("rep_save")
         # SQL - Delete repeating command
-        with open(os.path.join(sql_path, "rep_delete.sql")) as f:
-            self.delete_rep_sql = f.read()
+        self.delete_rep_sql = self._get_sql("rep_delete")
+
+    # TODO: Same as in class OpenCryptoPlugin
+    def _get_sql(self, name):
+        name = f"{name.lower()}.sql"
+        cls_name = type(self).__name__.lower()
+        with open(os.path.join(con.SQL_DIR, cls_name, name)) as f:
+            return f.read()
 
     # Save user and / or chat to database
     def save_usr_and_cht(self, user, chat):
