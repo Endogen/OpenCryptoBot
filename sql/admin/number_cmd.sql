@@ -1,0 +1,1 @@
+SELECT COUNT(command) FROM cmd_data

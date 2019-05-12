@@ -7,12 +7,11 @@ from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackQueryHandler
 
 
-# TODO: Extract SQL statements to files
-# TODO: Add usage info for 'man' command
 class Admin(OpenCryptoPlugin):
 
     def __init__(self, telegram_bot):
         super().__init__(telegram_bot)
+
         self.tgb.dispatcher.add_handler(
             CallbackQueryHandler(
                 self._callback,
@@ -32,7 +31,8 @@ class Admin(OpenCryptoPlugin):
                 args.pop(0)
                 sql = " ".join(args)
 
-                update.message.reply_text(repr(self.tgb.db.execute_sql(sql)))
+                data = self.tgb.db.execute_sql(sql)
+                update.message.reply_text(repr(data))
 
             # Change configuration
             elif command == "cfg":
@@ -64,7 +64,7 @@ class Admin(OpenCryptoPlugin):
             elif command == "msg":
                 args.pop(0)
 
-                sql = "SELECT user_id FROM users"
+                sql = self.get_sql("global_msg")
                 data = self.tgb.db.execute_sql(sql)
 
                 title = "This is a global message to " \
@@ -126,8 +126,7 @@ class Admin(OpenCryptoPlugin):
 
         # Statistics - Number of Commands
         if query.data == "admin_cmds":
-            sql = "SELECT COUNT(command) FROM cmd_data"
-            data = self.tgb.db.execute_sql(sql)
+            data = self.tgb.db.execute_sql(self.get_sql("number_cmd"))
 
             if not data:
                 bot.send_message(
@@ -143,8 +142,7 @@ class Admin(OpenCryptoPlugin):
 
         # Statistics - Number of Users
         elif query.data == "admin_usrs":
-            sql = "SELECT COUNT(user_id) FROM users"
-            data = self.tgb.db.execute_sql(sql)
+            data = self.tgb.db.execute_sql(self.get_sql("number_usr"))
 
             if not data:
                 bot.send_message(
@@ -160,12 +158,7 @@ class Admin(OpenCryptoPlugin):
 
         # Statistics - Command Toplist
         elif query.data == "admin_cmdtop":
-            sql = "SELECT command, COUNT(command) AS number " \
-                  "FROM cmd_data " \
-                  "GROUP BY command " \
-                  "ORDER BY 2 DESC " \
-                  "LIMIT 25"
-            data = self.tgb.db.execute_sql(sql)
+            data = self.tgb.db.execute_sql(self.get_sql("cmd_top"))
 
             msg = str()
             for row in data or []:
@@ -185,12 +178,7 @@ class Admin(OpenCryptoPlugin):
 
         # Statistics - Language Toplist
         elif query.data == "admin_langtop":
-            sql = "SELECT language, COUNT(language) AS lang " \
-                  "FROM users " \
-                  "GROUP BY language " \
-                  "ORDER BY 2 DESC " \
-                  "LIMIT 15"
-            data = self.tgb.db.execute_sql(sql)
+            data = self.tgb.db.execute_sql(self.get_sql("lang_top"))
 
             msg = str()
             for row in data or []:
@@ -210,13 +198,7 @@ class Admin(OpenCryptoPlugin):
 
         # Statistics - User Toplist
         elif query.data == "admin_usertop":
-            sql = "SELECT first_name, COUNT(command) " \
-                  "FROM cmd_data AS cmd JOIN users AS usr " \
-                  "ON cmd.user_id = usr.user_id " \
-                  "GROUP BY usr.user_id " \
-                  "ORDER BY 2 DESC " \
-                  "LIMIT 30"
-            data = self.tgb.db.execute_sql(sql)
+            data = self.tgb.db.execute_sql(self.get_sql("user_top"))
 
             msg = str()
             for row in data or []:
