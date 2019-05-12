@@ -1,6 +1,8 @@
+import os
 import inspect
 import logging
 import opencryptobot.emoji as emo
+import opencryptobot.constants as con
 
 from telegram import ChatAction
 from telegram.ext import CommandHandler
@@ -137,6 +139,12 @@ class OpenCryptoPlugin(PluginInterface):
             menu.append(footer_buttons)
 
         return menu
+
+    def get_sql(self, name):
+        name = f"{name.lower()}.sql"
+        cls_name = type(self).__name__.lower()
+        with open(os.path.join(con.SQL_DIR, cls_name, name)) as f:
+            return f.read()
 
 
 class Category:
