@@ -2,6 +2,7 @@ import os
 import zlib
 import pickle
 import sqlite3
+import opencryptobot.emoji as emo
 import opencryptobot.constants as con
 
 from opencryptobot.config import ConfigManager as Cfg
@@ -205,10 +206,14 @@ class Database:
             con = sqlite3.connect(self._db_path)
             cur = con.cursor()
 
-            cur.execute(sql, args)
-            con.commit()
+            try:
+                cur.execute(sql, args)
+                con.commit()
+            except Exception as e:
+                return f"{emo.ERROR} {e}"
 
             result = cur.fetchall()
+            result = '\n'.join(str(s) for s in result)
 
             con.close()
             return result
