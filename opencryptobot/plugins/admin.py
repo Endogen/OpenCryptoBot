@@ -29,10 +29,18 @@ class Admin(OpenCryptoPlugin):
             # Execute raw SQL
             if command == "sql":
                 args.pop(0)
-                sql = " ".join(args)
 
+                sql = " ".join(args)
                 data = self.tgb.db.execute_sql(sql)
-                update.message.reply_text(repr(data))
+
+                if data["error"]:
+                    msg = data["error"]
+                elif data["result"]:
+                    msg = '\n'.join(str(s) for s in data["result"])
+                else:
+                    msg = f"{emo.INFO} No data returned"
+
+                update.message.reply_text(msg)
 
             # Change configuration
             elif command == "cfg":
@@ -128,32 +136,32 @@ class Admin(OpenCryptoPlugin):
         if query.data == "admin_cmds":
             data = self.tgb.db.execute_sql(self.get_sql("number_cmd"))
 
-            if not data:
-                bot.send_message(
-                    chat_id=update.effective_user.id,
-                    text=f"`{emo.INFO} No results`",
-                    parse_mode=ParseMode.MARKDOWN)
-                return
+            if data["error"]:
+                msg = data["error"]
+            elif data["result"]:
+                msg = f"`Commands: {data['result'][0][0]}`"
+            else:
+                msg = f"{emo.INFO} No data returned"
 
             bot.send_message(
+                text=msg,
                 chat_id=update.effective_user.id,
-                text=f"`Commands: {data[0][0]}`",
                 parse_mode=ParseMode.MARKDOWN)
 
         # Statistics - Number of Users
         elif query.data == "admin_usrs":
             data = self.tgb.db.execute_sql(self.get_sql("number_usr"))
 
-            if not data:
-                bot.send_message(
-                    chat_id=update.effective_user.id,
-                    text=f"`{emo.INFO} No results`",
-                    parse_mode=ParseMode.MARKDOWN)
-                return
+            if data["error"]:
+                msg = data["error"]
+            elif data["result"]:
+                msg = f"`Users: {data['result'][0][0]}`"
+            else:
+                msg = f"{emo.INFO} No data returned"
 
             bot.send_message(
+                text=msg,
                 chat_id=update.effective_user.id,
-                text=f"`Users: {data[0][0]}`",
                 parse_mode=ParseMode.MARKDOWN)
 
         # Statistics - Command Toplist
@@ -161,19 +169,17 @@ class Admin(OpenCryptoPlugin):
             data = self.tgb.db.execute_sql(self.get_sql("cmd_top"))
 
             msg = str()
-            for row in data or []:
-                msg += utl.esc_md(f"{row[1]} {row[0]}\n")
-
-            if not msg:
-                bot.send_message(
-                    chat_id=update.effective_user.id,
-                    text=f"`{emo.INFO} No results`",
-                    parse_mode=ParseMode.MARKDOWN)
-                return
+            if data["error"]:
+                msg = data["error"]
+            elif data["result"]:
+                for row in data["result"] or []:
+                    msg += utl.esc_md(f"{row[1]} {row[0]}\n")
+            else:
+                msg = f"{emo.INFO} No data returned"
 
             bot.send_message(
-                chat_id=update.effective_user.id,
                 text=f"`Command Toplist:\n\n{msg}`",
+                chat_id=update.effective_user.id,
                 parse_mode=ParseMode.MARKDOWN)
 
         # Statistics - Language Toplist
@@ -181,19 +187,17 @@ class Admin(OpenCryptoPlugin):
             data = self.tgb.db.execute_sql(self.get_sql("lang_top"))
 
             msg = str()
-            for row in data or []:
-                msg += f"{row[1]} {row[0]}\n"
-
-            if not msg:
-                bot.send_message(
-                    chat_id=update.effective_user.id,
-                    text=f"`{emo.INFO} No results`",
-                    parse_mode=ParseMode.MARKDOWN)
-                return
+            if data["error"]:
+                msg = data["error"]
+            elif data["result"]:
+                for row in data["result"] or []:
+                    msg += f"{row[1]} {row[0]}\n"
+            else:
+                msg = f"{emo.INFO} No data returned"
 
             bot.send_message(
-                chat_id=update.effective_user.id,
                 text=f"`Language Toplist:\n\n{msg}`",
+                chat_id=update.effective_user.id,
                 parse_mode=ParseMode.MARKDOWN)
 
         # Statistics - User Toplist
@@ -201,19 +205,17 @@ class Admin(OpenCryptoPlugin):
             data = self.tgb.db.execute_sql(self.get_sql("user_top"))
 
             msg = str()
-            for row in data or []:
-                msg += f"{row[1]} {row[0]}\n"
-
-            if not msg:
-                bot.send_message(
-                    chat_id=update.effective_user.id,
-                    text=f"`{emo.INFO} No results`",
-                    parse_mode=ParseMode.MARKDOWN)
-                return
+            if data["error"]:
+                msg = data["error"]
+            elif data["result"]:
+                for row in data["result"] or []:
+                    msg += f"{row[1]} {row[0]}\n"
+            else:
+                msg = f"{emo.INFO} No data returned"
 
             bot.send_message(
-                chat_id=update.effective_user.id,
                 text=f"`User Toplist:\n\n{msg}`",
+                chat_id=update.effective_user.id,
                 parse_mode=ParseMode.MARKDOWN)
 
         bot.answer_callback_query(query.id, text="Query executed")

@@ -2,8 +2,9 @@ import os
 import zlib
 import pickle
 import sqlite3
+import inspect
 import opencryptobot.emoji as emo
-import opencryptobot.constants as con
+import opencryptobot.constants as c
 
 from opencryptobot.config import ConfigManager as Cfg
 
@@ -41,29 +42,30 @@ class Database:
             con.close()
 
         # SQL - Check if user exists
-        self.usr_exist_sql = self._get_sql("user_exists")
+        self.usr_exist_sql = self.get_sql("user_exists")
         # SQL - Check if chat exists
-        self.cht_exist_sql = self._get_sql("chat_exists")
+        self.cht_exist_sql = self.get_sql("chat_exists")
         # SQL - Add user
-        self.add_usr_sql = self._get_sql("user_add")
+        self.add_usr_sql = self.get_sql("user_add")
         # SQL - Add chat
-        self.add_cht_sql = self._get_sql("chat_add")
+        self.add_cht_sql = self.get_sql("chat_add")
         # SQL - Save command
-        self.save_cmd_sql = self._get_sql("cmd_save")
+        self.save_cmd_sql = self.get_sql("cmd_save")
         # SQL - Read repeating commands
-        self.read_rep_all_sql = self._get_sql("rep_read_all")
+        self.read_rep_all_sql = self.get_sql("rep_read_all")
         # SQL - Read repeating commands for a user or chat
-        self.read_rep_sql = self._get_sql("rep_read")
+        self.read_rep_sql = self.get_sql("rep_read")
         # SQL - Save repeating command
-        self.save_rep_sql = self._get_sql("rep_save")
+        self.save_rep_sql = self.get_sql("rep_save")
         # SQL - Delete repeating command
-        self.delete_rep_sql = self._get_sql("rep_delete")
+        self.delete_rep_sql = self.get_sql("rep_delete")
 
-    # TODO: Same as in class OpenCryptoPlugin
-    def _get_sql(self, name):
-        name = f"{name.lower()}.sql"
-        cls_name = type(self).__name__.lower()
-        with open(os.path.join(con.SQL_DIR, cls_name, name)) as f:
+    def get_sql(self, filename):
+        cls = inspect.stack()[1][0].f_locals["self"].__class__
+        cls_name = cls.__name__.lower()
+        filename = f"{filename}.sql"
+
+        with open(os.path.join(c.SQL_DIR, cls_name, filename)) as f:
             return f.read()
 
     # Save user and / or chat to database
@@ -202,6 +204,8 @@ class Database:
 
     # Execute raw SQL statements on database
     def execute_sql(self, sql, *args):
+        dic = {"result": None, "error": None}
+
         if Cfg.get("database", "use_db"):
             con = sqlite3.connect(self._db_path)
             cur = con.cursor()
@@ -209,11 +213,10 @@ class Database:
             try:
                 cur.execute(sql, args)
                 con.commit()
+                dic["result"] = cur.fetchall()
             except Exception as e:
-                return f"{emo.ERROR} {e}"
-
-            result = cur.fetchall()
-            result = '\n'.join(str(s) for s in result)
+                dic["error"] = f"{emo.ERROR} {e}"
 
             con.close()
-            return result
+
+        return dic

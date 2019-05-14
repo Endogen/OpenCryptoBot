@@ -141,10 +141,7 @@ class OpenCryptoPlugin(PluginInterface):
         return menu
 
     def get_sql(self, name):
-        name = f"{name.lower()}.sql"
-        cls_name = type(self).__name__.lower()
-        with open(os.path.join(con.SQL_DIR, cls_name, name)) as f:
-            return f.read()
+        return self.tgb.db.get_sql(name)
 
 
 class Category:
