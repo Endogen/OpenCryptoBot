@@ -35,7 +35,11 @@ class PluginInterface:
     def inline_mode(self):
         return False
 
-    # Execute logic after all plugins are fully loaded
+    # Execute logic after the plugin is loaded
+    def after_plugin_loaded(self):
+        return None
+
+    # Execute logic after all plugins are loaded
     def after_plugins_loaded(self):
         return None
 

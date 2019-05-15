@@ -21,12 +21,6 @@ class Repeat(OpenCryptoPlugin):
                   f"can't be used since database is disabled"
             logging.warning(msg)
 
-        # Add callback handler for removing repeaters
-        self.tgb.dispatcher.add_handler(
-            CallbackQueryHandler(
-                self._callback,
-                pattern="^(re|repeat|timer)"))
-
     def get_cmds(self):
         return ["re", "repeat", "timer"]
 
@@ -196,6 +190,13 @@ class Repeat(OpenCryptoPlugin):
                 chat_id=query.message.chat_id,
                 message_id=query.message.message_id,
                 parse_mode=ParseMode.MARKDOWN)
+
+    def after_plugin_loaded(self):
+        # Add callback handler for removing repeaters
+        self.tgb.dispatcher.add_handler(
+            CallbackQueryHandler(
+                self._callback,
+                pattern=f"^({'|'.join(self.get_cmds())})"))
 
     def get_usage(self):
         return f"`/{self.get_cmds()[0]} list | i=<interval>s|m|h|d <command>`"

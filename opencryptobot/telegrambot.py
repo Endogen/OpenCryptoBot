@@ -131,7 +131,7 @@ class TelegramBot:
             module = importlib.import_module(module_path)
 
             plugin_class = getattr(module, module_name.capitalize())
-            plugin_class(self)
+            plugin_class(self).after_plugin_loaded()
         except Exception as ex:
             msg = f"File '{file}' can't be loaded as a plugin: {ex}"
             logging.warning(msg)
