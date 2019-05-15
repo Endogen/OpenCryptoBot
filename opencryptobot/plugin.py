@@ -1,8 +1,6 @@
-import os
 import inspect
 import logging
 import opencryptobot.emoji as emo
-import opencryptobot.constants as con
 
 from telegram import ChatAction
 from telegram.ext import CommandHandler
