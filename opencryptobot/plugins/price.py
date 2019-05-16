@@ -9,12 +9,10 @@ from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
-# TODO: Show website for usage info?
 # TODO: Change order of currencies from 'eur-xmr' to 'xmr-eur'
 class Price(OpenCryptoPlugin):
 
-    bot_name = None
-    cg_url = "https://www.coingecko.com/en/coins/"
+    CG_URL = "https://www.coingecko.com/en/coins/"
 
     def get_cmds(self):
         return ["p", "price"]
@@ -134,7 +132,7 @@ class Price(OpenCryptoPlugin):
                 msg = f"`{coin} ({coin_name})`\n\n" + msg
 
             # Add link to source of data (CoinGecko)
-            msg += f"\n[Details on CoinGecko]({self.cg_url}{coin_id})"
+            msg += f"\n[Details on CoinGecko]({self.CG_URL}{coin_id})"
         else:
             msg = f"{emo.ERROR} Can't retrieve data for *{coin}*"
 
@@ -153,7 +151,7 @@ class Price(OpenCryptoPlugin):
                f"/{self.get_cmds()[0]} <symbol>\n\n" \
                f"/{self.get_cmds()[0]} <symbol> <exchange>\n\n" \
                f"/{self.get_cmds()[0]} <target symbol>-<symbol>\n\n" \
-            f"{bot_name} /{self.get_cmds()[0]} <symbol>.\n\n" \
+               f"{bot_name} /{self.get_cmds()[0]} <symbol>.\n\n" \
                f"{bot_name} /{self.get_cmds()[0]} <target symbol>-<symbol>." \
                f"`"
 
