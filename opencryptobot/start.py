@@ -25,9 +25,8 @@ class OpenCryptoBot:
         self._init_logger(log_path, log_level)
 
         # Create database
-        sql_dir = con.SQL_DIR
         db_path = self.args.database
-        self.db = Database(db_path, sql_dir)
+        self.db = Database(db_path)
 
         # Create bot
         bot_token = self._get_bot_token()

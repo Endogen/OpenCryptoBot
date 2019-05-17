@@ -12,7 +12,7 @@ from opencryptobot.config import ConfigManager as Cfg
 class Database:
 
     # Initialize database
-    def __init__(self, db_path="data.db", sql_path="sql"):
+    def __init__(self, db_path="data.db"):
         self._db_path = db_path
 
         # Create 'data' directory if not present
@@ -24,20 +24,15 @@ class Database:
         cur = con.cursor()
 
         # If tables don't exist, create them
-        sql = "SELECT name FROM sqlite_master"
-        if not cur.execute(sql).fetchone():
-            with open(os.path.join(sql_path, "users.sql")) as f:
-                cur.execute(f.read())
-                con.commit()
-            with open(os.path.join(sql_path, "chats.sql")) as f:
-                cur.execute(f.read())
-                con.commit()
-            with open(os.path.join(sql_path, "repeaters.sql")) as f:
-                cur.execute(f.read())
-                con.commit()
-            with open(os.path.join(sql_path, "cmd_data.sql")) as f:
-                cur.execute(f.read())
-                con.commit()
+        if not cur.execute(self.get_sql("db_exists")).fetchone():
+            cur.execute(self.get_sql("users"))
+            con.commit()
+            cur.execute(self.get_sql("chats"))
+            con.commit()
+            cur.execute(self.get_sql("repeaters"))
+            con.commit()
+            cur.execute(self.get_sql("cmd_data"))
+            con.commit()
 
             con.close()
 
