@@ -38,7 +38,6 @@ class Candlestick(OpenCryptoPlugin):
         resolution = "HOUR"
         base_coin = "BTC"
 
-        # FIXME: CoinGecko doesn't format OHLC data correctly (example 'eth-loki')
         # Coin or pair
         if "-" in args[0]:
             pair = args[0].split("-", 1)
