@@ -55,6 +55,7 @@ class Database:
         # SQL - Delete repeating command
         self.delete_rep_sql = self.get_sql("rep_delete")
 
+    # Get string with SQL statement from file
     def get_sql(self, filename):
         cls = inspect.stack()[1][0].f_locals["self"].__class__
         cls_name = cls.__name__.lower()
@@ -185,6 +186,7 @@ class Database:
             con.close()
             return results
 
+    # Delete repeaters from database
     def delete_rep(self, user_id, command):
         if Cfg.get("database", "use_db"):
             con = sqlite3.connect(self._db_path)
