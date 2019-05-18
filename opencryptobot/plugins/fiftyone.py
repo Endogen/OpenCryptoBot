@@ -24,12 +24,10 @@ class Fiftyone(OpenCryptoPlugin):
             return
 
         coin = args[0].upper()
-        coin_data = None
         data = None
 
         try:
-            c51 = Crypto51()
-            coin_data = c51.coins()
+            coin_data = Crypto51().coins()
         except Exception as e:
             return self.handle_error(e, update)
 
