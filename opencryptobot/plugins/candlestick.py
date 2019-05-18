@@ -176,10 +176,13 @@ class Candlestick(OpenCryptoPlugin):
                     parse_mode=ParseMode.MARKDOWN)
                 return
 
-        o = [value["open"] for value in ohlcv]
-        h = [value["high"] for value in ohlcv]
-        l = [value["low"] for value in ohlcv]
-        c = [value["close"] for value in ohlcv]
+        try:
+            o = [value["open"] for value in ohlcv]
+            h = [value["high"] for value in ohlcv]
+            l = [value["low"] for value in ohlcv]
+            c = [value["close"] for value in ohlcv]
+        except:
+            return self.handle_error(f"No OHLC data for {coin}", update)
 
         if cp_api:
             t = [time.mktime(dau.parse(value["time_close"]).timetuple()) for value in ohlcv]
