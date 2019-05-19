@@ -55,7 +55,7 @@ class Decentralized(OpenCryptoPlugin):
 
                 if notes:
                     notes = utl.esc_md(f"{notes}\n\n")
-                    msg += f"`{notes}`\n"
+                    msg += f"`{notes}`"
 
                 msg += f"`Consensus:    {cons}`\n"
                 msg += f"`Public Nodes: {nodes}`\n"
