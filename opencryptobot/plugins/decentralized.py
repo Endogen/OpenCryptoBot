@@ -75,7 +75,7 @@ class Decentralized(OpenCryptoPlugin):
         return f"`{self.get_cmds()[0]} <symbol>`"
 
     def get_description(self):
-        return "Show decentralization level"
+        return "Show decentralization info"
 
     def get_category(self):
         return Category.GENERAL
