@@ -763,9 +763,9 @@ Show top 30 coins with current price and sorted by market capital.
 `/top (<target symbol>)`  
 
 **Examples**  
-Show top 30 coins in USD
+Show top 30 coins in USD  
 `/top`  
-Show top 30 coins in EUR
+Show top 30 coins in EUR  
 `/top eur`  
 
 ## `/tr`
