@@ -202,7 +202,7 @@ class Repeat(OpenCryptoPlugin):
         return f"`/{self.get_cmds()[0]} list | i=<interval>s|m|h|d <command>`"
 
     def get_description(self):
-        return "Send commands repeatedly"
+        return "Repeat any command periodically"
 
     def get_category(self):
         return Category.GENERAL
