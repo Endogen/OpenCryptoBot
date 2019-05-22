@@ -176,6 +176,7 @@ If you configured the bot correctly and execute it, the bot will check for updat
 
 ##### Price
 ```
+/51 - PoW 51% attack cost
 /ath - All time high price for coin
 /best - Best movers for hour or day
 /ch - Price change over time
@@ -190,6 +191,7 @@ If you configured the bot correctly and execute it, the bot will check for updat
 ##### General
 ```
 /comp - Compare coins
+/de - Show decentralization info
 /des - Coin description
 /dev - Development information
 /ex - Exchange details and toplist
@@ -200,12 +202,14 @@ If you configured the bot correctly and execute it, the bot will check for updat
 /re - Repeat any command periodically
 /se - Search for symbol by coin name
 /t - Info about team behind a coin
+/top - List top 30 coins
 /tr - Google Trends - Interest Over Time
 /wp - Find whitepaper for a coin
 ```
 
 ##### News & Events
 ```
+/ev - Show crypto events
 /n - News about a coin
 /soc - Social media details
 /tw - Latest Tweets from Twitter
@@ -217,43 +221,49 @@ If you configured the bot correctly and execute it, the bot will check for updat
 /bpmn - BPMN diagram for a command
 /feedback - Send us your feedback
 /man - Show how to use a command
+/re - Repeat any command periodically
 ```
 
 If you want to show a list of available commands as you type, open a chat with Telegram user [@BotFather](https://telegram.me/BotFather) and send the command `/setcommands`. Then choose the bot you want to activate the list for and after that send the list of commands with description. Something like this:
 
 ```
-c - Chart with price and volume
-cs - Candlestick chart for coin
+51 - PoW 51% attack cost
+about - Information about bot
 ath - All time high price for coin
 best - Best movers for hour or day
+bpmn - BPMN diagram for a command
+c - Chart with price and volume
 ch - Price change over time
-ico - ICO info for coin
-p - Coin price
-roi - Return on Investment for a coin
-s - Price, market cap and volume
-v - Value of coin quantity
-worst - Worst movers for hour or day
 comp - Compare coins
+cs - Candlestick chart for coin
+de - Show decentralization info
 des - Coin description
 dev - Development information
+ev - Show crypto events
 ex - Exchange details and toplist
+feedback - Send us your feedback
 g - Global crypto data
 i - General coin information
+ico - ICO info for coin
 m - Find exchanges to trade a coin
+man - Show how to use a command
 mc - Market capitalization
+n - News about a coin
+p - Coin price
 pe - Info about person from a team
 re - Repeat any command periodically
+roi - Return on Investment for a coin
+s - Price, market cap and volume
 se - Search for symbol by coin name
-t - Info about team behind a coin
-tr - Google Trends - Interest Over Time
-vol - Volume for a coin
-wp - Find whitepaper for a coin
-n - News about a coin
 soc - Social media details
-tw - Latest Tweets from Twitter
-about - Information about bot
-bpmn - BPMN diagram for a command
-feedback - Send us your feedback
+t - Info about team behind a coin
+top - List top 30 coins
+tr - Google Trends - Interest Over Time
+tw - Get newest tweets for coin
+v - Value of coin quantity
+vol - Volume for a coin
+worst - Worst movers for hour or day
+wp - Find whitepaper for a coin
 ```
 
 ## Development
@@ -262,7 +272,6 @@ I am actively developing this bot and will do so also in the near future. If you
 ### Todo
 ##### Priority 1
 - [ ] Add alerts for prices
-- [ ] Add command for events
 
 ##### Priority 2
 - [ ] Add maintenance mode
