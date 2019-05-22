@@ -54,9 +54,8 @@ class Events(OpenCryptoPlugin):
             update.message.reply_text(text=msg, parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmds()[0]} (country_code=DE|US|...) " \
-               f"(type=Event|Conference|Meetup) (limit=<max # of events>) " \
-               f"(from_date=<date>) (to_date=<date>)`"
+        return f"`/{self.get_cmds()[0]} (limit=<# of events>) (country_code=DE|US|...) " \
+               f"(type=Event|Conference|Meetup) (from_date=<date>) (to_date=<date>)`"
 
     def get_description(self):
         return "Show crypto events"
