@@ -74,4 +74,4 @@ class Fiftyone(OpenCryptoPlugin):
         return "PoW 51% attack cost"
 
     def get_category(self):
-        return Category.GENERAL
+        return Category.PRICE

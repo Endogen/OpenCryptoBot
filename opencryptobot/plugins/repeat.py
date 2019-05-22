@@ -205,4 +205,4 @@ class Repeat(OpenCryptoPlugin):
         return "Repeat any command periodically"
 
     def get_category(self):
-        return Category.GENERAL
+        return Category.BOT

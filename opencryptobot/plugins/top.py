@@ -78,7 +78,7 @@ class Top(OpenCryptoPlugin):
         return f"`/{self.get_cmds()[0]} (<target symbol>)`"
 
     def get_description(self):
-        return "List of top 30 coins"
+        return "List top 30 coins"
 
     def get_category(self):
         return Category.GENERAL
