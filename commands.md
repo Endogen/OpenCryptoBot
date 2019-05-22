@@ -8,6 +8,7 @@ menu: true
 order: 4
 ---
 
+[/51](#51) - PoW 51% attack cost
 [/about](#about) - About the bot  
 [/admin](#admin) - Administrate bot  
 [/ath](#ath) - All Time High  
@@ -17,20 +18,24 @@ order: 4
 [/comp](#comp) - Compare currencies  
 [/cs](#cs) - Candlestick chart  
 [/c](#c) - Price and Volume chart  
+[/de](#de) - Indicator for decentralization  
 [/des](#des) - Currency description  
 [/dev](#dev) - Development info  
 [/donate](#donate) - Donate to bot development  
+[/ev](#ev) - List global crypto events
 [/ex](#ex) - Exchange details & toplist  
 [/feedback](#feedback) - Feedback  
 [/g](#g) - Global stats  
 [/help](#help) - List available commands  
 [/ico](#ico) - Initial Coin Offering  
 [/i](#i) - Technical coin info  
+[/man](#man) - Show how to use a command
 [/mc](#mc) - Market Capitalization  
 [/m](#m) - List coin markets  
 [/n](#n) - Crypto news  
 [/pe](#pe) - People in crypto  
 [/p](#p) - Current price  
+[/re](#re) - Send commands repeatedly
 [/restart](#restart) - Restart bot  
 [/roi](#roi) - Return on Investment  
 [/se](#se) - Coin search  
@@ -39,11 +44,29 @@ order: 4
 [/s](#s) - Currency stats  
 [/tr](#tr) - Google Trends  
 [/t](#t) - Team details  
+[/tw](#tw) - Get newest Tweets  
 [/update](#update) - Update bot  
 [/vol](#vol) - Volume for a coin  
 [/v](#v) - Value of coin quantity  
 [/worst](#worst) - Worst movers  
 [/wp](#wp) - Whitepaper download  
+
+## `/51`
+
+![Screenshot](assets/cmds/51.png)
+
+**Alternative commands**  
+`/fiftyone`
+
+**Description**  
+Show informations about how much money you have to invest to get a 51% attack going on a specific PoW coin.
+
+**Syntax**  
+`/51 <symbol>`
+
+**Examples**  
+Show costs for a 51% attack at Bitcoin
+`/51 btc`
 
 ## `/about`
 
@@ -100,15 +123,15 @@ None
 Show informations about the highest price ever reached. Including the date, the price (in a specifiable currency) and past days since ATH.
 
 **Syntax**  
-`/ath (<target symbol>,[...]-)<symbol>`  
+`/ath <symbol>(-<target symbol>,[...])`  
 
 **Examples**  
 Get All Time High price for ETH  
 `/ath eth`  
 Get All Time High price for ETH in BTC  
-`/ath btc-eth`  
+`/ath eth-btc`  
 Get All Time High price for ETH in BTC and XRP  
-`/ath btc,xrp-eth`  
+`/ath eth-btc,xrp`  
 
 ## `/best`
 
@@ -171,13 +194,13 @@ Show the price change of a cryptocurrency over time (day, week, month and year) 
 - And most fiat currencies
 
 **Syntax**  
-`/ch (<target symbol>-)<symbol>`
+`/ch <symbol>(-<target symbol>)`
 
 **Examples**  
 Show price change over time for XMR (default target symbol is USD)  
 `/ch xmr`  
 Show price change over time for XMR in BTC  
-`/ch btc-xmr`  
+`/ch xmr-btc`  
 
 ## `/comp`
 
@@ -208,15 +231,15 @@ Show link to compare XMR, DASH and DERO
 Show a candlestick diagram for a given cryptocurrency and a given timeframe.
 
 **Syntax**  
-`/cs (<target symbol>-)<symbol> (<timeframe>m[or]h[or]d)`
+`/cs <symbol>(-<target symbol>) (<timeframe>m[or]h[or]d)`
 
 **Examples**  
 Show candlestick chart for XMR (default timeframe is 3 days)  
 `/cs xmr`  
 Show candlestick chart for XMR in XRP  
-`/cs xrp-xmr`  
+`/cs xmr-xrp`  
 Show candlestick chart for XMR in XRP for last 90 days  
-`/cs xrp-xmr 90d`  
+`/cs xmr-xrp 90d`  
 Show candlestick chart for XMR for last 60 minutes  
 `/cs xmr 60m`  
 
@@ -231,15 +254,32 @@ Show candlestick chart for XMR for last 60 minutes
 Show a price and volume chart for the given timeframe.
 
 **Syntax**  
-`/c (<vs symbol>-)<symbol> (<# of days>)`
+`/c <symbol>(-<target symbol>) (<# of days>)`
 
 **Examples**  
 Show chart for XMR  
 `/c xmr`  
 Show chart for XMR in XRP  
-`/c xrp-xmr`  
+`/c xmr-xrp`  
 Show chart for XMR in XRP for last 90 days  
-`/c xrp-xmr 90`  
+`/c xmr-xrp 90`  
+
+## `/de`
+
+![Screenshot](assets/cmds/de.png)
+
+**Alternative commands**  
+`/decentralization`  
+
+**Description**  
+Show information about how decentralized a coin is.
+
+**Syntax**  
+`/de <symbol>`
+
+**Examples**  
+Decentralization info for LOKI 
+`/de loki`  
 
 ## `/des`
 
@@ -299,6 +339,33 @@ Show QR-Code for Ethereum donation address
 `/donateETH`  
 Show QR-Code for Monero donation address  
 `/donateXMR`  
+
+## `/ev`
+
+![Screenshot](assets/cmds/ev.png)
+
+**Alternative commands**  
+`/events`  
+
+**Description**  
+Show a list of global crypto events. It's possible to specify the event type, the country, the maximum number of entries and from / to date.
+
+**Syntax**  
+`/ev (limit=<# of events>) (country_code=DE|US|[...]) (type=Event|Conference|Meetup) (from_date=<date>) (to_date=<date>)`
+
+**Examples**  
+Show events 
+`/ev`  
+Show eight events 
+`/ev limit=8`  
+Show events in germany
+`/ev country_code=DE`  
+Show only conferences
+`/ev type=Conference`  
+Show only events from date to date
+`/ev from_date=2019-06-28 to_date=2019-07-28`  
+Show two meetups in germany 
+`/ev type=Meetup country_code=DE`  
 
 ## `/ex`
 
@@ -406,6 +473,23 @@ Show general cryptocurrency specs.
 Show info about XMR  
 `/i xmr`  
 
+## `/man`
+
+![Screenshot](assets/cmds/man.png)
+
+**Alternative commands**  
+`/manual`  
+
+**Description**  
+Show informations about how to use a command.
+
+**Syntax**  
+`/man <command>`
+
+**Examples**  
+Show manual for the `/p` command  
+`/man /p`  
+
 ## `/mc`
 
 ![Screenshot](assets/cmds/mc.png)
@@ -417,13 +501,13 @@ Show info about XMR
 Show market capitalization of specific cryptocurrency or a toplist (max 100 currencies).
 
 **Syntax**  
-`/mc (<target symbol>-)<symbol> [or] top=<# of currencies>`
+`/mc <symbol>(-<target symbol>) [or] top=<# of currencies>`
 
 **Examples**  
 Show market cap for XMR  
 `/mc xmr`  
 Show market cap for XMR in BTC  
-`/mc btc-xmr`  
+`/mc xmr-btc`  
 Show top 10 currencies by market cap  
 `/mc top=10`  
 
@@ -520,9 +604,9 @@ This command can also be used in [inline mode](https://core.telegram.org/bots/in
 
 **Syntax**  
 Regular  
-`/p (<target symbol>,[...]-)<symbol> (<exchange>)`  
+`/p <symbol>(-<target symbol>,[...]) (<exchange>)`  
 Inline mode  
-`@opencryptobot /p (<target symbol>,[...]-)<symbol>.`  
+`@opencryptobot /p <symbol>(-<target symbol>,[...]).`  
 
 **Examples**  
 Show price for XMR  
@@ -530,17 +614,37 @@ Show price for XMR
 Show price for XMR on Binance exchange  
 `/p xmr binance`  
 Show price for XMR in EOS  
-`/p eos-xmr`  
+`/p xmr-eos`  
 Show price for XMR in ETH on Binance  
-`/p eth-xmr binance`  
+`/p xmr-eth binance`  
 Show price for XMR in XRP, XLM and LTC  
-`/p xrp,xlm,ltc-xmr`  
+`/p xmr-xrp,xlm,ltc`  
 Show price for XMR (inline mode)  
 `@opencryptobot /p xmr.`  
 Show price for XMR in EOS (inline mode)  
-`@opencryptobot /p eos-xmr.`  
+`@opencryptobot /p xmr-eos.`  
 Show price for XMR in XRP, XLM and LTC (inline mode)  
-`@opencryptobot /p xrp,xlm,ltc-xmr.`  
+`@opencryptobot /p xmr-xrp,xlm,ltc.`  
+
+## `/re`
+
+![Screenshot](assets/cmds/re.png)
+
+**Alternative commands**  
+`/repeat`  
+`/timer`
+
+**Description**  
+Send specified commands periodically.
+
+**Syntax**  
+`/re i=<interval>s|m|h|d <command> | list`  
+
+**Examples**  
+Send the price of BTC every hour  
+`/re i=1h /p btc`  
+List all currently active repeaters  
+`/re list`  
 
 ## `/restart`  (only for bot admins)
 
@@ -686,7 +790,25 @@ List people that are working on a project with their role and a link to the `/pe
 Show people that are working on BTC  
 `/t btc`  
 
-## `/update` (only for bot admins)
+## `/tw`
+
+![Screenshot](assets/cmds/tw.png)
+
+**Alternative commands**  
+`/twitter`  
+
+**Description**  
+Return last three Tweets for a Twitter account.
+
+**Syntax**  
+`/tw <symbol>`  
+
+**Examples**  
+Show latest Tweets for LOKI  
+`/tw LOKI`  
+
+## `/update`
+**(only for bot admins)**
 
 ![Screenshot](assets/cmds/update.png)
 
@@ -724,15 +846,15 @@ Check if a new branch update is available
 Show the value of specific cryptocurrency quantity in `BTC`, `ETH`, `USD` and `EUR` or the specified currency.
 
 **Syntax**  
-`/v (<target symbol>,[...]-)<symbol> <quantity>`  
+`/v <symbol>(-<target symbol>,[...]) <quantity>`  
 
 **Examples**  
 Show value of 971 LOKI coins in default currencies  
 `/v loki 971`  
 Show value of 1500 XRP coins in XLM  
-`/v xlm-xrp 1500`  
+`/v xrp-xlm 1500`  
 Show value of 1500 XRP coins in XLM and EUR  
-`/v xlm,eur-xrp 1500`  
+`/v xrp-xlm,eur 1500`  
 
 ## `/vol`
 
@@ -745,13 +867,13 @@ Show value of 1500 XRP coins in XLM and EUR
 Show total volume for a cryptocurrency or volume toplist (max 100 currencies).
 
 **Syntax**  
-`/vol (<target symbol>-)<symbol> [or] top=<# of currencies>`  
+`/vol <symbol>(-<target symbol>) [or] top=<# of currencies>`  
 
 **Examples**  
 Show volume for LOKI  
 `/vol loki`  
 Show volume for LOKI in BTC  
-`/vol btc-loki`  
+`/vol loki-btc`  
 Show top 10 currencies by total volume  
 `/vol top=10`  
 
