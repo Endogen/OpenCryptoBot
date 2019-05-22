@@ -14,7 +14,7 @@ In Telegram search for **@OpenCryptoBot** (or click [here](https://telegram.me/O
 Once you found the bot, open a chat with him and press the *Start* button to access the bot. The bot will send you a list of all available commands that you can use. Click on a command to execute it or to see which arguments you have to provide to execute it properly.
 
 ### Add to group
-It's also possible to add the bot to a Telegram group. Inside your group, in the upper right corner, open the menu and click on *Add Members* and then search for **@OpenCryptoBot**. Once you found the bot click on *Invite* and your done!
+It's also possible to add the bot to a Telegram group. You can either click this [link](https://telegram.me/OpenCryptoBot?startgroup=add) or add the bot by opening your group chat and in the upper right corner open the menu and click on *Add Members* and then search for **@OpenCryptoBot**. Once you found the bot click on *Invite* and your done!
 
 ### Execute commands
 In a chat with the bot or in a group, start typing `/` and you will see all available commands. You could choose one of the commands but done this way, most commands will only show you how to use them, since they mostly need additional arguments to return the data you want.
