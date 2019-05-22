@@ -8,7 +8,7 @@ menu: true
 order: 4
 ---
 
-[/51](#51) - PoW 51% attack cost
+[/51](#51) - PoW 51% attack cost  
 [/about](#about) - About the bot  
 [/admin](#admin) - Administrate bot  
 [/ath](#ath) - All Time High  
@@ -22,26 +22,27 @@ order: 4
 [/des](#des) - Currency description  
 [/dev](#dev) - Development info  
 [/donate](#donate) - Donate to bot development  
-[/ev](#ev) - List global crypto events
+[/ev](#ev) - List global crypto events  
 [/ex](#ex) - Exchange details & toplist  
 [/feedback](#feedback) - Feedback  
 [/g](#g) - Global stats  
 [/help](#help) - List available commands  
 [/ico](#ico) - Initial Coin Offering  
 [/i](#i) - Technical coin info  
-[/man](#man) - Show how to use a command
+[/man](#man) - Show how to use a command  
 [/mc](#mc) - Market Capitalization  
 [/m](#m) - List coin markets  
 [/n](#n) - Crypto news  
 [/pe](#pe) - People in crypto  
 [/p](#p) - Current price  
-[/re](#re) - Send commands repeatedly
+[/re](#re) - Send commands repeatedly  
 [/restart](#restart) - Restart bot  
 [/roi](#roi) - Return on Investment  
 [/se](#se) - Coin search  
 [/shutdown](#shutdown) - Shutdown bot  
 [/soc](#soc) - Social links and stats  
 [/s](#s) - Currency stats  
+[/top](#top) - List top 30 coins  
 [/tr](#tr) - Google Trends  
 [/t](#t) - Team details  
 [/tw](#tw) - Get newest Tweets  
@@ -747,6 +748,25 @@ Show summary for a cryptocurrency to get a general idea about it.
 **Examples**  
 Show summary LOKI  
 `/s loki`  
+
+## `/top`
+
+![Screenshot](assets/cmds/top.png)
+
+**Alternative commands**  
+None  
+
+**Description**  
+Show top 30 coins with current price and sorted by market capital.
+
+**Syntax**  
+`/top (<target symbol>)`  
+
+**Examples**  
+Show top 30 coins in USD
+`/top`  
+Show top 30 coins in EUR
+`/top eur`  
 
 ## `/tr`
 

@@ -3,7 +3,7 @@ layout: post
 title: Initial Release 0.1.0
 description: >
   The first release of OpenCryptoBot
-image: /assets/img/blog/557624.jpg
+image: /assets/img/blog/bitcoin.jpg
 ---
 
 Today is the day. After about two months in the making, i'm proud to release the first version 0.1.0 of *OpenCryptoBot*!

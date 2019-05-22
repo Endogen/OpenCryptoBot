@@ -57,3 +57,4 @@ order: 2
 * Global dominance, volume and market cap
 * Coin logo and technical coin details
 * Search for a coin by name
+* Repeatedly send messages
