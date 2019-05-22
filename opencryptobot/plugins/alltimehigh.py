@@ -31,8 +31,8 @@ class Alltimehigh(OpenCryptoPlugin):
 
         if "-" in args[0]:
             pair = args[0].split("-", 1)
-            vs_cur = pair[0].lower()
-            coin = pair[1].upper()
+            vs_cur = pair[1].lower()
+            coin = pair[0].upper()
         else:
             coin = args[0].upper()
 
@@ -79,7 +79,7 @@ class Alltimehigh(OpenCryptoPlugin):
                 now = datetime.date.today()
 
                 ath_p_str = f"Price ATH: {ath_p} {c.upper()}\n"
-                cur_p_str = f"Price now: {cur_p.rjust(len(ath_p))} {c.upper()}\n"
+                cur_p_str = f"Price NOW: {cur_p.rjust(len(ath_p))} {c.upper()}\n"
 
                 msg += f"`" \
                        f"{date_ath} ({(now - ath).days} days ago)\n" \
@@ -98,7 +98,7 @@ class Alltimehigh(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmds()[0]} (<target symbol>,[...]-)<symbol>`"
+        return f"`/{self.get_cmds()[0]} <symbol>(-<target symbol>,[...])`"
 
     def get_description(self):
         return "All time high price for coin"

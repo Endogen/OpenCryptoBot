@@ -9,7 +9,6 @@ from opencryptobot.api.coingecko import CoinGecko
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
-# TODO: Change order of currencies from 'eur-xmr' to 'xmr-eur'
 class Price(OpenCryptoPlugin):
 
     CG_URL = "https://www.coingecko.com/en/coins/"
@@ -31,8 +30,8 @@ class Price(OpenCryptoPlugin):
 
         if "-" in args[0]:
             pair = args[0].split("-", 1)
-            vs_cur = pair[0].upper()
-            coin = pair[1].upper()
+            vs_cur = pair[1].upper()
+            coin = pair[0].upper()
         else:
             coin = args[0].upper()
 
@@ -150,9 +149,9 @@ class Price(OpenCryptoPlugin):
         return f"`" \
                f"/{self.get_cmds()[0]} <symbol>\n\n" \
                f"/{self.get_cmds()[0]} <symbol> <exchange>\n\n" \
-               f"/{self.get_cmds()[0]} <target symbol>-<symbol>\n\n" \
+               f"/{self.get_cmds()[0]} <symbol>-<target symbol>,[...]\n\n" \
                f"{bot_name} /{self.get_cmds()[0]} <symbol>.\n\n" \
-               f"{bot_name} /{self.get_cmds()[0]} <target symbol>-<symbol>." \
+               f"{bot_name} /{self.get_cmds()[0]} <symbol>-<target symbol>,[...]." \
                f"`"
 
     def get_description(self):

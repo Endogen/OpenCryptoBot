@@ -43,8 +43,8 @@ class Volume(OpenCryptoPlugin):
         else:
             if "-" in args[0]:
                 pair = args[0].split("-", 1)
-                vs_cur = pair[0].lower()
-                coin = pair[1].lower()
+                vs_cur = pair[1].lower()
+                coin = pair[0].lower()
             else:
                 coin = args[0].lower()
 
@@ -120,7 +120,7 @@ class Volume(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmds()[0]} (<target symbol>-)<symbol> | top=<# of currencies>`"
+        return f"`/{self.get_cmds()[0]} <symbol>(-<target symbol>) | top=<# of currencies>`"
 
     def get_description(self):
         return "Volume of a coin"

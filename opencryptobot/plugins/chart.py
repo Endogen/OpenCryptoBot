@@ -37,8 +37,8 @@ class Chart(OpenCryptoPlugin):
 
         if "-" in args[0]:
             pair = args[0].split("-", 1)
-            base_coin = pair[0].upper()
-            coin = pair[1].upper()
+            base_coin = pair[1].upper()
+            coin = pair[0].upper()
         else:
             coin = args[0].upper()
 
@@ -197,7 +197,7 @@ class Chart(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmds()[0]} (<vs symbol>-)<symbol> (<# of days>)`"
+        return f"`/{self.get_cmds()[0]} <symbol>(-<target symbol>) (<# of days>)`"
 
     def get_description(self):
         return "Chart with price and volume"

@@ -29,8 +29,8 @@ class Change(OpenCryptoPlugin):
 
         if "-" in args[0]:
             pair = args[0].split("-", 1)
-            vs_cur = pair[0].lower()
-            coin = pair[1].upper()
+            vs_cur = pair[1].lower()
+            coin = pair[0].upper()
         else:
             coin = args[0].upper()
 
@@ -107,7 +107,7 @@ class Change(OpenCryptoPlugin):
             disable_web_page_preview=True)
 
     def get_usage(self):
-        return f"`/{self.get_cmds()[0]} (<target currency>-)<symbol>`"
+        return f"`/{self.get_cmds()[0]} <symbol>(-<target symbol>)`"
 
     def get_description(self):
         return "Price change over time"

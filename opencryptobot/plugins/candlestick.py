@@ -41,8 +41,8 @@ class Candlestick(OpenCryptoPlugin):
         # Coin or pair
         if "-" in args[0]:
             pair = args[0].split("-", 1)
-            base_coin = pair[0].upper()
-            coin = pair[1].upper()
+            base_coin = pair[1].upper()
+            coin = pair[0].upper()
         else:
             coin = args[0].upper()
 
@@ -275,7 +275,7 @@ class Candlestick(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmds()[0]} (<target symbol>-)<symbol> (<timeframe>m|h|d)`"
+        return f"`/{self.get_cmds()[0]} <symbol>(-<target symbol>) (<timeframe>m|h|d)`"
 
     def get_description(self):
         return "Candlestick chart for coin"

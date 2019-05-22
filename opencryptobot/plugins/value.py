@@ -26,8 +26,8 @@ class Value(OpenCryptoPlugin):
 
         if "-" in args[0]:
             pair = args[0].split("-", 1)
-            vs_cur = pair[0].lower()
-            coin = pair[1].upper()
+            vs_cur = pair[1].lower()
+            coin = pair[0].upper()
         else:
             coin = args[0].upper()
 
@@ -85,7 +85,7 @@ class Value(OpenCryptoPlugin):
             parse_mode=ParseMode.MARKDOWN)
 
     def get_usage(self):
-        return f"`/{self.get_cmds()[0]} (<target symbol>,[...]-)<symbol> <quantity>`"
+        return f"`/{self.get_cmds()[0]} <symbol>(-<target symbol>,[...]) <quantity>`"
 
     def get_description(self):
         return "Value of coin quantity"
