@@ -284,6 +284,8 @@ class Candlestick(OpenCryptoPlugin):
         return Category.CHARTS
 
     def _get_cmc_coin_id(self, ticker):
+        self.cmc_coin_id = None
+
         for listing in APICache.get_cmc_coin_list():
             if ticker.upper() == listing["symbol"].upper():
                 self.cmc_coin_id = listing["id"]
