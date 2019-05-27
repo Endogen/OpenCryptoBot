@@ -91,6 +91,13 @@ class Repeat(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
+        # Check if command is repeater itself
+        if args[0].replace("/", "") in self.get_cmds():
+            update.message.reply_text(
+                text=f"{emo.ERROR} Repeater can't repeat itself",
+                parse_mode=ParseMode.MARKDOWN)
+            return
+
         # Set command to repeat as current message text
         update.message.text = " ".join(args)
 
@@ -152,7 +159,13 @@ class Repeat(OpenCryptoPlugin):
                 if not active:
                     job.schedule_removal()
 
-                plg.get_action(bot, upd, args=arg)
+                try:
+                    # Could go wrong if bot
+                    # isn't authorized anymore
+                    plg.get_action(bot, upd, args=arg)
+                except Exception as ex:
+                    logging.error(f"{ex} - {upd}")
+                    self.tgb.db.delete_rep(user_id, command)
             else:
                 job.schedule_removal()
         else:
