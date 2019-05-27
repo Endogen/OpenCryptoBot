@@ -62,9 +62,12 @@ class OpenCryptoPlugin(PluginInterface):
             else:
                 return func(self, bot, update, **kwargs)
 
-            bot.send_chat_action(
-                chat_id=user_id,
-                action=ChatAction.TYPING)
+            try:
+                bot.send_chat_action(
+                    chat_id=user_id,
+                    action=ChatAction.TYPING)
+            except Exception as ex:
+                logging.error(f"{ex} - {update}")
 
             return func(self, bot, update, **kwargs)
         return _send_typing_action
