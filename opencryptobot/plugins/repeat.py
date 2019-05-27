@@ -179,6 +179,7 @@ class Repeat(OpenCryptoPlugin):
     def _callback(self, bot, update):
         query = update.callback_query
 
+        # TODO: What if someone else tries to remove my repeater? Error?
         if query.data == "remove":
             user_id = query.from_user.id
             command = query.message.text.split('\n', 1)[0]
