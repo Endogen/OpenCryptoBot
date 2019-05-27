@@ -13,7 +13,7 @@ from opencryptobot.api.apicache import APICache
 from opencryptobot.config import ConfigManager as Cfg
 
 from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
-from telegram.ext import Updater, InlineQueryHandler, RegexHandler
+from telegram.ext import Updater, InlineQueryHandler, RegexHandler, MessageHandler, Filters
 from telegram.error import InvalidToken
 
 
@@ -53,11 +53,15 @@ class TelegramBot:
         self.job_queue = self.updater.job_queue
         self.dispatcher = self.updater.dispatcher
 
-        # Handler for command-links
-        self._add_link_handler()
-
         # Load classes in folder 'plugins'
         self._load_plugins()
+
+        # Handler for files downloads (plugins)
+        mh = MessageHandler(Filters.document, self._download)
+        self.dispatcher.add_handler(mh)
+
+        # Handler for command-links
+        self._add_link_handler()
 
         # Handler for inline-mode
         inline_handler = InlineQueryHandler(self._inline)
@@ -107,7 +111,7 @@ class TelegramBot:
     def _load_plugins(self):
         threads = list()
 
-        for _, _, files in os.walk(os.path.join("opencryptobot", "plugins")):
+        for _, _, files in os.walk(os.path.join(con.SRC_DIR, con.PLG_DIR)):
             for file in files:
                 if not file.lower().endswith(".py"):
                     continue
@@ -127,7 +131,7 @@ class TelegramBot:
     def _load_plugin(self, file):
         try:
             module_name = file[:-3]
-            module_path = f"opencryptobot.plugins.{module_name}"
+            module_path = f"{con.SRC_DIR}.{con.PLG_DIR}.{module_name}"
             module = importlib.import_module(module_path)
 
             plugin_class = getattr(module, module_name.capitalize())
@@ -146,7 +150,7 @@ class TelegramBot:
         self.remove_plugin(module_name)
 
         try:
-            module_path = f"opencryptobot.plugins.{module_name}"
+            module_path = f"{con.SRC_DIR}.{con.PLG_DIR}.{module_name}"
             module = importlib.import_module(module_path)
 
             reload(module)
@@ -156,6 +160,18 @@ class TelegramBot:
         except Exception as ex:
             msg = f"Plugin '{module_name.capitalize()}' can't be reloaded: {ex}"
             logging.warning(msg)
+            raise ex
+
+    def _download(self, bot, update):
+        name = update.message.effective_attachment.file_name
+        file = bot.getFile(update.message.document.file_id)
+        file.download(os.path.join(con.SRC_DIR, con.PLG_DIR, name))
+
+        try:
+            self.reload_plugin(name.replace(".py", ""))
+            update.message.reply_text(f"{emo.CHECK} Plugin loaded successfully")
+        except Exception as ex:
+            update.message.reply_text(f"{emo.ERROR} {ex}")
 
     def _inline(self, bot, update):
         query = update.inline_query.query

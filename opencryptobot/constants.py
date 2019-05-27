@@ -18,6 +18,9 @@ SQL_DIR = "sql"
 RES_DIR = "res"
 BPMN_DIR = os.path.join(RES_DIR, "bpmn")
 
+SRC_DIR = "opencryptobot"
+PLG_DIR = "plugins"
+
 MAX_TG_MSG_LEN = 4096
 CG_DATA_LIMIT = 2000
 DEF_CACHE_REFRESH = 86400  # In seconds
