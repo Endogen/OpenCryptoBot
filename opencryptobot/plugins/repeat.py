@@ -196,18 +196,23 @@ class Repeat(OpenCryptoPlugin):
     def _callback(self, bot, update):
         query = update.callback_query
 
-        # TODO: What if someone else tries to remove my repeater? Error?
         if query.data == "remove":
             user_id = query.from_user.id
             command = query.message.text.split('\n', 1)[0]
-            self.tgb.db.delete_rep(user_id, command)
 
-            bot.edit_message_text(
-                text=f"`{command}`\n"
-                     f"{emo.CANCEL} *Repeater removed*",
-                chat_id=query.message.chat_id,
-                message_id=query.message.message_id,
-                parse_mode=ParseMode.MARKDOWN)
+            # TODO: Testen
+            for rep in self.tgb.db.read_rep(user_id):
+                if rep[2].lower() == command.lower():
+                    self.tgb.db.delete_rep(user_id, command)
+
+                    bot.edit_message_text(
+                        text=f"`{command}`\n"
+                        f"{emo.CANCEL} *Repeater removed*",
+                        chat_id=query.message.chat_id,
+                        message_id=query.message.message_id,
+                        parse_mode=ParseMode.MARKDOWN)
+
+                    break
 
     def after_plugin_loaded(self):
         # Add callback handler for removing repeaters
