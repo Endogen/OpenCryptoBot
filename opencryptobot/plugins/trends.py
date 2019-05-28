@@ -67,18 +67,25 @@ class Trends(OpenCryptoPlugin):
         except Exception as e:
             return self.handle_error(e, update)
 
-        some_data = None
+        no_data = list()
         tr_data = list()
         for kw in args:
+            if data.empty:
+                no_data = args
+                break
+
+            if data.get(kw).empty:
+                no_data.append(kw)
+                continue
+
             tr_data.append(go.Scatter(x=data.get(kw).index, y=data.get(kw).values, name=kw))
 
-            if not data.get(kw).empty:
-                some_data = True
-
-        if not some_data:
+        if no_data:
             update.message.reply_text(
-                text=f"{emo.ERROR} No data for keyword(s): {', '.join(args)}",
+                text=f"{emo.ERROR} No data for keyword(s): {', '.join(no_data)}",
                 parse_mode=ParseMode.MARKDOWN)
+
+        if len(args) == len(no_data):
             return
 
         layout = go.Layout(
