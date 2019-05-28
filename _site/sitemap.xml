@@ -2,7 +2,7 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://localhost:4000/news/</loc>
-<lastmod>2019-05-23T00:38:25+02:00</lastmod>
+<lastmod>2019-05-27T21:21:57+02:00</lastmod>
 </url>
 <url>
 <loc>http://localhost:4000/news/2019-01-24-initial-release/</loc>
@@ -29,6 +29,6 @@
 </url>
 <url>
 <loc>http://localhost:4000/assets/Resume.pdf</loc>
-<lastmod>2019-05-22T23:38:49+02:00</lastmod>
+<lastmod>2019-05-27T21:21:57+02:00</lastmod>
 </url>
 </urlset>
