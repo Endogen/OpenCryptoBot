@@ -198,10 +198,10 @@ class Repeat(OpenCryptoPlugin):
 
         if query.data == "remove":
             user_id = query.from_user.id
+            chat_id = query.message.chat.id
             command = query.message.text.split('\n', 1)[0]
 
-            # TODO: Testen
-            for rep in self.tgb.db.read_rep(user_id):
+            for rep in self.tgb.db.read_rep(user_id, chat_id):
                 if rep[2].lower() == command.lower():
                     self.tgb.db.delete_rep(user_id, command)
 
