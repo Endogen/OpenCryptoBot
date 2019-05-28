@@ -101,6 +101,10 @@ class Repeat(OpenCryptoPlugin):
         # Set command to repeat as current message text
         update.message.text = " ".join(args)
 
+        # Clear message ID so that a reply to a repeater
+        # command will not reference a specific message
+        update.message.message_id = None
+
         try:
             self.tgb.db.save_rep(update, interval)
             self._run_repeater(update, interval)
