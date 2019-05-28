@@ -163,6 +163,9 @@ class TelegramBot:
             raise ex
 
     def _download(self, bot, update):
+        if update.effective_user.id not in Cfg.get("admin_id"):
+            return
+
         name = update.message.effective_attachment.file_name
         file = bot.getFile(update.message.document.file_id)
         file.download(os.path.join(con.SRC_DIR, con.PLG_DIR, name))
@@ -285,12 +288,16 @@ class TelegramBot:
                     update_cmd = utl.esc_md("/update")
                     tag = job.context['tag']
 
-                    bot.send_message(
-                        admin,
-                        f"New release *{utl.esc_md(tag)}* available\n\n"
-                        f"*Release Notes*\n{utl.esc_md(release_notes)}\n\n"
-                        f"{update_cmd}",
-                        parse_mode=ParseMode.MARKDOWN)
+                    try:
+                        bot.send_message(
+                            admin,
+                            f"New release *{utl.esc_md(tag)}* available\n\n"
+                            f"*Release Notes*\n{utl.esc_md(release_notes)}\n\n"
+                            f"{update_cmd}",
+                            parse_mode=ParseMode.MARKDOWN)
+                    except Exception as ex:
+                        err = f"Can't send release notes to chat {admin}"
+                        logging.error(f"{err} - {ex}")
 
         if Cfg.get("update", "update_check") is not None:
             sec = utl.get_seconds(Cfg.get("update", "update_check"))
