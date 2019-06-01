@@ -42,6 +42,7 @@ class News(OpenCryptoPlugin):
         filter = str()
         msg = str()
 
+        cp = CryptoPanic(token=self._token)
         data = None
 
         if not args:
@@ -49,7 +50,7 @@ class News(OpenCryptoPlugin):
                 return
 
             try:
-                data = CryptoPanic(token=self._token).get_posts()
+                data = cp.get_posts()
             except Exception as e:
                 return self.handle_error(e, update)
 
@@ -83,13 +84,13 @@ class News(OpenCryptoPlugin):
 
             try:
                 if symbol and filter:
-                    data = CryptoPanic(token=self._token).get_multiple_filters(symbol, filter)
+                    data = cp.get_multiple_filters(symbol, filter)
                     msg = f"<b>News for {symbol} and filter '{filter}'</b>\n\n"
                 elif symbol:
-                    data = CryptoPanic(token=self._token).get_currency_news(symbol)
+                    data = cp.get_currency_news(symbol)
                     msg = f"<b>News for {symbol}</b>\n\n"
                 elif filter:
-                    data = CryptoPanic(token=self._token).get_filtered_news(filter)
+                    data = cp.get_filtered_news(filter)
                     msg = f"<b>News for filter '{filter}</b>'\n\n"
             except Exception as e:
                 return self.handle_error(e, update)
