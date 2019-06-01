@@ -155,7 +155,7 @@ class Category:
     PRICE = "Price"
     GENERAL = "General"
     NEWS = "News & Events"
-    UTIL = "Utilities"
+    UTILS = "Utilities"
     FUN = "Fun"
     BOT = "Bot"
 
