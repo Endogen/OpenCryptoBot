@@ -15,6 +15,10 @@ DAT_FILE = "opencryptobot.db"
 
 SQL_DIR = "sql"
 
+UPD_DIR = "update"
+
+BCK_DIR = "backup"
+
 RES_DIR = "res"
 BPMN_DIR = os.path.join(RES_DIR, "bpmn")
 
