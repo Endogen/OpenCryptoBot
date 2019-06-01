@@ -215,3 +215,8 @@ def comp(pattern):
 
 def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1")
+
+
+# Return 'Yes' for True and 'No' for False
+def bool2str(b):
+    return "Yes" if b else "No"
