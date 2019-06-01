@@ -9,7 +9,6 @@ from telegram import ParseMode, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler
 
 
-# TODO: Is it possible to have inline repeaters?
 class Repeat(OpenCryptoPlugin):
 
     def __init__(self, telegram_bot):
