@@ -17,8 +17,6 @@ from opencryptobot.config import ConfigManager as Cfg
 
 class Update(OpenCryptoPlugin):
 
-    UPD_DIR = "update"
-
     def get_cmds(self):
         return ["update"]
 
@@ -64,7 +62,7 @@ class Update(OpenCryptoPlugin):
 
         try:
             # Clean old update data if present
-            shutil.rmtree(os.path.join(os.getcwd(), self.UPD_DIR))
+            shutil.rmtree(os.path.join(os.getcwd(), con.UPD_DIR))
         except:
             pass
 
@@ -165,11 +163,11 @@ class Update(OpenCryptoPlugin):
         m = update.message.reply_text(msg)
 
         zip_file = zipfile.ZipFile(io.BytesIO(response.content))
-        zip_file.extractall(self.UPD_DIR)
+        zip_file.extractall(con.UPD_DIR)
 
         done = False
         unzip_dir = str()
-        for _, dirs, _ in os.walk(self.UPD_DIR):
+        for _, dirs, _ in os.walk(con.UPD_DIR):
             for d in dirs:
                 unzip_dir = d
                 done = True
@@ -177,7 +175,7 @@ class Update(OpenCryptoPlugin):
             if done:
                 break
 
-        self._update_bot(os.path.join(self.UPD_DIR, unzip_dir))
+        self._update_bot(os.path.join(con.UPD_DIR, unzip_dir))
 
         Cfg.set(new_hash, "update", "update_hash")
 
