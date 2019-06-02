@@ -215,6 +215,12 @@ If you configured the bot correctly and execute it, the bot will check for updat
 /tw - Latest Tweets from Twitter
 ```
 
+##### Utilities
+```
+/po - Info about mining pools
+/wa - Details about wallets
+```
+
 ##### Bot
 ```
 /about - Information about bot
@@ -251,6 +257,7 @@ mc - Market capitalization
 n - News about a coin
 p - Coin price
 pe - Info about person from a team
+po - Info about mining pools
 re - Repeat any command periodically
 roi - Return on Investment for a coin
 s - Price, market cap and volume
@@ -262,6 +269,7 @@ tr - Google Trends - Interest Over Time
 tw - Get newest tweets for coin
 v - Value of coin quantity
 vol - Volume for a coin
+wa - Details about wallets
 worst - Worst movers for hour or day
 wp - Find whitepaper for a coin
 ```
