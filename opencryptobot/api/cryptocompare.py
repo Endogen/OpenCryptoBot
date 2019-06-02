@@ -43,6 +43,10 @@ class CryptoCompare(object):
         url_data = f"coin/generalinfo?fsyms={fsyms}&tsym={tsym}"
         return self._request(f"{self._base_url}{url_data}")
 
-    def get_wallets_info(self):
+    def get_wallet_info(self):
         url_data = f"wallets/general?api_key={self._token}"
+        return self._request(f"{self._base_url}{url_data}")
+
+    def get_pool_info(self):
+        url_data = f"mining/pools/general?api_key={self._token}"
         return self._request(f"{self._base_url}{url_data}")
