@@ -13,7 +13,7 @@ from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 class Wallets(OpenCryptoPlugin):
 
-    _base_url = "https://www.cryptocompare.com"
+    _CC_URL = "https://www.cryptocompare.com"
     _token = None
 
     def __init__(self, telegram_bot):
@@ -51,7 +51,7 @@ class Wallets(OpenCryptoPlugin):
         coins = kw.get("coins") if kw.get("coins") else None
 
         cp = CryptoCompare(token=self._token)
-        wallets = cp.get_wallets_info()
+        wallets = cp.get_wallet_info()
 
         if wallets["Response"] == "Error":
             if update.message:
@@ -110,13 +110,12 @@ class Wallets(OpenCryptoPlugin):
         ftr = "?" if not features else features
         src = f"`\n\nSource Code:\n`{src_url}" if src_url else ""
 
-        return f"[{name}]({self._base_url}{logo})\n\n" \
-               f"`Rating:     {rating}\n`" \
+        return f"[{name}]({self._CC_URL}{logo})\n\n" \
+               f"`Rating:     {rating} ({users} Users)\n`" \
                f"`Security:   {sec}\n`" \
                f"`Anonymity:  {anon}\n`" \
                f"`EaseOfUse:  {usage}\n`" \
                f"`Trading:    {utl.bool2str(trading)}\n`" \
-               f"`Users:      {users}\n`" \
                f"`Validation: {validation}\n\n`" \
                f"`Features:\n{', '.join(ftr)}\n\n`" \
                f"`Supported Coins:\n{', '.join(sorted(coins))}\n\n`" \
