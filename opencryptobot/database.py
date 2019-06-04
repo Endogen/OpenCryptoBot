@@ -44,12 +44,16 @@ class Database:
         self.add_usr_sql = self.get_sql("user_add")
         # SQL - Add chat
         self.add_cht_sql = self.get_sql("chat_add")
+        # SQL - Read chat
+        self.read_cht_sql = self.get_sql("read_chat")
         # SQL - Save command
         self.save_cmd_sql = self.get_sql("cmd_save")
-        # SQL - Read repeating commands
-        self.read_rep_all_sql = self.get_sql("rep_read_all")
         # SQL - Read repeating commands for a user or chat
         self.read_rep_sql = self.get_sql("rep_read")
+        # SQL - Read repeating commands for a user
+        self.read_rep_usr_sql = self.get_sql("rep_read_usr")
+        # SQL - Read repeating commands
+        self.read_rep_all_sql = self.get_sql("rep_read_all")
         # SQL - Save repeating command
         self.save_rep_sql = self.get_sql("rep_save")
         # SQL - Delete repeating command
@@ -131,30 +135,31 @@ class Database:
 
     # Save new repeater to database
     def save_rep(self, update, interval):
-        if update.message:
-            usr = update.message.from_user
-            cmd = update.message.text.lower()
-            cht = update.message.chat
-        elif update.inline_query:
-            usr = update.effective_user
-            cmd = update.inline_query.query[:-1].lower()
-            cht = update.effective_chat
-        else:
-            raise Exception("Not possible to save repeater")
+        if Cfg.get("database", "use_db"):
+            if update.message:
+                usr = update.message.from_user
+                cmd = update.message.text.lower()
+                cht = update.message.chat
+            elif update.inline_query:
+                usr = update.effective_user
+                cmd = update.inline_query.query[:-1].lower()
+                cht = update.effective_chat
+            else:
+                raise Exception("Not possible to save repeater")
 
-        ids = self.save_usr_and_cht(usr, cht)
-        upd = zlib.compress(pickle.dumps(update))
+            ids = self.save_usr_and_cht(usr, cht)
+            upd = zlib.compress(pickle.dumps(update))
 
-        con = sqlite3.connect(self._db_path)
-        cur = con.cursor()
+            con = sqlite3.connect(self._db_path)
+            cur = con.cursor()
 
-        # Save msg to be repeated
-        cur.execute(
-            self.save_rep_sql,
-            [ids["user_id"], ids["chat_id"], cmd, interval, upd])
+            # Save msg to be repeated
+            cur.execute(
+                self.save_rep_sql,
+                [ids["user_id"], ids["chat_id"], cmd, interval, upd])
 
-        con.commit()
-        con.close()
+            con.commit()
+            con.close()
 
     # Read repeaters from database
     def read_rep(self, user_id=None, chat_id=None):
@@ -164,11 +169,9 @@ class Database:
 
             if user_id:
                 if user_id == chat_id:
-                    chat_id = None
-
-                cur.execute(
-                    self.read_rep_sql,
-                    [user_id, chat_id])
+                    cur.execute(self.read_rep_usr_sql, [user_id])
+                else:
+                    cur.execute(self.read_rep_sql, [user_id, chat_id])
             else:
                 cur.execute(self.read_rep_all_sql)
 
@@ -187,33 +190,54 @@ class Database:
             return results
 
     # Delete repeaters from database
-    def delete_rep(self, user_id, command):
+    def delete_rep(self, command, user_id, chat_id=None):
         if Cfg.get("database", "use_db"):
             con = sqlite3.connect(self._db_path)
             cur = con.cursor()
 
             cur.execute(
                 self.delete_rep_sql,
-                [int(user_id), command])
+                [int(user_id), int(chat_id), command])
 
             con.commit()
             con.close()
+
+    # Read chat by chat_id
+    def read_chat(self, chat_id):
+        if Cfg.get("database", "use_db"):
+            con = sqlite3.connect(self._db_path)
+            cur = con.cursor()
+
+            cur.execute(self.read_cht_sql, [chat_id])
+            con.commit()
+
+            result = cur.fetchall()
+
+            con.close()
+
+            if result:
+                return list(result[0])
+
+            return None
 
     # Execute raw SQL statements on database
     def execute_sql(self, sql, *args):
         dic = {"result": None, "error": None}
 
         if Cfg.get("database", "use_db"):
-            con = sqlite3.connect(self._db_path)
-            cur = con.cursor()
+            if Cfg.get("database", "use_db"):
+                con = sqlite3.connect(self._db_path)
+                cur = con.cursor()
 
-            try:
-                cur.execute(sql, args)
-                con.commit()
-                dic["result"] = cur.fetchall()
-            except Exception as e:
-                dic["error"] = f"{emo.ERROR} {e}"
+                try:
+                    cur.execute(sql, args)
+                    con.commit()
+                    dic["result"] = cur.fetchall()
+                except Exception as e:
+                    dic["error"] = f"{emo.ERROR} {e}"
 
-            con.close()
+                con.close()
+        else:
+            dic["error"] = "Database not enabled"
 
         return dic

@@ -50,9 +50,13 @@ class Repeat(OpenCryptoPlugin):
 
             if repeaters:
                 for repeater in repeaters:
+                    chat = self.tgb.db.read_chat(repeater[1])
+                    chat_name = chat[2] if chat else None
+
                     update.message.reply_text(
-                        text=f"`{repeater[2]}`\n"
-                             f"↺ {repeater[3]} seconds",
+                        text=f"Command:\n`{repeater[2]}`\n"
+                             f"Group:\n`{chat_name}`\n\n"
+                             f"↺ {repeater[3]} seconds\n",
                         parse_mode=ParseMode.MARKDOWN,
                         reply_markup=self._keyboard_remove_rep())
                 return
@@ -105,8 +109,8 @@ class Repeat(OpenCryptoPlugin):
         update.message.message_id = None
 
         try:
-            self.tgb.db.save_rep(update, interval)
             self._run_repeater(update, interval)
+            self.tgb.db.save_rep(update, interval)
         except IntegrityError as ie:
             err = "Repeater already saved"
             update.message.reply_text(f"{emo.ERROR} {err}")
@@ -151,8 +155,10 @@ class Repeat(OpenCryptoPlugin):
                 chat_id = upd.message.chat.id
                 command = upd.message.text
 
-                active = False
+                if user_id == chat_id:
+                    chat_id = None
 
+                active = False
                 # Check if repeater still exists in DB
                 for rep in self.tgb.db.read_rep(user_id, chat_id):
                     if rep[2].lower() == command.lower():
@@ -168,7 +174,7 @@ class Repeat(OpenCryptoPlugin):
                     plg.get_action(bot, upd, args=arg)
                 except Exception as ex:
                     logging.error(f"{ex} - {upd}")
-                    self.tgb.db.delete_rep(user_id, command)
+                    self.tgb.db.delete_rep(command, user_id, chat_id)
             else:
                 job.schedule_removal()
         else:
@@ -192,24 +198,37 @@ class Repeat(OpenCryptoPlugin):
         return InlineKeyboardMarkup(menu, resize_keyboard=True)
 
     # Callback to delete repeater
+    @OpenCryptoPlugin.send_typing
     def _callback(self, bot, update):
         query = update.callback_query
 
         if query.data == "remove":
             user_id = query.from_user.id
             chat_id = query.message.chat.id
-            command = query.message.text.split('\n', 1)[0]
+            command = query.message.text.split('\n')[1]
+
+            if user_id == chat_id:
+                chat_id = None
 
             for rep in self.tgb.db.read_rep(user_id, chat_id):
                 if rep[2].lower() == command.lower():
-                    self.tgb.db.delete_rep(user_id, command)
+                    self.tgb.db.delete_rep(command, user_id, chat_id)
+
+                    text = query.message.text
+                    index = text.rfind("\n")
+                    text = f"{text[0:index]}\n"
+                    text_list = text.split("\n")
+                    text_list[1] = f"`{text_list[1]}`"
+                    text_list[3] = f"`{text_list[3]}`"
+                    text = "\n".join(text_list)
 
                     bot.edit_message_text(
-                        text=f"`{command}`\n"
-                        f"{emo.CANCEL} *Repeater removed*",
+                        text=f"{text}{emo.CANCEL} *Removed*",
                         chat_id=query.message.chat_id,
                         message_id=query.message.message_id,
                         parse_mode=ParseMode.MARKDOWN)
+
+                    bot.answer_callback_query(query.id, text="DONE!")
 
                     break
 
