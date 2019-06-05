@@ -1,3 +1,4 @@
+import hashlib
 import logging
 import opencryptobot.emoji as emo
 import opencryptobot.utils as utl
@@ -49,14 +50,15 @@ class Repeat(OpenCryptoPlugin):
             repeaters = self.tgb.db.read_rep(user_id, chat_id)
 
             if repeaters:
-                for repeater in repeaters:
-                    chat = self.tgb.db.read_chat(repeater[1])
+                for rep in repeaters:
+                    chat = self.tgb.db.read_chat(rep[2])
                     chat_name = chat[2] if chat else None
 
                     update.message.reply_text(
-                        text=f"Command:\n`{repeater[2]}`\n"
-                             f"Group:\n`{chat_name}`\n\n"
-                             f"↺ {repeater[3]} seconds\n",
+                        text=f"Command:\n`{rep[3]}`\n"
+                             f"Chat:\n`{chat_name}`\n\n"
+                             f"↺ {rep[4]} seconds\n\n"
+                             f"(ID: {rep[0]})",
                         parse_mode=ParseMode.MARKDOWN,
                         reply_markup=self._keyboard_remove_rep())
                 return
@@ -155,13 +157,10 @@ class Repeat(OpenCryptoPlugin):
                 chat_id = upd.message.chat.id
                 command = upd.message.text
 
-                if user_id == chat_id:
-                    chat_id = None
-
                 active = False
                 # Check if repeater still exists in DB
                 for rep in self.tgb.db.read_rep(user_id, chat_id):
-                    if rep[2].lower() == command.lower():
+                    if rep[3].lower() == command.lower():
                         active = True
                         break
 
@@ -174,7 +173,7 @@ class Repeat(OpenCryptoPlugin):
                     plg.get_action(bot, upd, args=arg)
                 except Exception as ex:
                     logging.error(f"{ex} - {upd}")
-                    self.tgb.db.delete_rep(command, user_id, chat_id)
+                    self.tgb.db.delete_rep(rep)
             else:
                 job.schedule_removal()
         else:
@@ -183,8 +182,8 @@ class Repeat(OpenCryptoPlugin):
     # Run all saved repeaters after all plugins loaded
     def after_plugins_loaded(self):
         for repeater in self.tgb.db.read_rep() or []:
-            update = repeater[4]
-            interval = repeater[3]
+            interval = repeater[4]
+            update = repeater[5]
 
             try:
                 self._run_repeater(update, int(interval))
@@ -203,18 +202,17 @@ class Repeat(OpenCryptoPlugin):
         query = update.callback_query
 
         if query.data == "remove":
+            text = query.message.text
             user_id = query.from_user.id
-            chat_id = query.message.chat.id
-            command = query.message.text.split('\n')[1]
 
-            if user_id == chat_id:
-                chat_id = None
+            msg_id = text.split('\n')[7]
+            msg_id = msg_id.replace("(ID: ", "")
+            msg_id = int(msg_id.replace(")", ""))
 
-            for rep in self.tgb.db.read_rep(user_id, chat_id):
-                if rep[2].lower() == command.lower():
-                    self.tgb.db.delete_rep(command, user_id, chat_id)
+            for rep in self.tgb.db.read_rep(user_id):
+                if msg_id == rep[0]:
+                    self.tgb.db.delete_rep(msg_id)
 
-                    text = query.message.text
                     index = text.rfind("\n")
                     text = f"{text[0:index]}\n"
                     text_list = text.split("\n")
@@ -229,7 +227,6 @@ class Repeat(OpenCryptoPlugin):
                         parse_mode=ParseMode.MARKDOWN)
 
                     bot.answer_callback_query(query.id, text="DONE!")
-
                     break
 
     def after_plugin_loaded(self):

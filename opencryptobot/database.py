@@ -168,7 +168,7 @@ class Database:
             cur = con.cursor()
 
             if user_id:
-                if user_id == chat_id:
+                if user_id == chat_id or chat_id is None:
                     cur.execute(self.read_rep_usr_sql, [user_id])
                 else:
                     cur.execute(self.read_rep_sql, [user_id, chat_id])
@@ -182,7 +182,7 @@ class Database:
             results = list()
             for repeater in result:
                 rep = list(repeater)
-                rep[4] = pickle.loads(zlib.decompress(rep[4]))
+                rep[5] = pickle.loads(zlib.decompress(rep[5]))
 
                 results.append(rep)
 
@@ -190,14 +190,14 @@ class Database:
             return results
 
     # Delete repeaters from database
-    def delete_rep(self, command, user_id, chat_id=None):
+    def delete_rep(self, repeater_id):
         if Cfg.get("database", "use_db"):
             con = sqlite3.connect(self._db_path)
             cur = con.cursor()
 
             cur.execute(
                 self.delete_rep_sql,
-                [int(user_id), int(chat_id), command])
+                [repeater_id])
 
             con.commit()
             con.close()
