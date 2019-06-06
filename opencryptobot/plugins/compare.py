@@ -5,7 +5,6 @@ from telegram import ParseMode
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
-# TODO: Add possibility to choose time frame
 class Compare(OpenCryptoPlugin):
 
     BASE_URL = "https://coinlib.io/compare/"
