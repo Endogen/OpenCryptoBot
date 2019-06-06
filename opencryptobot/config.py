@@ -104,7 +104,7 @@ class ChangeHandler(FileSystemEventHandler):
             statbuf = os.stat(event.src_path)
             new = statbuf.st_mtime
 
-            # FIXME: Workaround for watchdog bug
+            # Workaround for watchdog bug
             # https://github.com/gorakhargosh/watchdog/issues/93
             if (new - ChangeHandler.old) > 0.5:
                 if ConfigManager.ignore:
