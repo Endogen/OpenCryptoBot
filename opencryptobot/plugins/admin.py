@@ -130,7 +130,8 @@ class Admin(OpenCryptoPlugin):
             InlineKeyboardButton("Number of Users", callback_data="admin_usrs"),
             InlineKeyboardButton("Command Toplist", callback_data="admin_cmdtop"),
             InlineKeyboardButton("Language Toplist", callback_data="admin_langtop"),
-            InlineKeyboardButton("User Toplist", callback_data="admin_usertop")]
+            InlineKeyboardButton("User Toplist", callback_data="admin_usertop"),
+            InlineKeyboardButton("Daily Users", callback_data="admin_userdaily")]
 
         menu = self.build_menu(buttons)
         return InlineKeyboardMarkup(menu, resize_keyboard=True)
@@ -225,6 +226,25 @@ class Admin(OpenCryptoPlugin):
 
             bot.send_message(
                 text=f"`User Toplist:\n\n{msg}`",
+                chat_id=update.effective_user.id,
+                parse_mode=ParseMode.MARKDOWN)
+
+        # TODO: Implement correctly
+        # Statistics - Daily Users
+        elif query.data == "admin_userdaily":
+            data = self.tgb.db.execute_sql(self.get_sql("user_top"))
+
+            msg = str()
+            if data["error"]:
+                msg = data["error"]
+            elif data["result"]:
+                for row in data["result"] or []:
+                    msg += f"{row[1]} {row[0]}\n"
+            else:
+                msg = f"{emo.INFO} No data returned"
+
+            bot.send_message(
+                text=f"`Daily Users:\n\n{msg}`",
                 chat_id=update.effective_user.id,
                 parse_mode=ParseMode.MARKDOWN)
 
