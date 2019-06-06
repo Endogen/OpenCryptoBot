@@ -249,6 +249,7 @@ ev - Show crypto events
 ex - Exchange details and toplist
 feedback - Send us your feedback
 g - Global crypto data
+h - Show overview of all commands
 i - General coin information
 ico - ICO info for coin
 m - Find exchanges to trade a coin
