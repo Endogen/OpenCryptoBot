@@ -127,6 +127,7 @@ class OpenCryptoPlugin(PluginInterface):
 
         logging.info(f"Plugin '{type(self).__name__}' removed")
 
+    # Handle exceptions (write to log, reply to Telegram message)
     def handle_error(self, error, update, send_error=True):
         cls_name = f"Class: {type(self).__name__}"
         logging.error(f"{repr(error)} - {error} - {cls_name} - {update}")
@@ -135,6 +136,7 @@ class OpenCryptoPlugin(PluginInterface):
             msg = f"{emo.ERROR} {error}"
             update.message.reply_text(msg)
 
+    # Build button-menu for Telegram
     def build_menu(cls, buttons, n_cols=1, header_buttons=None, footer_buttons=None):
         menu = [buttons[i:i + n_cols] for i in range(0, len(buttons), n_cols)]
 
@@ -145,10 +147,12 @@ class OpenCryptoPlugin(PluginInterface):
 
         return menu
 
-    def get_sql(self, name):
-        return self.tgb.db.get_sql(name)
+    # Bridge to database method
+    def get_sql(self, filename):
+        return self.tgb.db.get_sql(filename)
 
 
+# Categories for commands
 class Category:
 
     CHARTS = "Charts"

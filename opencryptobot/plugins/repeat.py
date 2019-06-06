@@ -111,6 +111,7 @@ class Repeat(OpenCryptoPlugin):
         update.message.message_id = None
 
         try:
+            # TODO: Check if the order is correct
             self._run_repeater(update, interval)
             self.tgb.db.save_rep(update, interval)
         except IntegrityError as ie:
@@ -181,16 +182,17 @@ class Repeat(OpenCryptoPlugin):
 
     # Run all saved repeaters after all plugins loaded
     def after_plugins_loaded(self):
-        for repeater in self.tgb.db.read_rep() or []:
-            interval = repeater[4]
-            update = repeater[5]
+        if Cfg.get("database", "use_db"):
+            for repeater in self.tgb.db.read_rep() or []:
+                interval = repeater[4]
+                update = repeater[5]
 
-            try:
-                self._run_repeater(update, int(interval))
-            except Exception as e:
-                update.message.reply_text(
-                    text=f"{emo.ERROR} {e}",
-                    parse_mode=ParseMode.MARKDOWN)
+                try:
+                    self._run_repeater(update, int(interval))
+                except Exception as e:
+                    update.message.reply_text(
+                        text=f"{emo.ERROR} {e}",
+                        parse_mode=ParseMode.MARKDOWN)
 
     def _keyboard_remove_rep(self):
         menu = self.build_menu([InlineKeyboardButton("Remove", callback_data="remove")])

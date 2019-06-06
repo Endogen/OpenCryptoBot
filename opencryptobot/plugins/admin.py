@@ -28,19 +28,22 @@ class Admin(OpenCryptoPlugin):
 
             # Execute raw SQL
             if command == "sql":
-                args.pop(0)
+                if Cfg.get("database", "use_db"):
+                    args.pop(0)
 
-                sql = " ".join(args)
-                data = self.tgb.db.execute_sql(sql)
+                    sql = " ".join(args)
+                    data = self.tgb.db.execute_sql(sql)
 
-                if data["error"]:
-                    msg = data["error"]
-                elif data["result"]:
-                    msg = '\n'.join(str(s) for s in data["result"])
+                    if data["error"]:
+                        msg = data["error"]
+                    elif data["result"]:
+                        msg = '\n'.join(str(s) for s in data["result"])
+                    else:
+                        msg = f"{emo.INFO} No data returned"
+
+                    update.message.reply_text(msg)
                 else:
-                    msg = f"{emo.INFO} No data returned"
-
-                update.message.reply_text(msg)
+                    update.message.reply_text(f"{emo.INFO} Database not enabled")
 
             # Change configuration
             elif command == "cfg":
@@ -70,23 +73,26 @@ class Admin(OpenCryptoPlugin):
 
             # Send global message
             elif command == "msg":
-                args.pop(0)
+                if Cfg.get("database", "use_db"):
+                    args.pop(0)
 
-                sql = self.get_sql("global_msg")
-                data = self.tgb.db.execute_sql(sql)
+                    sql = self.get_sql("global_msg")
+                    data = self.tgb.db.execute_sql(sql)
 
-                title = "This is a global message to " \
-                        "every user of @OpenCryptoBot:\n\n"
+                    title = "This is a global message to " \
+                            "every user of @OpenCryptoBot:\n\n"
 
-                msg = " ".join(args)
+                    msg = " ".join(args)
 
-                for user_id in data or []:
-                    try:
-                        bot.send_message(
-                            chat_id=user_id[0],
-                            text=f"{title}{msg}")
-                    except Exception as e:
-                        self.handle_error(e, update, send_error=False)
+                    for user_id in data or []:
+                        try:
+                            bot.send_message(
+                                chat_id=user_id[0],
+                                text=f"{title}{msg}")
+                        except Exception as e:
+                            self.handle_error(e, update, send_error=False)
+                else:
+                    update.message.reply_text(f"{emo.INFO} Database not enabled")
 
             # Manage plugins
             elif command == "plg":
@@ -131,6 +137,10 @@ class Admin(OpenCryptoPlugin):
 
     def _callback(self, bot, update):
         query = update.callback_query
+
+        if not Cfg.get("database", "use_db"):
+            bot.answer_callback_query(query.id, text="Database not enabled")
+            return
 
         # Statistics - Number of Commands
         if query.data == "admin_cmds":
