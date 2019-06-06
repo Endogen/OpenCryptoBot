@@ -1,5 +1,4 @@
 CREATE TABLE repeaters (
-	row_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	user_id INTEGER,
 	chat_id INTEGER,
 	command TEXT NOT NULL,
