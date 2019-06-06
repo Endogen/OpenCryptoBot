@@ -1,6 +1,7 @@
 import opencryptobot.utils as utl
 import opencryptobot.emoji as emo
 
+from collections import OrderedDict
 from opencryptobot.plugin import OpenCryptoPlugin
 from opencryptobot.config import ConfigManager as Cfg
 from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
@@ -229,22 +230,30 @@ class Admin(OpenCryptoPlugin):
                 chat_id=update.effective_user.id,
                 parse_mode=ParseMode.MARKDOWN)
 
-        # TODO: Implement correctly
         # Statistics - Daily Users
         elif query.data == "admin_userdaily":
-            data = self.tgb.db.execute_sql(self.get_sql("user_top"))
+            data = self.tgb.db.execute_sql(self.get_sql("user_daily"))
 
-            msg = str()
             if data["error"]:
                 msg = data["error"]
             elif data["result"]:
+                o_dict = OrderedDict()
                 for row in data["result"] or []:
-                    msg += f"{row[1]} {row[0]}\n"
+                    date = row[0].split(" ")[0]
+                    if date not in o_dict:
+                        o_dict[date] = list()
+                    o_dict[date].append(row[1])
+
+                msg = str()
+                for k, v in o_dict.items():
+                    msg += f"\n{k}\n"
+                    for name in v:
+                        msg += f"{name}\n"
             else:
                 msg = f"{emo.INFO} No data returned"
 
             bot.send_message(
-                text=f"`Daily Users:\n\n{msg}`",
+                text=f"`Daily Users:\n{msg}`",
                 chat_id=update.effective_user.id,
                 parse_mode=ParseMode.MARKDOWN)
 
