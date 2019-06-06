@@ -111,7 +111,6 @@ class Repeat(OpenCryptoPlugin):
         update.message.message_id = None
 
         try:
-            # TODO: Check if the order is correct
             self._run_repeater(update, interval)
             self.tgb.db.save_rep(update, interval)
         except IntegrityError as ie:
