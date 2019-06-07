@@ -1,5 +1,5 @@
 import opencryptobot.emoji as emo
-import opencryptobot.constants as con
+import opencryptobot.utils as utl
 
 from telegram import ParseMode
 from opencryptobot.ratelimit import RateLimit
@@ -49,15 +49,11 @@ class Description(OpenCryptoPlugin):
 
         coin_desc = data["description"]["en"]
 
-        if len(coin_desc) > con.MAX_TG_MSG_LEN:
-            url = f"https://www.coingecko.com/en/coins/{data['id']}"
-            html_link = f'...\n\n<a href="{url}">Read whole description</a>'
-            coin_desc = coin_desc[:(con.MAX_TG_MSG_LEN - 27)] + html_link
-
-        update.message.reply_text(
-            text=coin_desc,
-            parse_mode=ParseMode.HTML,
-            disable_web_page_preview=True)
+        for message in utl.split_msg(coin_desc):
+            update.message.reply_text(
+                text=message,
+                parse_mode=ParseMode.HTML,
+                disable_web_page_preview=True)
 
     def get_usage(self):
         return f"`/{self.get_cmds()[0]} <symbol>`"

@@ -59,10 +59,11 @@ class Team(OpenCryptoPlugin):
 
         msg = f"`Team behind {coin}`\n\n{msg}"
 
-        update.message.reply_text(
-            text=msg,
-            parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=True)
+        for message in utl.split_msg(msg):
+            update.message.reply_text(
+                text=message,
+                parse_mode=ParseMode.MARKDOWN,
+                disable_web_page_preview=True)
 
     def get_usage(self):
         return f"`/{self.get_cmds()[0]} <symbol>`"
