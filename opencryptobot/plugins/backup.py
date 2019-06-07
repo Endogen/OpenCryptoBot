@@ -6,7 +6,6 @@ import time
 import opencryptobot.emoji as emo
 import opencryptobot.constants as con
 
-from telegram import ParseMode
 from opencryptobot.plugin import OpenCryptoPlugin
 
 
