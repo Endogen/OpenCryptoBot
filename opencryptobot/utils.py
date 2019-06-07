@@ -96,7 +96,6 @@ def format(value,
         if cut_zeros:
             while "." in v and v.endswith(("0", ".")):
                 v = v[:-1]
-
     return v
 
 
@@ -220,3 +219,25 @@ def str2bool(v):
 # Return 'Yes' for True and 'No' for False
 def bool2str(b):
     return "Yes" if b else "No"
+
+
+# Restrict message length to max characters as defined by Telegram
+def split_msg(msg, max_len=None, split_char="\n", only_one=False):
+    if not max_len:
+        import opencryptobot.constants as con
+        max_len = con.MAX_TG_MSG_LEN
+
+    if only_one:
+        return [msg[:max_len][:msg[:max_len].rfind(split_char)]]
+
+    remaining = msg
+    messages = list()
+    while len(remaining) > max_len:
+        split_at = remaining[:max_len].rfind(split_char)
+        message = remaining[:max_len][:split_at]
+        messages.append(message)
+        remaining = remaining[len(message):]
+    else:
+        messages.append(remaining)
+
+    return messages
