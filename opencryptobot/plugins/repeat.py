@@ -166,6 +166,7 @@ class Repeat(OpenCryptoPlugin):
 
                 if not active:
                     job.schedule_removal()
+                    return
 
                 try:
                     # Could go wrong if bot
