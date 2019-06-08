@@ -50,6 +50,9 @@ class Trends(OpenCryptoPlugin):
         else:
             tf = self.DEFAULT_T
 
+        # Check for brackets and combine keywords
+        args = self._combine_args(args)
+
         if len(args) > 5:
             update.message.reply_text(
                 text=f"{emo.ERROR} Not possible to provide more then 5 keywords",
@@ -105,6 +108,23 @@ class Trends(OpenCryptoPlugin):
         update.message.reply_photo(
             photo=io.BufferedReader(BytesIO(pio.to_image(fig, format="jpeg"))),
             parse_mode=ParseMode.MARKDOWN)
+
+    def _combine_args(self, args):
+        combine = list()
+        new_args = list()
+        for arg in args:
+            if arg.startswith("("):
+                combine.append(arg[1:])
+                continue
+            elif arg.endswith(")"):
+                if combine:
+                    arg = f"{' '.join(combine)} {arg[:len(arg)-1]}"
+                    combine.clear()
+            elif combine:
+                combine.append(arg)
+                continue
+            new_args.append(arg)
+        return new_args
 
     def get_usage(self):
         return f"`/{self.get_cmds()[0]} <keyword> (<keyword> ... t=<# of>d|m|y)`"
