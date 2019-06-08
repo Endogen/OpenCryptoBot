@@ -193,7 +193,7 @@ class TelegramBot:
                 if not plugin.inline_mode():
                     return
 
-                value = plugin.get_action(bot, update, args=args)
+                value = plugin.get_action(bot, update, args=args, inline=True)
                 description = plugin.get_description()
                 break
 
