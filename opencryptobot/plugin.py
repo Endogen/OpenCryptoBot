@@ -15,7 +15,7 @@ class PluginInterface:
         raise NotImplementedError(f"Interface method '{method}' not implemented")
 
     # Logic that gets executed if command is triggered
-    def get_action(self, bot, update, args):
+    def get_action(self, bot, update, args, inline=False, notify=True, quote=True):
         method = inspect.currentframe().f_code.co_name
         raise NotImplementedError(f"Interface method '{method}' not implemented")
 
