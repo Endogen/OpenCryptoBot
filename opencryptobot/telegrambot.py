@@ -12,6 +12,7 @@ from opencryptobot.api.github import GitHub
 from opencryptobot.api.apicache import APICache
 from opencryptobot.config import ConfigManager as Cfg
 
+from opencryptobot.plugin import Keyword
 from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
 from telegram.ext import Updater, InlineQueryHandler, RegexHandler, MessageHandler, Filters
 from telegram.error import InvalidToken
@@ -186,6 +187,9 @@ class TelegramBot:
         cmd = args[0][1:]
         args.pop(0)
 
+        # TODO: Test this
+        args.append(f"{Keyword.INLINE}=true")
+
         value = str()
         description = str()
         for plugin in self.plugins:
@@ -193,7 +197,7 @@ class TelegramBot:
                 if not plugin.inline_mode():
                     return
 
-                value = plugin.get_action(bot, update, args=args, inline=True)
+                value = plugin.get_action(bot, update, args=args)
                 description = plugin.get_description()
                 break
 
