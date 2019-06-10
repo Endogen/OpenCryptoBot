@@ -47,8 +47,7 @@ class Wallets(OpenCryptoPlugin):
         if RateLimit.limit_reached(update):
             return
 
-        kw = utl.get_keywords(args)
-        coins = kw.get("coins") if kw.get("coins") else None
+        coins = utl.get_kw(args, "coins")
 
         cp = CryptoCompare(token=self._token)
         wallets = cp.get_wallet_info()

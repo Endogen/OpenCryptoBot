@@ -48,9 +48,6 @@ class Pools(OpenCryptoPlugin):
         if RateLimit.limit_reached(update):
             return
 
-        kw = utl.get_keywords(args)
-        coins = kw.get("coins") if kw.get("coins") else None
-
         cp = CryptoCompare(token=self._token)
         pools = cp.get_pool_info()
 
@@ -62,6 +59,8 @@ class Pools(OpenCryptoPlugin):
             return
 
         found = False
+
+        coins = utl.get_kw(args, "coins")
 
         # Return pools for specified coin(s)
         if coins:

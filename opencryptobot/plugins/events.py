@@ -14,8 +14,9 @@ class Events(OpenCryptoPlugin):
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
-        kw = utl.get_keywords(args)
-        limit = kw.get("limit") if kw.get("limit") else 5
+        kw = utl.get_kw(args)
+
+        limit = kw.get("limit", 5)
         kw.pop("limit", None)
 
         if RateLimit.limit_reached(update):

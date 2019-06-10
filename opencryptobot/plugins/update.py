@@ -40,9 +40,9 @@ class Update(OpenCryptoPlugin):
             update.message.reply_text(msg)
             return
 
-        kw = utl.get_keywords(args)
-        branch = kw.get("branch")
-        release = kw.get("release")
+        kw = utl.get_kw(args)
+        branch = kw.get("branch", None)
+        release = kw.get("release", None)
 
         if branch and release:
             msg = f"{emo.ERROR} Combination of 'branch' " \
