@@ -6,7 +6,7 @@ from telegram import ParseMode
 from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coingecko import CoinGecko
-from opencryptobot.plugin import OpenCryptoPlugin, Category
+from opencryptobot.plugin import OpenCryptoPlugin, Category, Keyword
 
 
 class Price(OpenCryptoPlugin):
@@ -19,8 +19,13 @@ class Price(OpenCryptoPlugin):
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
-        if not args:
-            if update.message:
+        # TODO: Do this in every plugin
+        keywords = utl.get_kw(args)
+        arg_list = utl.del_kw(args)
+
+        # TODO: Do this in most other plugins
+        if not arg_list:
+            if not keywords.get(Keyword.INLINE):
                 update.message.reply_text(
                     text=f"Usage:\n{self.get_usage()}",
                     parse_mode=ParseMode.MARKDOWN)
@@ -28,16 +33,16 @@ class Price(OpenCryptoPlugin):
 
         vs_cur = str()
 
-        if "-" in args[0]:
-            pair = args[0].split("-", 1)
+        if "-" in arg_list[0]:
+            pair = arg_list[0].split("-", 1)
             vs_cur = pair[1].upper()
             coin = pair[0].upper()
         else:
-            coin = args[0].upper()
+            coin = arg_list[0].upper()
 
         exchange = str()
-        if len(args) > 1:
-            exchange = args[1]
+        if len(arg_list) > 1:
+            exchange = arg_list[1]
 
         try:
             response = APICache.get_cg_coins_list()
@@ -135,13 +140,10 @@ class Price(OpenCryptoPlugin):
         else:
             msg = f"{emo.ERROR} Can't retrieve data for *{coin}*"
 
-        if update.message:
-            update.message.reply_text(
-                text=f"{msg}",
-                parse_mode=ParseMode.MARKDOWN,
-                disable_web_page_preview=True)
-        else:
+        if keywords.get(Keyword.INLINE):
             return msg
+
+        self.send_msg(msg, update, keywords)
 
     def get_usage(self):
         bot_name = self.tgb.updater.bot.name
