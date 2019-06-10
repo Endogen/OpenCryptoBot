@@ -1,9 +1,10 @@
 import inspect
 import logging
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 
-from telegram import ChatAction
 from telegram.ext import CommandHandler
+from telegram import ChatAction, ParseMode
 from opencryptobot.config import ConfigManager as Cfg
 
 
@@ -127,6 +128,29 @@ class OpenCryptoPlugin(PluginInterface):
 
         logging.info(f"Plugin '{type(self).__name__}' removed")
 
+    def send_msg(self, msg, update, keywords):
+        notify = keywords.get(Keyword.NOTIFY, True)
+        quote = keywords.get(Keyword.QUOTE, None)
+        preview = keywords.get(Keyword.PREVIEW, False)
+        parse = keywords.get(Keyword.PARSE, ParseMode.MARKDOWN)
+
+        # TODO: How to simplify this?
+        if quote is None:
+            for message in utl.split_msg(msg):
+                update.message.reply_text(
+                    text=message,
+                    parse_mode=parse,
+                    disable_web_page_preview=not preview,
+                    disable_notification=not notify)
+        else:
+            for message in utl.split_msg(msg):
+                update.message.reply_text(
+                    text=message,
+                    parse_mode=parse,
+                    disable_web_page_preview=not preview,
+                    disable_notification=not notify,
+                    quote=quote)
+
     # Handle exceptions (write to log, reply to Telegram message)
     def handle_error(self, error, update, send_error=True):
         cls_name = f"Class: {type(self).__name__}"
@@ -150,6 +174,16 @@ class OpenCryptoPlugin(PluginInterface):
     # Bridge to database method
     def get_sql(self, filename):
         return self.tgb.db.get_sql(filename)
+
+
+# Keywords for messages
+class Keyword:
+
+    NOTIFY = "notify"
+    PREVIEW = "preview"
+    QUOTE = "quote"
+    PARSE = "parse"
+    INLINE = "inline"
 
 
 # Categories for commands
