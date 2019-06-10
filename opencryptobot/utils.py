@@ -152,20 +152,36 @@ def get_date(from_date, time_span):
         t = from_date - timedelta(days=time_frame * 30)
     elif resolution == "y":
         t = from_date - timedelta(days=time_frame * 365)
+    else:
+        return None
 
     return str(t)[:10]
 
 
-def get_keywords(args):
+# Get list of keywords or value of keyword
+def get_kw(args, keyword=None, fallback=None):
     keywords = dict()
 
     if args:
         for arg in args:
             if "=" in arg:
                 kv = arg.split("=")
-                keywords[kv[0]] = kv[1]
+                v = str2bool(kv[1]) if is_bool(kv[1]) else kv[1]
+                keywords[kv[0]] = v
+
+    if keyword:
+        return keywords.get(keyword, fallback)
 
     return keywords
+
+
+# Remove all keywords from list with arguments
+def del_kw(args):
+    ar = list()
+    for arg in args:
+        if "=" not in arg:
+            ar.append(arg)
+    return ar
 
 
 def remove_html_links(text):
@@ -210,6 +226,10 @@ def esc_md(text):
 def comp(pattern):
     import re
     return re.compile(pattern, re.IGNORECASE)
+
+
+def is_bool(v):
+    return v.lower() in ("yes", "true", "t", "1", "no", "false", "f", "0")
 
 
 def str2bool(v):
