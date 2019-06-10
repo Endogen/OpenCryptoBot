@@ -1,4 +1,3 @@
-import hashlib
 import logging
 import opencryptobot.emoji as emo
 import opencryptobot.utils as utl
@@ -106,10 +105,6 @@ class Repeat(OpenCryptoPlugin):
         # Set command to repeat as current message text
         update.message.text = " ".join(args)
 
-        # Clear message ID so that a reply to a repeater
-        # command will not reference a specific message
-        update.message.message_id = None
-
         try:
             self._run_repeater(update, interval)
             self.tgb.db.save_rep(update, interval)
@@ -148,14 +143,14 @@ class Repeat(OpenCryptoPlugin):
     # Execute repeater command
     def _send_msg(self, bot, job):
         if job.context:
-            upd = job.context["upd"]
-            arg = job.context["arg"]
-            plg = job.context["plg"]
+            updt = job.context["upd"]
+            plgn = job.context["plg"]
+            args = job.context["arg"]
 
-            if upd and arg and plg:
-                user_id = upd.message.from_user.id
-                chat_id = upd.message.chat.id
-                command = upd.message.text
+            if updt and plgn:
+                user_id = updt.message.from_user.id
+                chat_id = updt.message.chat.id
+                command = updt.message.text
 
                 active = False
                 # Check if repeater still exists in DB
@@ -171,9 +166,9 @@ class Repeat(OpenCryptoPlugin):
                 try:
                     # Could go wrong if bot
                     # isn't authorized anymore
-                    plg.get_action(bot, upd, args=arg)
+                    plgn.get_action(bot, updt, args=args)
                 except Exception as ex:
-                    logging.error(f"{ex} - {upd}")
+                    logging.error(f"{ex} - {updt}")
                     self.tgb.db.delete_rep(rep)
             else:
                 job.schedule_removal()
