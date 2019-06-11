@@ -5,7 +5,7 @@ from telegram import ParseMode
 from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coingecko import CoinGecko
-from opencryptobot.plugin import OpenCryptoPlugin, Category
+from opencryptobot.plugin import OpenCryptoPlugin, Category, Keyword
 
 
 class Stats(OpenCryptoPlugin):
@@ -16,16 +16,20 @@ class Stats(OpenCryptoPlugin):
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
-        if not args:
-            update.message.reply_text(
-                text=f"Usage:\n{self.get_usage()}",
-                parse_mode=ParseMode.MARKDOWN)
+        keywords = utl.get_kw(args)
+        arg_list = utl.del_kw(args)
+
+        if not arg_list:
+            if not keywords.get(Keyword.INLINE):
+                update.message.reply_text(
+                    text=f"Usage:\n{self.get_usage()}",
+                    parse_mode=ParseMode.MARKDOWN)
             return
 
         if RateLimit.limit_reached(update):
             return
 
-        coin = args[0].upper()
+        coin = arg_list[0].upper()
         data = None
         cgid = None
 
@@ -123,29 +127,31 @@ class Stats(OpenCryptoPlugin):
         else:
             y1 = "{:>10}".format("N/A")
 
-        update.message.reply_text(
-            text=f"`"
-                 f"{name} ({symbol})\n\n"
-                 f"USD {p_usd}\n"
-                 f"EUR {p_eur}\n"
-                 f"{btc_str}"
-                 f"{eth_str}\n"
-                 f"Hour  {h1}\n"
-                 f"Day   {d1}\n"
-                 f"Week  {w1}\n"
-                 f"Month {m1}\n"
-                 f"Year  {y1}\n\n"
-                 f"Market Cap Rank: {rank_mc}\n"
-                 f"Coin Gecko Rank: {rank_cg}\n\n"
-                 f"Volume 24h: {v_24h} USD\n"
-                 f"Market Cap: {m_cap} USD\n"
-                 f"Circ. Supp: {sup_c}\n"
-                 f"Total Supp: {sup_t}\n\n"
-                 f"`"
-                 f"Stats on [CoinGecko](https://www.coingecko.com/en/coins/{cgid}) & "
-                 f"[Coinlib](https://coinlib.io/coin/{coin}/{coin})",
-            parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=True)
+        msg = f"`" \
+              f"{name} ({symbol})\n\n" \
+              f"USD {p_usd}\n" \
+              f"EUR {p_eur}\n" \
+              f"{btc_str}" \
+              f"{eth_str}\n" \
+              f"Hour  {h1}\n" \
+              f"Day   {d1}\n" \
+              f"Week  {w1}\n" \
+              f"Month {m1}\n" \
+              f"Year  {y1}\n\n" \
+              f"Market Cap Rank: {rank_mc}\n" \
+              f"Coin Gecko Rank: {rank_cg}\n\n" \
+              f"Volume 24h: {v_24h} USD\n" \
+              f"Market Cap: {m_cap} USD\n" \
+              f"Circ. Supp: {sup_c}\n" \
+              f"Total Supp: {sup_t}\n\n" \
+              f"`" \
+              f"Stats on [CoinGecko](https://www.coingecko.com/en/coins/{cgid}) & " \
+              f"[Coinlib](https://coinlib.io/coin/{coin}/{coin})"
+
+        if keywords.get(Keyword.INLINE):
+            return msg
+
+        self.send_msg(msg, update, keywords)
 
     def get_usage(self):
         return f"`/{self.get_cmds()[0]} <symbol>`"
@@ -155,3 +161,6 @@ class Stats(OpenCryptoPlugin):
 
     def get_category(self):
         return Category.PRICE
+
+    def inline_mode(self):
+        return True
