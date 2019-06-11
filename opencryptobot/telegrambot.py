@@ -187,7 +187,6 @@ class TelegramBot:
         cmd = args[0][1:]
         args.pop(0)
 
-        # TODO: Test this
         args.append(f"{Keyword.INLINE}=true")
 
         value = str()
@@ -204,19 +203,13 @@ class TelegramBot:
         if not value:
             return
 
-        results = list()
-        results.append(
-            InlineQueryResultArticle(
+        msg_content = InputTextMessageContent(value, parse_mode=ParseMode.MARKDOWN)
+        inline_result = InlineQueryResultArticle(
                 id=uuid.uuid4(),
                 title=description,
-                input_message_content=InputTextMessageContent(
-                    value,
-                    parse_mode=ParseMode.MARKDOWN
-                )
-            )
-        )
+                input_message_content=msg_content)
 
-        bot.answer_inline_query(update.inline_query.id, results)
+        bot.answer_inline_query(update.inline_query.id, [inline_result])
 
     # Handle all telegram and telegram.ext related errors
     def _handle_tg_errors(self, bot, update, error):
