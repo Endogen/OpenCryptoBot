@@ -261,3 +261,8 @@ def split_msg(msg, max_len=None, split_char="\n", only_one=False):
         messages.append(remaining)
 
     return messages
+
+
+# Check if every value in each list is the same
+def all_same(*items):
+    return True if all(v == items[0] for v in items) else False
