@@ -197,7 +197,10 @@ class TelegramBot:
                     return
 
                 value = plugin.get_action(bot, update, args=args)
-                description = plugin.get_description()
+                if value.startswith(emo.ERROR) or value.startswith(emo.INFO):
+                    description = value
+                else:
+                    description = plugin.get_description()
                 break
 
         if not value:
