@@ -4,7 +4,7 @@ import opencryptobot.utils as utl
 from telegram import ParseMode
 from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.coindata import CoinData
-from opencryptobot.plugin import OpenCryptoPlugin, Category
+from opencryptobot.plugin import OpenCryptoPlugin, Category, Keyword
 
 
 class Best(OpenCryptoPlugin):
@@ -17,30 +17,36 @@ class Best(OpenCryptoPlugin):
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
-        if args:
-            t = args[0].lower()
+        keywords = utl.get_kw(args)
+        arg_list = utl.del_kw(args)
+
+        if arg_list:
+            t = arg_list[0].lower()
             if not t == "hour" and not t == "day":
-                update.message.reply_text(
-                    text=f"{emo.ERROR} First argument has to be `day` or `hour`",
-                    parse_mode=ParseMode.MARKDOWN)
+                if not keywords.get(Keyword.INLINE):
+                    update.message.reply_text(
+                        text=f"{emo.ERROR} First argument has to be `day` or `hour`",
+                        parse_mode=ParseMode.MARKDOWN)
                 return
 
-        if len(args) > 1:
-            entries = args[1]
+        if len(arg_list) > 1:
+            entries = arg_list[1]
             if not entries.isnumeric():
-                update.message.reply_text(
-                    text=f"{emo.ERROR} Second argument (# of positions "
-                         f"to display) has to be a number",
-                    parse_mode=ParseMode.MARKDOWN)
+                if not keywords.get(Keyword.INLINE):
+                    update.message.reply_text(
+                        text=f"{emo.ERROR} Second argument (# of positions "
+                             f"to display) has to be a number",
+                        parse_mode=ParseMode.MARKDOWN)
                 return
 
-        if len(args) > 2:
-            entries = args[2]
+        if len(arg_list) > 2:
+            entries = arg_list[2]
             if not entries.isnumeric():
-                update.message.reply_text(
-                    text=f"{emo.ERROR} Third argument (min. volume) "
-                         f"has to be a number",
-                    parse_mode=ParseMode.MARKDOWN)
+                if not keywords.get(Keyword.INLINE):
+                    update.message.reply_text(
+                        text=f"{emo.ERROR} Third argument (min. volume) "
+                             f"has to be a number",
+                        parse_mode=ParseMode.MARKDOWN)
                 return
 
         if RateLimit.limit_reached(update):
@@ -50,22 +56,22 @@ class Best(OpenCryptoPlugin):
         volume = None
         entries = 10
 
-        if args:
+        if arg_list:
             # Period
-            if args[0].lower() == "hour":
+            if arg_list[0].lower() == "hour":
                 period = CoinData.HOUR
-            elif args[0].lower() == "day":
+            elif arg_list[0].lower() == "day":
                 period = CoinData.DAY
             else:
                 period = CoinData.HOUR
 
             # Entries
-            if len(args) > 1 and args[1].isnumeric():
-                entries = int(args[1])
+            if len(arg_list) > 1 and arg_list[1].isnumeric():
+                entries = int(arg_list[1])
 
             # Volume
-            if len(args) > 2 and args[2].isnumeric():
-                volume = int(args[2])
+            if len(arg_list) > 2 and arg_list[2].isnumeric():
+                volume = int(arg_list[2])
 
         try:
             best = CoinData().get_movers(
@@ -77,9 +83,10 @@ class Best(OpenCryptoPlugin):
             return self.handle_error(e, update)
 
         if not best:
-            update.message.reply_text(
-                text=f"{emo.INFO} No matching data found",
-                parse_mode=ParseMode.MARKDOWN)
+            if not keywords.get(Keyword.INLINE):
+                update.message.reply_text(
+                    text=f"{emo.INFO} No matching data found",
+                    parse_mode=ParseMode.MARKDOWN)
             return
 
         msg = str()
@@ -105,9 +112,12 @@ class Best(OpenCryptoPlugin):
         if volume:
             vol = f" (vol > {utl.format(volume)})"
 
-        update.message.reply_text(
-            text=f"`Best movers 1{period.lower()[:1]}{vol}\n\n`" + msg,
-            parse_mode=ParseMode.MARKDOWN)
+        msg = f"`Best movers 1{period.lower()[:1]}{vol}\n\n`{msg}"
+
+        if keywords.get(Keyword.INLINE):
+            return msg
+
+        self.send_msg(msg, update, keywords)
 
     def get_usage(self):
         return f"`/{self.get_cmds()[0]} hour | day (<# of entries>) (<min. volume>)`"
@@ -117,3 +127,6 @@ class Best(OpenCryptoPlugin):
 
     def get_category(self):
         return Category.PRICE
+
+    def inline_mode(self):
+        return True
