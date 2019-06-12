@@ -1,5 +1,6 @@
 import datetime
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 
 from datetime import date
 from telegram import ParseMode
@@ -7,7 +8,7 @@ from opencryptobot.utils import format
 from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coingecko import CoinGecko
-from opencryptobot.plugin import OpenCryptoPlugin, Category
+from opencryptobot.plugin import OpenCryptoPlugin, Category, Keyword
 
 
 class Alltimehigh(OpenCryptoPlugin):
@@ -18,10 +19,14 @@ class Alltimehigh(OpenCryptoPlugin):
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
-        if not args:
-            update.message.reply_text(
-                text=f"Usage:\n{self.get_usage()}",
-                parse_mode=ParseMode.MARKDOWN)
+        keywords = utl.get_kw(args)
+        arg_list = utl.del_kw(args)
+
+        if not arg_list:
+            if not keywords.get(Keyword.INLINE):
+                update.message.reply_text(
+                    text=f"Usage:\n{self.get_usage()}",
+                    parse_mode=ParseMode.MARKDOWN)
             return
 
         if RateLimit.limit_reached(update):
@@ -29,12 +34,12 @@ class Alltimehigh(OpenCryptoPlugin):
 
         vs_cur = "usd"
 
-        if "-" in args[0]:
-            pair = args[0].split("-", 1)
+        if "-" in arg_list[0]:
+            pair = arg_list[0].split("-", 1)
             vs_cur = pair[1].lower()
             coin = pair[0].upper()
         else:
-            coin = args[0].upper()
+            coin = arg_list[0].upper()
 
         ath_date = str()
         ath_price = str()
@@ -93,9 +98,10 @@ class Alltimehigh(OpenCryptoPlugin):
         else:
             msg = f"{emo.ERROR} Can't retrieve data for *{coin}*"
 
-        update.message.reply_text(
-            text=msg,
-            parse_mode=ParseMode.MARKDOWN)
+        if keywords.get(Keyword.INLINE):
+            return msg
+
+        self.send_msg(msg, update, keywords)
 
     def get_usage(self):
         return f"`/{self.get_cmds()[0]} <symbol>(-<target symbol>,[...])`"
@@ -105,3 +111,6 @@ class Alltimehigh(OpenCryptoPlugin):
 
     def get_category(self):
         return Category.PRICE
+
+    def inline_mode(self):
+        return True
