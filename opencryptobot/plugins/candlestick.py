@@ -6,6 +6,7 @@ import plotly.io as pio
 import dateutil.parser as dau
 import plotly.graph_objs as go
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 import plotly.figure_factory as fif
 import opencryptobot.constants as con
 
@@ -18,6 +19,7 @@ from opencryptobot.api.cryptocompare import CryptoCompare
 from opencryptobot.plugin import OpenCryptoPlugin, Category
 
 
+# TODO: Add source of data and time frame
 class Candlestick(OpenCryptoPlugin):
 
     cmc_coin_id = None
@@ -116,12 +118,20 @@ class Candlestick(OpenCryptoPlugin):
                     text=f"{emo.ERROR} CoinGecko ERROR: {ohlcv['Message']}",
                     parse_mode=ParseMode.MARKDOWN)
                 return
-        else:
-            ohlcv = ohlcv["Data"]
 
-        cp_api = False
+        ohlcv = ohlcv["Data"]
 
-        if not ohlcv:
+        if ohlcv:
+            try:
+                o = [value["open"] for value in ohlcv]
+                h = [value["high"] for value in ohlcv]
+                l = [value["low"] for value in ohlcv]
+                c = [value["close"] for value in ohlcv]
+                t = [value["time"] for value in ohlcv]
+            except:
+                return self.handle_error(f"No OHLC data for {coin}", update)
+
+        if not ohlcv or utl.all_same(o, h, l, c):
             if base_coin != "BTC" and base_coin != "USD":
                 update.message.reply_text(
                     text=f"{emo.ERROR} Base currency for "
@@ -140,7 +150,7 @@ class Candlestick(OpenCryptoPlugin):
                 else:
                     time_frame = int(time_frame)
             else:
-                time_frame = 30  # Days
+                time_frame = 60  # Days
 
             try:
                 cp_ohlc = APICache.get_cp_coin_list()
@@ -176,18 +186,14 @@ class Candlestick(OpenCryptoPlugin):
                     parse_mode=ParseMode.MARKDOWN)
                 return
 
-        try:
-            o = [value["open"] for value in ohlcv]
-            h = [value["high"] for value in ohlcv]
-            l = [value["low"] for value in ohlcv]
-            c = [value["close"] for value in ohlcv]
-        except:
-            return self.handle_error(f"No OHLC data for {coin}", update)
-
-        if cp_api:
-            t = [time.mktime(dau.parse(value["time_close"]).timetuple()) for value in ohlcv]
-        else:
-            t = [value["time"] for value in ohlcv]
+            try:
+                o = [value["open"] for value in ohlcv]
+                h = [value["high"] for value in ohlcv]
+                l = [value["low"] for value in ohlcv]
+                c = [value["close"] for value in ohlcv]
+                t = [time.mktime(dau.parse(value["time_close"]).timetuple()) for value in ohlcv]
+            except:
+                return self.handle_error(f"No OHLC data for {coin}", update)
 
         margin_l = 140
         tickformat = "0.8f"
