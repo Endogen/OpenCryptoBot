@@ -49,8 +49,11 @@ class Wallets(OpenCryptoPlugin):
 
         coins = utl.get_kw(args, "coins")
 
-        cp = CryptoCompare(token=self._token)
-        wallets = cp.get_wallet_info()
+        try:
+            cp = CryptoCompare(token=self._token)
+            wallets = cp.get_wallet_info()
+        except Exception as e:
+            return self.handle_error(e, update)
 
         if wallets["Response"] == "Error":
             if update.message:

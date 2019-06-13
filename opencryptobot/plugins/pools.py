@@ -48,8 +48,11 @@ class Pools(OpenCryptoPlugin):
         if RateLimit.limit_reached(update):
             return
 
-        cp = CryptoCompare(token=self._token)
-        pools = cp.get_pool_info()
+        try:
+            cp = CryptoCompare(token=self._token)
+            pools = cp.get_pool_info()
+        except Exception as e:
+            return self.handle_error(e, update)
 
         if pools["Response"] == "Error":
             if update.message:
