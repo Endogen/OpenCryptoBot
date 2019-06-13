@@ -4,15 +4,15 @@ import logging
 import importlib
 import threading
 import opencryptobot.emoji as emo
-import opencryptobot.constants as con
 import opencryptobot.utils as utl
+import opencryptobot.constants as con
 
 from importlib import reload
+from opencryptobot.plugin import Keyword
 from opencryptobot.api.github import GitHub
 from opencryptobot.api.apicache import APICache
 from opencryptobot.config import ConfigManager as Cfg
 
-from opencryptobot.plugin import Keyword
 from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
 from telegram.ext import Updater, InlineQueryHandler, RegexHandler, MessageHandler, Filters
 from telegram.error import InvalidToken
@@ -182,37 +182,53 @@ class TelegramBot:
         if not query or not query.startswith("/") or not query.endswith("."):
             return
 
+        def _send(msg, description=None):
+            if not description:
+                description = str(msg)
+
+            content = InputTextMessageContent(str(msg), parse_mode=ParseMode.MARKDOWN)
+            inline_result = InlineQueryResultArticle(
+                id=uuid.uuid4(),
+                title=description,
+                input_message_content=content)
+
+            bot.answer_inline_query(update.inline_query.id, [inline_result])
+
         args = query.split(" ")
         args[len(args) - 1] = args[len(args)-1].replace(".", "")
-        cmd = args[0][1:]
+        cmd = args[0][1:].lower()
         args.pop(0)
 
         args.append(f"{Keyword.INLINE}=true")
 
-        value = str()
-        description = str()
+        plgn = None
         for plugin in self.plugins:
             if cmd in plugin.get_cmds():
                 if not plugin.inline_mode():
-                    return
+                    message = "Inline mode not supported"
+                    return _send(f"{emo.INFO} {message}")
 
-                value = plugin.get_action(bot, update, args=args)
-                if value.startswith(emo.ERROR) or value.startswith(emo.INFO):
-                    description = value
-                else:
-                    description = plugin.get_description()
+                plgn = plugin
                 break
 
-        if not value:
-            return
+        if not plgn:
+            message = "Command not found"
+            return _send(f"{emo.INFO} {message}")
 
-        msg_content = InputTextMessageContent(value, parse_mode=ParseMode.MARKDOWN)
-        inline_result = InlineQueryResultArticle(
-                id=uuid.uuid4(),
-                title=description,
-                input_message_content=msg_content)
+        v = plgn.get_action(bot, update, args=args)
 
-        bot.answer_inline_query(update.inline_query.id, [inline_result])
+        if not v:
+            message = "No message returned"
+            return _send(f"{emo.ERROR} {message}")
+
+        if not isinstance(v, str):
+            message = "No *string* returned"
+            return _send(f"{emo.ERROR} {message}")
+
+        if v.startswith(emo.ERROR) or v.startswith(emo.INFO):
+            return _send(v)
+
+        _send(v, plgn.get_description())
 
     # Handle all telegram and telegram.ext related errors
     def _handle_tg_errors(self, bot, update, error):
