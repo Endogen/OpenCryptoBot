@@ -54,6 +54,7 @@ class Market(OpenCryptoPlugin):
             return
 
         # Sort markets by volume
+        # TODO: Not correctly sorted (/m btc vol)
         if volume:
             data = sorted(
                 coin_info["tickers"],
