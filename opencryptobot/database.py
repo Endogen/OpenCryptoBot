@@ -6,8 +6,6 @@ import inspect
 import opencryptobot.emoji as emo
 import opencryptobot.constants as c
 
-from opencryptobot.config import ConfigManager as Cfg
-
 
 class Database:
 
