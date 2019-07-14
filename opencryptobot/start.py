@@ -52,8 +52,8 @@ class OpenCryptoBot:
             dest="savelog",
             action="store_false",
             help="don't save logs to file",
-            required=False)
-        parser.set_defaults(savelog=True)
+            required=False,
+            default=True)
 
         # Use database
         parser.add_argument(
@@ -61,8 +61,8 @@ class OpenCryptoBot:
             dest="savedata",
             action="store_false",
             help="save command history to database",
-            required=False)
-        parser.set_defaults(savedata=True)
+            required=False,
+            default=True)
 
         # Logfile path
         parser.add_argument(
@@ -114,8 +114,8 @@ class OpenCryptoBot:
             dest="webhook",
             action="store_true",
             help="use webhook instead of polling",
-            required=False)
-        parser.set_defaults(webhook=False)
+            required=False,
+            default=False)
 
         return parser.parse_args()
 
