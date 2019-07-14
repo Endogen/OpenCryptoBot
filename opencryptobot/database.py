@@ -17,8 +17,7 @@ class Database:
 
         # Create 'data' directory if not present
         data_dir = os.path.dirname(db_path)
-        if not os.path.exists(data_dir):
-            os.makedirs(data_dir)
+        os.makedirs(data_dir, exist_ok=True)
 
         con = sqlite3.connect(db_path)
         cur = con.cursor()
