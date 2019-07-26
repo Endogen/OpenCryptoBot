@@ -151,6 +151,27 @@ class OpenCryptoPlugin(PluginInterface):
                     disable_notification=not notify,
                     quote=quote)
 
+    def send_photo(self, photo, update, keywords):
+        notify = keywords.get(Keyword.NOTIFY, True)
+        quote = keywords.get(Keyword.QUOTE, None)
+        preview = keywords.get(Keyword.PREVIEW, False)
+        parse = keywords.get(Keyword.PARSE, ParseMode.MARKDOWN)
+
+        # TODO: How to simplify this?
+        if quote is None:
+            update.message.reply_photo(
+                photo=photo,
+                parse_mode=parse,
+                disable_web_page_preview=not preview,
+                disable_notification=not notify)
+        else:
+            update.message.reply_photo(
+                photo=photo,
+                parse_mode=parse,
+                disable_web_page_preview=not preview,
+                disable_notification=not notify,
+                quote=quote)
+
     # Handle exceptions (write to log, reply to Telegram message)
     def handle_error(self, error, update, send_error=True):
         cls_name = f"Class: {type(self).__name__}"

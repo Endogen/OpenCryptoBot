@@ -16,7 +16,7 @@ from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coinpaprika import CoinPaprika
 from opencryptobot.api.cryptocompare import CryptoCompare
-from opencryptobot.plugin import OpenCryptoPlugin, Category
+from opencryptobot.plugin import OpenCryptoPlugin, Category, Keyword
 
 
 # TODO: Add source of data and time frame
@@ -30,10 +30,14 @@ class Candlestick(OpenCryptoPlugin):
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
-        if not args:
-            update.message.reply_text(
-                text=f"Usage:\n{self.get_usage()}",
-                parse_mode=ParseMode.MARKDOWN)
+        keywords = utl.get_kw(args)
+        arg_list = utl.del_kw(args)
+
+        if not arg_list:
+            if not keywords.get(Keyword.INLINE):
+                update.message.reply_text(
+                    text=f"Usage:\n{self.get_usage()}",
+                    parse_mode=ParseMode.MARKDOWN)
             return
 
         time_frame = 72
@@ -41,12 +45,12 @@ class Candlestick(OpenCryptoPlugin):
         base_coin = "BTC"
 
         # Coin or pair
-        if "-" in args[0]:
-            pair = args[0].split("-", 1)
+        if "-" in arg_list[0]:
+            pair = arg_list[0].split("-", 1)
             base_coin = pair[1].upper()
             coin = pair[0].upper()
         else:
-            coin = args[0].upper()
+            coin = arg_list[0].upper()
 
         if coin == "BTC" and base_coin == "BTC":
             base_coin = "USD"
@@ -64,19 +68,19 @@ class Candlestick(OpenCryptoPlugin):
         cmc_thread.start()
 
         # Time frame
-        if len(args) > 1:
-            if args[1].lower().endswith("m") and args[1][:-1].isnumeric():
+        if len(arg_list) > 1:
+            if arg_list[1].lower().endswith("m") and arg_list[1][:-1].isnumeric():
                 resolution = "MINUTE"
-                time_frame = args[1][:-1]
-            elif args[1].lower().endswith("h") and args[1][:-1].isnumeric():
+                time_frame = arg_list[1][:-1]
+            elif arg_list[1].lower().endswith("h") and arg_list[1][:-1].isnumeric():
                 resolution = "HOUR"
-                time_frame = args[1][:-1]
-            elif args[1].lower().endswith("d") and args[1][:-1].isnumeric():
+                time_frame = arg_list[1][:-1]
+            elif arg_list[1].lower().endswith("d") and arg_list[1][:-1].isnumeric():
                 resolution = "DAY"
-                time_frame = args[1][:-1]
+                time_frame = arg_list[1][:-1]
             else:
                 update.message.reply_text(
-                    text=f"{emo.ERROR} Argument *{args[1]}* is invalid",
+                    text=f"{emo.ERROR} Argument *{arg_list[1]}* is invalid",
                     parse_mode=ParseMode.MARKDOWN)
                 return
 
@@ -140,7 +144,7 @@ class Candlestick(OpenCryptoPlugin):
                 return
 
             # Time frame
-            if len(args) > 1:
+            if len(arg_list) > 1:
                 if resolution != "DAY":
                     update.message.reply_text(
                         text=f"{emo.ERROR} Timeframe for *{coin}* "
@@ -276,9 +280,10 @@ class Candlestick(OpenCryptoPlugin):
                 xanchor="right", yanchor="bottom"
             )])
 
-        update.message.reply_photo(
-            photo=io.BufferedReader(BytesIO(pio.to_image(fig, format='jpeg'))),
-            parse_mode=ParseMode.MARKDOWN)
+        self.send_photo(
+            io.BufferedReader(BytesIO(pio.to_image(fig, format='jpeg'))),
+            update,
+            keywords)
 
     def get_usage(self):
         return f"`/{self.get_cmds()[0]} <symbol>(-<target symbol>) (<timeframe>m|h|d)`"

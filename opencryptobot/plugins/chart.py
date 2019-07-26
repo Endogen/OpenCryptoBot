@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.io as pio
 import plotly.graph_objs as go
 import opencryptobot.emoji as emo
+import opencryptobot.utils as utl
 import opencryptobot.constants as con
 
 from io import BytesIO
@@ -12,7 +13,7 @@ from telegram import ParseMode
 from opencryptobot.ratelimit import RateLimit
 from opencryptobot.api.apicache import APICache
 from opencryptobot.api.coingecko import CoinGecko
-from opencryptobot.plugin import OpenCryptoPlugin, Category
+from opencryptobot.plugin import OpenCryptoPlugin, Category, Keyword
 
 
 class Chart(OpenCryptoPlugin):
@@ -26,21 +27,25 @@ class Chart(OpenCryptoPlugin):
     @OpenCryptoPlugin.save_data
     @OpenCryptoPlugin.send_typing
     def get_action(self, bot, update, args):
-        if not args:
-            update.message.reply_text(
-                text=f"Usage:\n{self.get_usage()}",
-                parse_mode=ParseMode.MARKDOWN)
+        keywords = utl.get_kw(args)
+        arg_list = utl.del_kw(args)
+
+        if not arg_list:
+            if not keywords.get(Keyword.INLINE):
+                update.message.reply_text(
+                    text=f"Usage:\n{self.get_usage()}",
+                    parse_mode=ParseMode.MARKDOWN)
             return
 
         time_frame = 3  # Days
         base_coin = "BTC"
 
-        if "-" in args[0]:
-            pair = args[0].split("-", 1)
+        if "-" in arg_list[0]:
+            pair = arg_list[0].split("-", 1)
             base_coin = pair[1].upper()
             coin = pair[0].upper()
         else:
-            coin = args[0].upper()
+            coin = arg_list[0].upper()
 
         if coin == "BTC" and base_coin == "BTC":
             base_coin = "USD"
@@ -51,8 +56,8 @@ class Chart(OpenCryptoPlugin):
                 parse_mode=ParseMode.MARKDOWN)
             return
 
-        if len(args) > 1 and args[1].isnumeric():
-            time_frame = args[1]
+        if len(arg_list) > 1 and arg_list[1].isnumeric():
+            time_frame = arg_list[1]
 
         if RateLimit.limit_reached(update):
             return
@@ -192,9 +197,10 @@ class Chart(OpenCryptoPlugin):
 
         fig["layout"]["yaxis2"].update(tickformat=tickformat)
 
-        update.message.reply_photo(
-            photo=io.BufferedReader(BytesIO(pio.to_image(fig, format="jpeg"))),
-            parse_mode=ParseMode.MARKDOWN)
+        self.send_photo(
+            io.BufferedReader(BytesIO(pio.to_image(fig, format='jpeg'))),
+            update,
+            keywords)
 
     def get_usage(self):
         return f"`/{self.get_cmds()[0]} <symbol>(-<target symbol>) (<# of days>)`"
