@@ -13,7 +13,7 @@ from opencryptobot.api.github import GitHub
 from opencryptobot.api.apicache import APICache
 from opencryptobot.config import ConfigManager as Cfg
 
-from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
+from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent, Chat
 from telegram.ext import Updater, InlineQueryHandler, RegexHandler, MessageHandler, Filters
 from telegram.error import InvalidToken
 
@@ -164,6 +164,11 @@ class TelegramBot:
             raise ex
 
     def _download(self, bot, update):
+        # Check if in a private chat
+        if bot.get_chat(update.message.chat_id).type != Chat.PRIVATE:
+            return
+
+        # Check if user that triggered the command is allowed to execute it
         if update.effective_user.id not in Cfg.get("admin_id"):
             return
 
