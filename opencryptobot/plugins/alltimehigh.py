@@ -96,7 +96,7 @@ class Alltimehigh(OpenCryptoPlugin):
         if msg:
             msg = f"`All-Time High for {coin}`\n\n {msg}"
         else:
-            msg = f"{emo.ERROR} Can't retrieve data for *{coin}*"
+            msg = f"{emo.INFO} No data for *{coin}*"
 
         if keywords.get(Keyword.INLINE):
             return msg
