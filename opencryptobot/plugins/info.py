@@ -84,7 +84,7 @@ class Info(OpenCryptoPlugin):
                   f"Proof type:   {proof}\n" \
                   f"Hashes (sec): {utl.format(int(h_per_s))}\n" \
                   f"Block:        {block}\n" \
-                  f"Block time:   {block_time}\n" \
+                  f"Block time:   {block_time} seconds\n" \
                   f"Block reward: {block_reward}" \
                   f"`"
 
