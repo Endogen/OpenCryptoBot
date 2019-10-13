@@ -115,11 +115,9 @@ class Candlestick(OpenCryptoPlugin):
                     f"then *{con.CG_DATA_LIMIT}* data points",
                     parse_mode=ParseMode.MARKDOWN)
                 return
-            elif ohlcv["Message"].startswith("There is no data for the symbol"):
-                ohlcv = None
             else:
                 update.message.reply_text(
-                    text=f"{emo.ERROR} CoinGecko ERROR: {ohlcv['Message']}",
+                    text=f"{emo.ERROR} CoinGecko: {ohlcv['Message']}",
                     parse_mode=ParseMode.MARKDOWN)
                 return
 
