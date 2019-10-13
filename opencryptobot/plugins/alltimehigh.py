@@ -74,7 +74,7 @@ class Alltimehigh(OpenCryptoPlugin):
                 change = format(ath_change[c], decimals=2)
 
                 date_time = ath_date[c]
-                date_ath = date_time[:10]
+                date_ath = date_time[:10].strip()
                 date_list = date_ath.split("-")
                 y = int(date_list[0])
                 m = int(date_list[1])
