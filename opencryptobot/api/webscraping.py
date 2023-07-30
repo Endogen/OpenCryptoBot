@@ -6,16 +6,16 @@ COIN_PAPRIKA_PARTIAL = "https://coinpaprika.com/coin/"
 CMC_URL_PARTIAL = "https://coinmarketcap.com/currencies/"
 ALL_CRYPTO_WP_PARTIAL = "https://www.allcryptowhitepapers.com/"
 
+def return_response_content(response: requests.Response):
+    if not response.status_code == requests.codes.ok:
+        raise ValueError(f"Page status error: {response.status_code}")
+    return response.content
+
 
 def get_wp_allcryptowhitepaper(name):
     url = f"{ALL_CRYPTO_WP_PARTIAL}{name}-Whitepaper"
-    response = requests.get(url)
-    response.raise_for_status()
-
-    if response.status_code != 200:
-        return None
-
-    soup = BeautifulSoup(response.content, "html.parser")
+    content = return_response_content(requests.get(url))
+    soup = BeautifulSoup(content, "html.parser")
     for entry_content in soup.find_all(class_="entry-content"):
         for p in entry_content.find_all("p"):
             for a in p.find_all("a"):
@@ -25,13 +25,8 @@ def get_wp_allcryptowhitepaper(name):
 
 def get_wp_coinmarketcap(slug):
     url = f"{CMC_URL_PARTIAL}{slug}"
-    response = requests.get(url)
-    response.raise_for_status()
-
-    if response.status_code != 200:
-        return None
-
-    soup = BeautifulSoup(response.content, "html.parser")
+    content = return_response_content(requests.get(url))
+    soup = BeautifulSoup(content, "html.parser")
     for links in soup.find_all(class_="list-unstyled details-panel-item--links"):
         for li in links.find_all("li"):
             if li.find_all(class_="glyphicons glyphicons-file details-list-item-icon"):
@@ -41,12 +36,7 @@ def get_wp_coinmarketcap(slug):
 
 def get_wp_coinpaprika(coin_id):
     url = f"{COIN_PAPRIKA_PARTIAL}{coin_id}"
-    response = requests.get(url)
-    response.raise_for_status()
-
-    if response.status_code != 200:
-        return None
-
-    soup = BeautifulSoup(response.content, "html.parser")
+    content = return_response_content(requests.get(url))
+    soup = BeautifulSoup(content, "html.parser")
     for link in soup.find_all(class_="cp-details__whitepaper-link"):
         return link["href"]
